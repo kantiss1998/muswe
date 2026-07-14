@@ -1,0 +1,177 @@
+'use client'
+
+import React, { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ProductImage } from '@/modules/products/types'
+import { cn } from '@/lib/utils'
+
+interface ProductGalleryProps {
+  images: ProductImage[]
+  productName: string
+  selectedVariantId?: string | null
+}
+
+export function ProductGallery({
+  images,
+  productName,
+  selectedVariantId,
+}: ProductGalleryProps): React.JSX.Element {
+  const [activeImage, setActiveImage] = useState<string | null>(
+    images.find((img) => img.is_primary)?.url || images[0]?.url || null
+  )
+
+  const [zoomPos, setZoomPos] = useState({ x: 0, y: 0 })
+  const [isZoomed, setIsZoomed] = useState(false)
+  const [hasIntentToZoom, setHasIntentToZoom] = useState(false)
+
+  const [direction, setDirection] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    // Check if device is mobile to enable drag and disable zoom
+    const mql = window.matchMedia('(max-width: 768px)')
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsMobile(mql.matches)
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+    mql.addEventListener('change', handler)
+    return () => mql.removeEventListener('change', handler)
+  }, [])
+
+  const prevVariantIdRef = useRef<string | null>(null)
+
+  // Auto-switch active image when a variant is selected and has a matching variant_id image
+  useEffect(() => {
+    if (selectedVariantId && selectedVariantId !== prevVariantIdRef.current) {
+      prevVariantIdRef.current = selectedVariantId
+      const variantImage = images.find((img) => img.variant_id === selectedVariantId)
+      if (variantImage) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setDirection(1)
+        setHasIntentToZoom(false) // Reset HD intent on image change
+
+        setActiveImage(variantImage.url)
+
+        if (isMobile) {
+          const mobileGallery = document.getElementById('mobile-product-gallery')
+          const targetImg = document.getElementById(`gallery-img-${variantImage.id}`)
+          if (mobileGallery && targetImg) {
+            mobileGallery.scrollTo({ left: targetImg.offsetLeft, behavior: 'smooth' })
+          }
+        }
+      }
+    }
+  }, [selectedVariantId, images, isMobile])
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile) return // Disable zoom on mobile
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
+    const x = ((e.clientX - left) / width) * 100
+    const y = ((e.clientY - top) / height) * 100
+    setZoomPos({ x, y })
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const paginate = (newDirection: number) => {
+    const currentIndex = images.findIndex((img) => img.url === activeImage)
+    let nextIndex = currentIndex + newDirection
+    if (nextIndex < 0) nextIndex = images.length - 1
+    if (nextIndex >= images.length) nextIndex = 0
+    setDirection(newDirection)
+    setHasIntentToZoom(false) // Reset HD intent on image change
+    setActiveImage(images[nextIndex].url)
+  }
+
+  if (images.length === 0) {
+    return (
+      <div className="aspect-[3/4] w-full bg-neutral-100 flex items-center justify-center text-xs text-neutral-400 font-sans">
+        Tidak ada gambar produk
+      </div>
+    )
+  }
+
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 300 : -300,
+      opacity: 0,
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 300 : -300,
+      opacity: 0,
+    }),
+  }
+
+  return (
+    <div className="flex flex-col w-full group">
+      {/* Mobile Swipe Gallery (Native Scroll Snap) */}
+      <div className="md:hidden relative w-full aspect-[3/4] overflow-hidden bg-neutral-50 border border-neutral-100">
+        <div
+          id="mobile-product-gallery"
+          className="flex w-full h-full overflow-x-auto snap-x snap-mandatory scrollbar-none scroll-smooth"
+          onScroll={(e) => {
+            const target = e.target as HTMLDivElement
+            const index = Math.round(target.scrollLeft / target.clientWidth)
+            if (images[index] && images[index].url !== activeImage) {
+              setActiveImage(images[index].url)
+            }
+          }}
+        >
+          {images.map((img) => (
+            <div
+              key={img.id}
+              id={`gallery-img-${img.id}`}
+              className="w-full h-full flex-shrink-0 snap-center relative"
+            >
+              <Image
+                src={img.url}
+                alt={productName}
+                fill
+                quality={75}
+                sizes="(max-width: 768px) 100vw, 500px"
+                className="object-cover"
+                priority={img.is_primary || images[0].id === img.id}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile Swipe Indicators (Dots) */}
+        {images.length > 1 && (
+          <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-1.5 z-10 pointer-events-none">
+            {images.map((img) => (
+              <div
+                key={`dot-${img.id}`}
+                className={cn(
+                  'h-1 transition-all duration-300 rounded-full',
+                  activeImage === img.url ? 'w-4 bg-brand-dark' : 'w-1.5 bg-neutral-300/80'
+                )}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Desktop Vertical Stack Gallery */}
+      <div className="hidden md:flex flex-col space-y-4">
+        {images.map((img) => (
+          <div key={img.id} className="relative aspect-[3/4] w-full bg-brand-cream overflow-hidden cursor-zoom-in">
+            <Image
+              src={img.url}
+              alt={img.alt_text || productName}
+              fill
+              sizes="(max-width: 1200px) 50vw, 33vw"
+              className="object-cover"
+              priority={img.is_primary || images[0].id === img.id}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
