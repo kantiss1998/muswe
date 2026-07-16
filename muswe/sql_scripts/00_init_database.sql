@@ -864,3 +864,24 @@ BEGIN
     WHERE created_at < NOW() - INTERVAL '5 minutes';
 END;
 $$ LANGUAGE plpgsql;
+
+-- 4. Add missing RPC for Dashboard Revenue
+CREATE OR REPLACE FUNCTION public.get_dashboard_revenue()
+RETURNS numeric AS $$
+DECLARE
+    total numeric;
+BEGIN
+    SELECT COALESCE(SUM(total_amount), 0) INTO total
+    FROM public.orders
+    WHERE status = 'completed';
+    
+    RETURN total;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 5. Add missing unique constraints for UPSERT (cart sync)
+ALTER TABLE public.carts DROP CONSTRAINT IF EXISTS carts_user_id_key;
+ALTER TABLE public.carts ADD CONSTRAINT carts_user_id_key UNIQUE (user_id);
+
+ALTER TABLE public.cart_items DROP CONSTRAINT IF EXISTS cart_items_cart_id_variant_id_key;
+ALTER TABLE public.cart_items ADD CONSTRAINT cart_items_cart_id_variant_id_key UNIQUE (cart_id, variant_id);

@@ -58,13 +58,12 @@ const SidebarLogo = ({ logoUrl, isMobile }: { logoUrl?: string | null; isMobile?
   if (isMobile) {
     return logoUrl ? (
       <div className="flex items-center space-x-2">
-        <div className="relative h-6 w-20">
-          <NextImage
+        <div className="relative h-6 w-20 flex items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={logoUrl}
             alt="Logo"
-            fill
-            sizes="80px"
-            className="object-contain object-left"
+            className="max-h-full max-w-full object-contain object-left"
           />
         </div>
         <span className="text-brand-gold font-heading text-xs font-bold tracking-wider uppercase bg-brand-gold-muted/10 px-1.5 py-0.5 rounded-xs">
@@ -80,13 +79,12 @@ const SidebarLogo = ({ logoUrl, isMobile }: { logoUrl?: string | null; isMobile?
 
   return logoUrl ? (
     <Link href="/admin" className="flex items-center space-x-2">
-      <div className="relative h-8 w-24">
-        <NextImage
+      <div className="relative h-8 w-24 flex items-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src={logoUrl}
           alt="Logo"
-          fill
-          sizes="96px"
-          className="object-contain object-left"
+          className="max-h-full max-w-full object-contain object-left"
         />
       </div>
       <span className="text-brand-gold font-heading text-xs font-bold tracking-wider uppercase bg-brand-gold-muted/10 px-1.5 py-0.5 rounded-xs">
