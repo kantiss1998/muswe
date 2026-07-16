@@ -150,69 +150,13 @@ export function ProductGeneralInfoSection({
         rows={5}
       />
 
-      <div className="space-y-2">
-        <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">
-          Panduan Ukuran (Size Guide)
-        </label>
-        <div className="flex gap-4 items-start border border-neutral-200 p-3 bg-neutral-50/20">
-          <div className="w-20 h-20 bg-white border border-neutral-200 flex-shrink-0 flex items-center justify-center relative overflow-hidden">
-            {sizeGuide ? (
-              <Image
-                src={sizeGuide}
-                alt="Size Guide"
-                fill
-                sizes="80px"
-                unoptimized
-                className="object-contain"
-                onError={(e) => {
-                  e.currentTarget.src = 'https://placehold.co/150?text=Error'
-                }}
-              />
-            ) : (
-              <span className="text-xs text-neutral-400 uppercase font-semibold text-center">
-                No Image
-              </span>
-            )}
-          </div>
-          <div className="flex-1 space-y-2">
-            <input
-              type="text"
-              className="w-full px-2 py-1.5 border border-neutral-200 outline-none text-xs bg-white focus:border-neutral-800"
-              value={sizeGuide}
-              onChange={(e) => onSizeGuideChange(e.target.value)}
-              placeholder="https://... atau unggah gambar size guide"
-            />
-            <div className="flex items-center gap-2">
-              <input
-                type="file"
-                id="size-guide-upload"
-                accept="image/*"
-                className="hidden"
-                onChange={async (e) => {
-                  const file = e.target.files?.[0]
-                  if (!file) return
-
-                  const toastId = toast.loading('Mengunggah size guide...')
-                  try {
-                    const publicUrl = await uploadImage(file, 'products')
-                    onSizeGuideChange(publicUrl)
-                    toast.success('Size guide berhasil diunggah!', { id: toastId })
-                  } catch (err: unknown) {
-                    const message = err instanceof Error ? err.message : 'Gagal mengunggah gambar'
-                    toast.error(message, { id: toastId })
-                  }
-                }}
-              />
-              <label
-                htmlFor="size-guide-upload"
-                className="cursor-pointer inline-flex items-center text-xs font-bold uppercase tracking-wider py-1.5 px-3 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none bg-white"
-              >
-                Unggah Gambar
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Textarea
+        label="Detail Ukuran & Bahan"
+        value={sizeGuide}
+        onChange={(e) => onSizeGuideChange(e.target.value)}
+        placeholder="Tuliskan spesifikasi produk, detail bahan, ukuran kain, dll..."
+        rows={4}
+      />
 
       <Textarea
         label="Panduan Perawatan (Care Guide)"

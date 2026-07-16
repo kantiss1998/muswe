@@ -102,16 +102,14 @@ export function ProductInfoSection({
 
       {/* Varian Picker */}
       <motion.div variants={itemVariants} className="relative">
-        {product.product_variants.some((v) =>
-          v.product_variant_attrs?.some((a) => a.attr_name.toLowerCase().includes('ukuran'))
-        ) && (
+        {product.size_guide && product.size_guide.trim().length > 0 && (
           <div className="flex justify-end absolute top-1 right-0 z-10">
             <button
               type="button"
               onClick={onSizeGuideOpen}
               className="text-sm uppercase tracking-wider font-heading font-semibold text-brand-gold hover:text-brand-gold-light transition-colors underline underline-offset-2 cursor-pointer"
             >
-              Panduan Ukuran
+              Detail Ukuran & Bahan
             </button>
           </div>
         )}
