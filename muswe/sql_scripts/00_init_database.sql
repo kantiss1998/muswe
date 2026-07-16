@@ -27,8 +27,9 @@ ALTER TABLE product_variants
   ALTER COLUMN compare_price TYPE bigint USING compare_price::bigint;
 
 ALTER TABLE products
-  ALTER COLUMN min_price TYPE bigint USING min_price::bigint,
-  ALTER COLUMN max_price TYPE bigint USING max_price::bigint;
+  ADD COLUMN IF NOT EXISTS min_price bigint DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS max_price bigint DEFAULT 0;
+
 
 ALTER TABLE flash_sale_items
   ALTER COLUMN original_price TYPE bigint USING original_price::bigint,
@@ -850,16 +851,16 @@ CREATE TABLE IF NOT EXISTS public.checkout_locks (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 2. Drop session_id from carts (Guest cart is not implemented)
-ALTER TABLE public.carts DROP COLUMN IF EXISTS session_id;
+-- 2. (Skipped) Drop session_id from carts
+-- ALTER TABLE public.carts DROP COLUMN IF EXISTS session_id;
 
 COMMIT;
 
 -- 3. Create function to clean up stale checkout locks (> 5 mins)
 CREATE OR REPLACE FUNCTION public.cleanup_checkout_locks()
-RETURNS void AS 
+RETURNS void AS $$
 BEGIN
     DELETE FROM public.checkout_locks 
     WHERE created_at < NOW() - INTERVAL '5 minutes';
 END;
- LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;

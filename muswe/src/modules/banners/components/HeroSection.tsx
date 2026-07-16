@@ -13,7 +13,8 @@ interface HeroSectionProps {
   banners: Banner[]
 }
 
-export function HeroSection({ banners }: HeroSectionProps): React.JSX.Element {
+export function HeroSection({ banners: allBanners }: HeroSectionProps): React.JSX.Element {
+  const banners = React.useMemo(() => allBanners.filter(b => !!b.image_url), [allBanners])
   const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
