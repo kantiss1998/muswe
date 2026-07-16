@@ -38,7 +38,7 @@ const DEFAULT_SETTINGS: SiteSetting[] = [
   { key: 'store_name', value: 'Muswe', type: 'text', group: 'general', label: 'Nama Toko' },
   {
     key: 'store_tagline',
-    value: 'Fashion Muslim Premium Indonesia',
+    value: 'Kerudung Motif Premium Indonesia',
     type: 'text',
     group: 'general',
     label: 'Slogan Toko',
@@ -59,7 +59,7 @@ const DEFAULT_SETTINGS: SiteSetting[] = [
   },
   {
     key: 'meta_title',
-    value: 'Muswe — Fashion Muslim Premium Indonesia',
+    value: 'Muswe — Kerudung Motif Premium Indonesia',
     type: 'text',
     group: 'seo',
     label: 'Meta Title Default',
@@ -108,7 +108,7 @@ const DEFAULT_SETTINGS: SiteSetting[] = [
   },
   {
     key: 'store_logo_url',
-    value: '/logo.PNG',
+    value: '/logo/Regular.png',
     type: 'image',
     group: 'general',
     label: 'URL Logo Toko',
@@ -238,7 +238,7 @@ export default function AdminSettingsPage(): React.JSX.Element {
       {activeSubTab === 'settings' ? (
         settingsLoading ? (
           <div className="py-24 text-center">
-            <p className="text-neutral-400 text-xs tracking-widest uppercase animate-pulse">
+            <p className="text-neutral-400 text-xs tracking-wider uppercase animate-pulse">
               Memuat pengaturan...
             </p>
           </div>
@@ -256,7 +256,7 @@ export default function AdminSettingsPage(): React.JSX.Element {
       ) : // Logs viewport
       logsLoading ? (
         <div className="py-24 text-center">
-          <p className="text-neutral-400 text-xs tracking-widest uppercase animate-pulse">
+          <p className="text-neutral-400 text-xs tracking-wider uppercase animate-pulse">
             Memuat log...
           </p>
         </div>

@@ -111,7 +111,7 @@ export function ReturnReviewModal({
           </div>
           {selectedReturn.customer_notes && (
             <div className="pt-2 border-t border-neutral-100">
-              <p className="text-[10px] uppercase font-bold text-neutral-400">Catatan Pelanggan:</p>
+              <p className="text-xs uppercase font-bold text-neutral-400">Catatan Pelanggan:</p>
               <p className="text-neutral-600 mt-1 italic leading-relaxed">
                 {selectedReturn.customer_notes}
               </p>
@@ -119,7 +119,7 @@ export function ReturnReviewModal({
           )}
           {selectedReturn.return_media && selectedReturn.return_media.length > 0 && (
             <div className="pt-2 border-t border-neutral-100">
-              <p className="text-[10px] uppercase font-bold text-neutral-400 mb-2">
+              <p className="text-xs uppercase font-bold text-neutral-400 mb-2">
                 Bukti Foto Retur:
               </p>
               <div className="flex gap-2">
@@ -147,13 +147,13 @@ export function ReturnReviewModal({
 
         {/* Return Items List */}
         <div className="space-y-2">
-          <p className="text-[10px] uppercase font-bold text-neutral-400">Daftar Item Retur:</p>
+          <p className="text-xs uppercase font-bold text-neutral-400">Daftar Item Retur:</p>
           <div className="border border-neutral-200 divide-y divide-neutral-100 p-3 bg-white max-h-36 overflow-y-auto rounded-none">
             {selectedReturn.return_items?.map((item) => (
-              <div key={item.id} className="py-2.5 flex justify-between items-center text-[11px]">
+              <div key={item.id} className="py-2.5 flex justify-between items-center text-sm">
                 <div>
                   <p className="font-semibold text-neutral-800">{item.order_items?.product_name}</p>
-                  <p className="text-[10px] text-neutral-400">
+                  <p className="text-xs text-neutral-400">
                     Varian: {item.order_items?.variant_name} | SKU: {item.order_items?.sku}
                   </p>
                 </div>
@@ -167,10 +167,10 @@ export function ReturnReviewModal({
 
         {/* Refund Bank Details */}
         <div className="border border-neutral-200 p-4 space-y-2.5 bg-neutral-50/20 rounded-none">
-          <p className="text-[10px] uppercase font-bold text-neutral-400">
+          <p className="text-xs uppercase font-bold text-neutral-400">
             Rekening Tujuan Refund:
           </p>
-          <div className="grid grid-cols-2 gap-2 text-[11px] font-medium text-neutral-700">
+          <div className="grid grid-cols-2 gap-2 text-sm font-medium text-neutral-700">
             <p>
               Nama Bank:{' '}
               <span className="font-bold text-neutral-900">{selectedReturn.refund_bank_name}</span>

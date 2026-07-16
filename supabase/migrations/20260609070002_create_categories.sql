@@ -7,7 +7,7 @@
 -- Table: categories (self-referencing hierarchy)
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS categories (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   parent_id UUID REFERENCES categories(id) ON DELETE SET NULL,
   name VARCHAR(150) NOT NULL,
   slug VARCHAR(180) NOT NULL UNIQUE,
@@ -28,7 +28,7 @@ CREATE INDEX IF NOT EXISTS idx_categories_is_active ON categories(is_active);
 -- Table: collections (editorial/thematic curation)
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS collections (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(150) NOT NULL,
   slug VARCHAR(180) NOT NULL UNIQUE,
   description TEXT,

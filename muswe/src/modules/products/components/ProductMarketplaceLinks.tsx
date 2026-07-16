@@ -19,21 +19,21 @@ export function ProductMarketplaceLinks({
   return (
     <div className="border border-neutral-200 bg-white p-6 rounded-none space-y-4">
       <div className="flex justify-between items-center border-b border-neutral-100 pb-2.5">
-        <h3 className="text-xs uppercase font-bold tracking-widest text-neutral-400">
+        <h3 className="text-xs uppercase font-bold tracking-wider text-neutral-400">
           Platform Marketplace (E-Commerce)
         </h3>
         <Button
           type="button"
           onClick={onAddLink}
           variant="outline"
-          className="text-[9px] font-bold uppercase py-0.5 px-2 border-neutral-850"
+          className="text-sm font-bold uppercase py-0.5 px-2 border-neutral-850"
         >
           + Tambah Link
         </Button>
       </div>
 
       {marketplaceLinks.length === 0 ? (
-        <p className="text-[11px] text-neutral-400 italic">Belum ada link marketplace.</p>
+        <p className="text-sm text-neutral-400 italic">Belum ada link marketplace.</p>
       ) : (
         <div className="space-y-4">
           {marketplaceLinks.map((link, idx) => (

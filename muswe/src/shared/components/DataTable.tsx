@@ -64,7 +64,7 @@ export function DataTable<T extends { id?: string | number }>({
                 <th
                   key={String(col.key) || idx}
                   className={cn(
-                    'px-6 py-4 text-[10px] font-heading font-bold uppercase tracking-wider text-neutral-500',
+                    'px-6 py-4 text-xs font-heading font-bold uppercase tracking-wider text-neutral-500',
                     col.sortable && 'cursor-pointer hover:bg-neutral-100 transition-colors',
                     col.className
                   )}

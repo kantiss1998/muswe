@@ -90,7 +90,7 @@ export const ProductCard = React.memo(function ProductCard({
                   </div>
                 ) : (
                   <div
-                    className="h-10 w-10 bg-neutral-100 flex items-center justify-center text-[8px] text-neutral-400 font-sans"
+                    className="h-10 w-10 bg-neutral-100 flex items-center justify-center text-xs text-neutral-400 font-sans"
                     aria-hidden="true"
                   >
                     No Img
@@ -98,13 +98,13 @@ export const ProductCard = React.memo(function ProductCard({
                 )}
               </div>
               <div className="ml-3 flex-1">
-                <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-brand-gold">
+                <p className="text-xs font-heading font-bold uppercase tracking-wider text-brand-gold">
                   Berhasil Ditambahkan!
                 </p>
-                <p className="text-[11px] font-heading font-medium uppercase text-brand-black line-clamp-1 mt-0.5">
+                <p className="text-sm font-heading font-medium uppercase text-brand-black line-clamp-1 mt-0.5">
                   {product.name}
                 </p>
-                <p className="text-[9px] text-neutral-400 uppercase font-sans mt-0.5">
+                <p className="text-sm text-neutral-400 uppercase font-sans mt-0.5">
                   Varian: {variant.name} &bull; Qty: 1
                 </p>
               </div>
@@ -135,14 +135,14 @@ export const ProductCard = React.memo(function ProductCard({
   return (
     <div
       className={cn(
-        'group relative flex flex-col w-full text-center bg-transparent transition-all duration-500',
+        'group relative flex flex-col w-full text-center bg-white transition-all duration-500 rounded-xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:-translate-y-1',
         className
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Product Image Area */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-brand-cream transition-colors duration-300">
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-brand-cream transition-colors duration-300 rounded-xl">
         <Link
           href={productUrl}
           prefetch={true}
@@ -231,7 +231,7 @@ export const ProductCard = React.memo(function ProductCard({
               toast.success('Ditambahkan ke wishlist', { icon: '❤️' })
             }
           }}
-          className="absolute top-3 right-3 p-1.5 bg-white/85 hover:bg-white border border-neutral-100 transition-all rounded-none duration-300 hover:scale-110 active:scale-90 z-10"
+          className="absolute top-3 right-3 p-1.5 bg-white/85 hover:bg-white border border-neutral-100 transition-all rounded-full duration-300 hover:scale-110 active:scale-90 z-10"
           aria-label={liked ? 'Hapus dari wishlist' : 'Tambah ke wishlist'}
           aria-pressed={liked}
         >
@@ -245,7 +245,7 @@ export const ProductCard = React.memo(function ProductCard({
         </button>
 
         {/* Special Out of Stock overlay */}
-        {product.product_variants.every((v) => v.stock === 0) && (
+        {product.product_variants?.every((v) => v.stock === 0) && (
           <div className="absolute inset-0 bg-white/60 flex items-center justify-center pointer-events-none">
             <Badge variant="brand" size="md">
               Habis Terjual
@@ -254,10 +254,10 @@ export const ProductCard = React.memo(function ProductCard({
         )}
 
         {/* Quick add or view details overlay */}
-        <div className="absolute bottom-0 left-0 right-0 bg-brand-black/85 backdrop-blur-xs py-2 px-3 transform translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 md:group-hover:translate-y-0 max-md:translate-y-0 z-20 flex flex-col items-center justify-center min-h-[44px]">
-          {!hasMultipleColors && sizeVariants.length > 0 ? (
-            <div className="w-full space-y-1 text-center">
-              <span className="text-[8px] font-heading font-medium uppercase tracking-widest text-brand-gold-light">
+        <div className="absolute bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md py-3 px-3 transform translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 md:group-hover:translate-y-0 max-md:translate-y-0 z-20 flex flex-col items-center justify-center min-h-[44px]">
+          {!hasMultipleColors && sizeVariants && sizeVariants.length > 0 ? (
+            <div className="w-full space-y-2 text-center">
+              <span className="text-xs font-heading font-medium uppercase tracking-wider text-brand-black">
                 + Keranjang Instan
               </span>
               <div className="flex flex-wrap gap-1 justify-center">
@@ -275,7 +275,7 @@ export const ProductCard = React.memo(function ProductCard({
                       aria-busy={isCurrentAdding}
                       aria-label={`Tambah ukuran ${sizeLabel} ke keranjang`}
                       onClick={(e) => handleQuickAdd(e, v)}
-                      className="px-2 py-0.5 bg-white hover:bg-brand-gold hover:text-white text-[9px] font-heading font-bold uppercase tracking-wider text-brand-black transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed select-none min-w-[28px] border border-neutral-100 flex items-center justify-center cursor-pointer"
+                      className="px-2 py-1 bg-white hover:bg-brand-black hover:text-white text-xs font-heading font-bold uppercase tracking-wider text-brand-black transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed select-none min-w-[32px] border border-neutral-200 shadow-sm flex items-center justify-center cursor-pointer rounded-md"
                     >
                       {isCurrentAdding ? (
                         <div
@@ -291,7 +291,7 @@ export const ProductCard = React.memo(function ProductCard({
               </div>
             </div>
           ) : (
-            <span className="text-[9px] font-heading font-medium uppercase tracking-widest text-white py-1 text-center w-full block">
+            <span className="text-sm font-heading font-medium uppercase tracking-wider text-brand-black py-1 text-center w-full block">
               Lihat Detail
             </span>
           )}
@@ -299,30 +299,30 @@ export const ProductCard = React.memo(function ProductCard({
       </div>
 
       {/* Product Information */}
-      <div className="flex flex-col items-center pt-4 pb-2 px-0 space-y-1.5">
+      <div className="flex flex-col items-center pt-4 pb-4 px-2 space-y-1.5 bg-white rounded-b-xl z-10">
         {/* Category Name */}
         {product.categories && (
-          <span className="text-[9px] uppercase tracking-widest font-heading font-medium text-neutral-400">
+          <span className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-400">
             {product.categories.name}
           </span>
         )}
 
         {/* Product Title */}
         <Link href={productUrl} prefetch={true} className="block">
-          <h3 className="text-[11px] font-sans font-medium uppercase tracking-[0.1em] text-brand-black hover:text-brand-gray transition-colors truncate px-2">
+          <h3 className="text-sm font-sans font-medium capitalize tracking-wide text-brand-black hover:text-brand-gray transition-colors truncate px-2">
             {product.name}
           </h3>
         </Link>
 
         {/* Price Tag */}
         <div className="flex items-center justify-center space-x-2 pt-0.5">
-          <span className="text-[11px] font-sans font-medium text-neutral-600">
+          <span className="text-sm font-sans font-semibold text-brand-black">
             {minPrice !== maxPrice
               ? `${formatIDR(minPrice)} - ${formatIDR(maxPrice)}`
               : formatIDR(minPrice)}
           </span>
           {comparePrice && comparePrice > minPrice && (
-            <span className="text-[10px] font-sans text-neutral-400 line-through">
+            <span className="text-xs font-sans text-neutral-400 line-through">
               {formatIDR(comparePrice)}
             </span>
           )}

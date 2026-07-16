@@ -4,21 +4,17 @@ import { HeroSection } from '@/modules/banners/components/HeroSection'
 import { CategorySection } from '@/modules/categories/components/CategorySection'
 import { FlashSaleSection } from '@/modules/flash-sales/components/FlashSaleSection'
 import { CollectionSpotlight } from '@/modules/collections/components/CollectionSpotlight'
-import { TrustStrip } from '@/modules/banners/components/TrustStrip'
-import { FeaturedProductsSection } from '@/modules/products/components/FeaturedProductsSection'
-import { NewArrivalsSection } from '@/modules/products/components/NewArrivalsSection'
-import { ProductGridSection } from '@/modules/products/components/ProductGridSection'
 import { RecentlyViewedSection } from '@/modules/products/components/RecentlyViewedSection'
 
 export async function generateMetadata() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.muswe.com'
   return {
-    title: 'Muswe - Premium Modest Fashion',
+    title: 'Muswe - Premium Printed Hijab',
     description:
-      'Temukan koleksi modest fashion terbaik, kemeja linen, dan gaya busana premium di Muswe. Belanja mudah, cepat, dan aman.',
+      'Temukan koleksi kerudung motif terbaik dan eksklusif di Muswe. Belanja mudah, cepat, dan aman.',
     openGraph: {
-      title: 'Muswe - Premium Modest Fashion',
-      description: 'Temukan koleksi modest fashion terbaik di Muswe.',
+      title: 'Muswe - Premium Printed Hijab',
+      description: 'Temukan koleksi kerudung motif terbaik di Muswe.',
       url: baseUrl,
       type: 'website',
     },
@@ -46,7 +42,7 @@ export default async function Homepage(): Promise<React.JSX.Element> {
     '@type': 'Organization',
     name: 'Muswe',
     url: baseUrl,
-    logo: `${baseUrl}/images/logo.png`,
+    logo: `${baseUrl}/logo/Regular.png`,
     sameAs: ['https://www.instagram.com/muswe', 'https://www.facebook.com/muswe'],
   }
 
@@ -79,45 +75,17 @@ export default async function Homepage(): Promise<React.JSX.Element> {
         {/* 1. Banner */}
         <HeroSection banners={banners} />
 
-        {/* Trust strip right after banner */}
-        <TrustStrip />
-
-        {/* 2. Produk Pilihan */}
-        <FeaturedProductsSection products={featuredProducts} />
-
         {/* 3. Collection 1 */}
-        {col1 && <CollectionSpotlight collection={col1} index={0} />}
+        {col1 && <CollectionSpotlight collection={col1} products={collection1Products} index={0} />}
 
-        {/* 4. Produk dari Collection 1 */}
-        {col1 && (
-          <ProductGridSection
-            products={collection1Products}
-            eyebrow="Dari Koleksi"
-            title={`Produk ${col1.name}`}
-            viewAllHref={`/koleksi/${col1.slug}`}
-            viewAllLabel={`Lihat Semua ${col1.name}`}
-            variant="alt"
-          />
-        )}
+        {/* 4. Collection 2 */}
+        {col2 && <CollectionSpotlight collection={col2} products={collection2Products} variant="dark" index={1} />}
 
-        {/* 5. Collection 2 */}
-        {col2 && <CollectionSpotlight collection={col2} variant="dark" index={1} />}
-
-        {/* 6. Produk dari Collection 2 */}
-        {col2 && (
-          <ProductGridSection
-            products={collection2Products}
-            eyebrow="Dari Koleksi"
-            title={`Produk ${col2.name}`}
-            viewAllHref={`/koleksi/${col2.slug}`}
-            viewAllLabel={`Lihat Semua ${col2.name}`}
-          />
-        )}
-
+        {/* 2. Kategori Utama (Grid Banner) */}
+        <CategorySection categories={categories} />
+        
         {/* Additional sections */}
         <FlashSaleSection flashSale={flashSale} />
-        <CategorySection categories={categories} />
-        <NewArrivalsSection products={newestProducts} />
         <RecentlyViewedSection />
       </div>
     </>

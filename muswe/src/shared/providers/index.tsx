@@ -3,14 +3,16 @@
 import React from 'react'
 import { QueryProvider } from './QueryProvider'
 import { SupabaseProvider } from './SupabaseProvider'
+import { Suspense } from 'react'
 import { Toaster } from 'react-hot-toast'
 
 export function Providers({ children }: { children: React.ReactNode }): React.JSX.Element {
   return (
     <QueryProvider>
-      <SupabaseProvider>
-        {children}
-        <Toaster
+      <Suspense fallback={null}>
+        <SupabaseProvider>
+          {children}
+          <Toaster
           position="top-right"
           toastOptions={{
             duration: 3500,
@@ -46,7 +48,8 @@ export function Providers({ children }: { children: React.ReactNode }): React.JS
             },
           }}
         />
-      </SupabaseProvider>
+        </SupabaseProvider>
+      </Suspense>
     </QueryProvider>
   )
 }

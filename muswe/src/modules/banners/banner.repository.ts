@@ -9,7 +9,6 @@ import type { Banner } from './types'
 export class BannerRepository {
   async getActiveBanners(page = 1, limit = 20): Promise<ApiListResponse<Banner>> {
     const supabase = createStaticClient()
-    const now = new Date().toISOString()
 
     const from = (page - 1) * limit
     const to = from + limit - 1
@@ -21,8 +20,6 @@ export class BannerRepository {
         { count: 'exact' }
       )
       .eq('is_active', true)
-      .or(`starts_at.is.null,starts_at.lte.${now}`)
-      .or(`ends_at.is.null,ends_at.gte.${now}`)
       .order('sort_order', { ascending: true })
       .range(from, to)
 

@@ -7,7 +7,7 @@
 -- Table: return_requests
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS return_requests (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID NOT NULL REFERENCES orders(id) ON DELETE RESTRICT,
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (
@@ -45,7 +45,7 @@ CREATE TRIGGER trg_return_requests_updated_at
 -- Table: return_items
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS return_items (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   return_request_id UUID NOT NULL REFERENCES return_requests(id) ON DELETE CASCADE,
   order_item_id UUID NOT NULL REFERENCES order_items(id) ON DELETE RESTRICT,
   quantity INT NOT NULL CHECK (quantity > 0),
@@ -60,7 +60,7 @@ CREATE INDEX IF NOT EXISTS idx_return_items_return_request_id ON return_items(re
 -- Table: return_media
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS return_media (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   return_request_id UUID NOT NULL REFERENCES return_requests(id) ON DELETE CASCADE,
   url VARCHAR(500) NOT NULL,
   sort_order INT NOT NULL DEFAULT 0

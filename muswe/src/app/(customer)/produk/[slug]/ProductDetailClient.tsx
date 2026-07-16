@@ -215,7 +215,7 @@ export function ProductDetailClient({
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="flex items-center flex-wrap gap-x-2 gap-y-1 text-[10px] uppercase tracking-wider text-neutral-400 mb-8 font-heading"
+          className="flex items-center flex-wrap gap-x-2 gap-y-1 text-xs uppercase tracking-wider text-neutral-400 mb-8 font-heading"
         >
           <Link href="/" className="hover:text-brand-black transition-colors">
             Home

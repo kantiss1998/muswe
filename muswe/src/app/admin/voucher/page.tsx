@@ -179,7 +179,7 @@ export default function AdminVouchersPage(): React.JSX.Element {
       <AdminPageHeader title="Kupon Voucher" subtitle="Kelola diskon belanja dan penawaran khusus.">
         <Button
           onClick={handleOpenAdd}
-          className="text-xs uppercase font-bold tracking-widest flex items-center py-3 px-5"
+          className="text-xs uppercase font-bold tracking-wider flex items-center py-3 px-5"
         >
           <Plus size={14} className="mr-1.5" /> Tambah Voucher
         </Button>
@@ -189,7 +189,7 @@ export default function AdminVouchersPage(): React.JSX.Element {
       <div className="border border-neutral-200 bg-white rounded-none overflow-hidden">
         {isLoading ? (
           <div className="py-24 text-center">
-            <p className="text-neutral-400 text-xs tracking-widest uppercase animate-pulse">
+            <p className="text-neutral-400 text-xs tracking-wider uppercase animate-pulse">
               Memuat voucher...
             </p>
           </div>
@@ -214,7 +214,7 @@ export default function AdminVouchersPage(): React.JSX.Element {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-sans">
               <thead>
-                <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-widest font-bold text-[10px]">
+                <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-wider font-bold text-xs">
                   <th className="py-3 px-5">Kode / Nama</th>
                   <th className="py-3 px-4">Tipe Diskon</th>
                   <th className="py-3 px-4 text-center">Batas Penggunaan</th>
@@ -230,7 +230,7 @@ export default function AdminVouchersPage(): React.JSX.Element {
                       <span className="font-bold text-neutral-900 text-sm block font-mono select-all tracking-wider">
                         {v.code}
                       </span>
-                      <span className="text-[10px] text-neutral-400 font-normal mt-0.5 block">
+                      <span className="text-xs text-neutral-400 font-normal mt-0.5 block">
                         {v.name}
                       </span>
                     </td>
@@ -240,7 +240,7 @@ export default function AdminVouchersPage(): React.JSX.Element {
                           ? `${v.value}%`
                           : `Rp ${Number(v.value).toLocaleString()}`}
                       </p>
-                      <p className="text-[10px] text-neutral-450 font-normal">
+                      <p className="text-xs text-neutral-450 font-normal">
                         Min Belanja: Rp {Number(v.min_purchase).toLocaleString()}
                       </p>
                     </td>
@@ -248,20 +248,20 @@ export default function AdminVouchersPage(): React.JSX.Element {
                       <p className="font-semibold">
                         {v.used_count || 0} / {v.usage_limit || '∞'} Terpakai
                       </p>
-                      <p className="text-[10px] text-neutral-400 font-normal">
+                      <p className="text-xs text-neutral-400 font-normal">
                         Maksimal {v.usage_per_user} per user
                       </p>
                     </td>
                     <td className="py-4 px-4 text-center text-neutral-550 leading-relaxed">
                       <p>{v.starts_at ? new Date(v.starts_at).toLocaleDateString() : '-'}</p>
-                      <p className="text-[10px] text-neutral-400 font-normal">
+                      <p className="text-xs text-neutral-400 font-normal">
                         s.d {v.expires_at ? new Date(v.expires_at).toLocaleDateString() : '-'}
                       </p>
                     </td>
                     <td className="py-4 px-4 text-center">
                       <button
                         onClick={() => handleToggleActive(v)}
-                        className={`inline-flex items-center text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 transition ${
+                        className={`inline-flex items-center text-xs uppercase font-bold tracking-wider px-2.5 py-1 transition ${
                           v.is_active
                             ? 'bg-neutral-900 text-white border border-neutral-900'
                             : 'bg-white text-neutral-400 border border-neutral-200'

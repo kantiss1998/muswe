@@ -35,20 +35,20 @@ export function CustomToast({
                 <Image className="object-cover" src={imageUrl} alt={subtitle} fill sizes="40px" />
               </div>
             ) : (
-              <div className="h-10 w-10 bg-neutral-100 flex items-center justify-center text-[8px] text-neutral-400 font-sans">
+              <div className="h-10 w-10 bg-neutral-100 flex items-center justify-center text-xs text-neutral-400 font-sans">
                 No Img
               </div>
             )}
           </div>
           <div className="ml-3 flex-1">
-            <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-brand-gold">
+            <p className="text-xs font-heading font-bold uppercase tracking-wider text-brand-gold">
               {title}
             </p>
-            <p className="text-[11px] font-heading font-medium uppercase text-brand-black line-clamp-1 mt-0.5">
+            <p className="text-sm font-heading font-medium uppercase text-brand-black line-clamp-1 mt-0.5">
               {subtitle}
             </p>
             {description && (
-              <p className="text-[9px] text-neutral-400 uppercase font-sans mt-0.5">
+              <p className="text-sm text-neutral-400 uppercase font-sans mt-0.5">
                 {description}
               </p>
             )}

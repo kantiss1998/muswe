@@ -53,11 +53,11 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
         </label>
 
         {error && (
-          <span className="text-[10px] text-red-500 tracking-wide font-sans mt-1">{error}</span>
+          <span className="text-xs text-red-500 tracking-wide font-sans mt-1">{error}</span>
         )}
 
         {!error && helperText && (
-          <span className="text-[10px] text-neutral-500 tracking-wide font-sans mt-1">
+          <span className="text-xs text-neutral-500 tracking-wide font-sans mt-1">
             {helperText}
           </span>
         )}

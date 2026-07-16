@@ -7,7 +7,7 @@ import { PageHero, PageContainer } from '@/shared/components'
 export const metadata: Metadata = {
   title: 'Cara Belanja — Muswe',
   description:
-    'Ikuti panduan mudah cara berbelanja pakaian muslim premium di toko online Muswe.',
+    'Ikuti panduan mudah cara berbelanja kerudung motif premium di toko online Muswe.',
 }
 
 const steps = [
@@ -67,7 +67,7 @@ export default function CaraBelanjaPage(): React.JSX.Element {
           ))}
 
           <div className="border border-neutral-200 bg-brand-cream/50 p-6 md:p-8 text-xs text-neutral-500 leading-relaxed font-medium">
-            <p className="font-heading font-semibold text-brand-black mb-2 uppercase tracking-wider text-[10px]">
+            <p className="font-heading font-semibold text-brand-black mb-2 uppercase tracking-wider text-xs">
               Butuh Bantuan Lebih Lanjut?
             </p>
             Jika Anda mengalami kendala saat checkout atau pembayaran, silakan hubungi Customer

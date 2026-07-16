@@ -27,13 +27,13 @@ export function CategorySection({ categories }: CategorySectionProps): React.JSX
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5"
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8"
         >
           {mainCategories.map((cat, index) => (
-            <motion.div key={cat.id} variants={fadeUpItem}>
+            <motion.div key={cat.id} variants={fadeUpItem} className="flex flex-col items-center">
               <Link
                 href={`/kategori/${cat.slug}`}
-                className="group relative aspect-square md:aspect-[3/4] w-full overflow-hidden bg-neutral-100 border border-neutral-100 block gold-border-hover card-hover-lift"
+                className="group relative w-32 h-32 md:w-48 md:h-48 overflow-hidden bg-brand-cream rounded-full mb-4 shadow-sm hover:shadow-md transition-shadow duration-300 block"
               >
                 {cat.image_url ? (
                   <Image
@@ -48,19 +48,12 @@ export function CategorySection({ categories }: CategorySectionProps): React.JSX
                     {cat.name}
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/50 via-neutral-900/10 to-transparent transition-opacity duration-500 group-hover:from-neutral-900/60" />
-
-                <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] md:text-xs font-heading font-semibold uppercase tracking-widest text-white">
-                      {cat.name}
-                    </span>
-                    <span className="text-[9px] font-heading text-white/70 uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      0{index + 1}
-                    </span>
-                  </div>
-                  <div className="w-0 group-hover:w-full h-px bg-brand-gold-light transition-all duration-500 mt-2" />
-                </div>
+                <div className="absolute inset-0 bg-black/5 transition-opacity duration-500 group-hover:bg-black/10 rounded-full" />
+              </Link>
+              <Link href={`/kategori/${cat.slug}`}>
+                <span className="text-sm md:text-base font-heading font-medium uppercase tracking-wider text-brand-black hover:text-brand-gold transition-colors text-center">
+                  {cat.name}
+                </span>
               </Link>
             </motion.div>
           ))}

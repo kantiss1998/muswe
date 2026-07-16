@@ -160,7 +160,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <label
             htmlFor={selectId}
-            className="text-[10px] uppercase tracking-wider font-heading font-medium text-brand-black/70 transition-colors duration-200"
+            className="text-xs uppercase tracking-wider font-heading font-medium text-brand-black/70 transition-colors duration-200"
           >
             {label}
           </label>
@@ -198,9 +198,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             onKeyDown={handleKeyDown}
             className={cn(
               // Input styles matching Input.tsx
-              'w-full flex items-center justify-between bg-white text-xs px-4 py-3 border border-neutral-200 rounded-none text-left transition-all duration-300 focus-ring-premium disabled:opacity-50 disabled:cursor-not-allowed',
+              'w-full flex items-center justify-between bg-neutral-50/50 text-sm px-4 py-3 border border-neutral-200 rounded-lg text-left transition-all duration-300 focus:border-brand-black focus:bg-white focus:ring-4 focus:ring-brand-black/5 outline-none disabled:opacity-50 disabled:cursor-not-allowed',
               {
-                'border-brand-black bg-neutral-50/50': isOpen,
+                'border-brand-black bg-white ring-4 ring-brand-black/5': isOpen,
                 'border-red-500': error,
                 'text-neutral-400': !selectedOption,
                 'text-brand-black': selectedOption,
@@ -220,14 +220,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               })}
               aria-hidden="true"
             />
-            {/* Animated focus underline */}
-            <div
-              className={cn(
-                'absolute bottom-0 left-0 right-0 h-[2px] bg-brand-black transform origin-left transition-transform duration-300',
-                isOpen ? 'scale-x-100' : 'scale-x-0 group-focus-within:scale-x-100'
-              )}
-              aria-hidden="true"
-            />
+
           </button>
 
           {/* Dropdown Menu */}
@@ -240,7 +233,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
                 animate={{ opacity: 1, y: 0, scaleY: 1 }}
                 exit={{ opacity: 0, y: -10, scaleY: 0.95 }}
                 transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute z-50 w-full mt-1 bg-white border border-neutral-200 shadow-lg origin-top max-h-60 overflow-y-auto outline-none"
+                className="absolute z-50 w-full mt-2 bg-white border border-neutral-100 shadow-xl rounded-lg origin-top max-h-60 overflow-y-auto outline-none py-1"
                 role="listbox"
                 tabIndex={-1}
                 onKeyDown={handleKeyDown}
@@ -266,9 +259,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
                         onClick={() => handleSelect(opt.value)}
                         onMouseMove={() => setFocusedIndex(index)}
                         className={cn(
-                          'flex items-center justify-between px-4 py-2.5 text-xs font-sans cursor-pointer transition-colors',
+                          'flex items-center justify-between px-4 py-2.5 text-sm font-sans cursor-pointer transition-colors',
                           isSelected || isFocused
-                            ? 'bg-neutral-50 text-brand-black font-medium'
+                            ? 'bg-neutral-50/80 text-brand-black font-medium'
                             : 'text-neutral-600'
                         )}
                       >
@@ -289,13 +282,13 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         </div>
 
         {error && (
-          <span id={errorId} className="text-[10px] text-red-500 tracking-wide font-sans">
+          <span id={errorId} className="text-xs text-red-500 tracking-wide font-sans">
             {error}
           </span>
         )}
 
         {!error && helperText && (
-          <span id={helperId} className="text-[10px] text-neutral-500 tracking-wide font-sans">
+          <span id={helperId} className="text-xs text-neutral-500 tracking-wide font-sans">
             {helperText}
           </span>
         )}

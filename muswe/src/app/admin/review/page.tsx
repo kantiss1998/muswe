@@ -103,7 +103,7 @@ export default function AdminReviewsPage(): React.JSX.Element {
       <div className="border border-neutral-200 bg-white rounded-none overflow-hidden">
         {isLoading ? (
           <div className="py-24 text-center">
-            <p className="text-neutral-400 text-xs tracking-widest uppercase animate-pulse">
+            <p className="text-neutral-400 text-xs tracking-wider uppercase animate-pulse">
               Memuat ulasan...
             </p>
           </div>
@@ -128,7 +128,7 @@ export default function AdminReviewsPage(): React.JSX.Element {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-sans">
               <thead>
-                <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-widest font-bold text-[10px]">
+                <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-wider font-bold text-xs">
                   <th className="py-3 px-5">Produk</th>
                   <th className="py-3 px-4">Pengulas</th>
                   <th className="py-3 px-4">Bintang / Ulasan</th>
@@ -146,7 +146,7 @@ export default function AdminReviewsPage(): React.JSX.Element {
                     </td>
                     <td className="py-4 px-4 text-neutral-600">
                       <p>{rev.is_anonymous ? 'Anonim' : rev.profiles?.name || 'Pelanggan'}</p>
-                      <p className="text-[10px] text-neutral-400 font-normal">
+                      <p className="text-xs text-neutral-400 font-normal">
                         {new Date(rev.created_at).toLocaleDateString()}
                       </p>
                     </td>
@@ -187,8 +187,8 @@ export default function AdminReviewsPage(): React.JSX.Element {
                       )}
 
                       {rev.review_replies?.length > 0 && (
-                        <div className="bg-neutral-55 bg-neutral-100/60 p-2 border-l-2 border-neutral-900 mt-2 font-normal text-[11px]">
-                          <span className="font-bold text-neutral-800 text-[10px] uppercase block">
+                        <div className="bg-neutral-55 bg-neutral-100/60 p-2 border-l-2 border-neutral-900 mt-2 font-normal text-sm">
+                          <span className="font-bold text-neutral-800 text-xs uppercase block">
                             Balasan Admin:
                           </span>
                           <span className="italic block mt-0.5 text-neutral-600">
@@ -199,7 +199,7 @@ export default function AdminReviewsPage(): React.JSX.Element {
                     </td>
                     <td className="py-4 px-4 text-center">
                       <span
-                        className={`inline-block text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 ${getStatusBadgeClass(rev.status)}`}
+                        className={`inline-block text-sm uppercase tracking-wider font-bold px-2 py-0.5 ${getStatusBadgeClass(rev.status)}`}
                       >
                         {getStatusLabel(rev.status)}
                       </span>
@@ -208,7 +208,7 @@ export default function AdminReviewsPage(): React.JSX.Element {
                       {rev.status !== 'approved' && (
                         <Button
                           onClick={() => handleUpdateStatus(rev.id, 'approved')}
-                          className="bg-green-600 hover:bg-green-700 text-white border-green-600 text-[10px] py-1.5 px-2.5 font-bold uppercase"
+                          className="bg-green-600 hover:bg-green-700 text-white border-green-600 text-xs py-1.5 px-2.5 font-bold uppercase"
                         >
                           Setujui
                         </Button>
@@ -216,7 +216,7 @@ export default function AdminReviewsPage(): React.JSX.Element {
                       {rev.status !== 'rejected' && (
                         <Button
                           onClick={() => handleUpdateStatus(rev.id, 'rejected')}
-                          className="bg-red-600 hover:bg-red-700 text-white border-red-600 text-[10px] py-1.5 px-2.5 font-bold uppercase"
+                          className="bg-red-600 hover:bg-red-700 text-white border-red-600 text-xs py-1.5 px-2.5 font-bold uppercase"
                         >
                           Tolak
                         </Button>
@@ -225,7 +225,7 @@ export default function AdminReviewsPage(): React.JSX.Element {
                         <Button
                           onClick={() => handleUpdateStatus(rev.id, 'hidden')}
                           variant="outline"
-                          className="text-[10px] py-1.5 px-2.5 font-bold uppercase border-neutral-200 text-neutral-500 hover:text-neutral-900"
+                          className="text-xs py-1.5 px-2.5 font-bold uppercase border-neutral-200 text-neutral-500 hover:text-neutral-900"
                         >
                           Sembunyikan
                         </Button>
@@ -233,7 +233,7 @@ export default function AdminReviewsPage(): React.JSX.Element {
                       <Button
                         onClick={() => handleOpenReplyModal(rev)}
                         variant="outline"
-                        className="text-[10px] py-1.5 px-2.5 font-bold uppercase border-neutral-800 text-neutral-800 hover:bg-neutral-50"
+                        className="text-xs py-1.5 px-2.5 font-bold uppercase border-neutral-800 text-neutral-800 hover:bg-neutral-50"
                       >
                         <MessageSquare size={10} className="mr-1 inline" /> Balas
                       </Button>

@@ -88,7 +88,7 @@ function AdminProductTambahContent(): React.JSX.Element {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-neutral-400 text-xs tracking-widest uppercase animate-pulse">
+        <p className="text-neutral-400 text-xs tracking-wider uppercase animate-pulse">
           Memuat data duplikasi...
         </p>
       </div>

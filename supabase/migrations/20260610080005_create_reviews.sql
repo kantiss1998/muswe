@@ -7,7 +7,7 @@
 -- Table: product_reviews
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS product_reviews (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_item_id UUID NOT NULL UNIQUE REFERENCES order_items(id) ON DELETE RESTRICT,
   product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
   variant_id UUID REFERENCES product_variants(id) ON DELETE SET NULL,
@@ -37,7 +37,7 @@ CREATE INDEX IF NOT EXISTS idx_product_reviews_created_at ON product_reviews(cre
 -- Table: review_media
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS review_media (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   review_id UUID NOT NULL REFERENCES product_reviews(id) ON DELETE CASCADE,
   url VARCHAR(500) NOT NULL,
   type TEXT NOT NULL CHECK (type IN ('image', 'video')),
@@ -52,7 +52,7 @@ CREATE INDEX IF NOT EXISTS idx_review_media_review_id ON review_media(review_id)
 -- Table: review_replies (1 admin reply per review)
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS review_replies (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   review_id UUID NOT NULL REFERENCES product_reviews(id) ON DELETE CASCADE UNIQUE,
   admin_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   body TEXT NOT NULL,

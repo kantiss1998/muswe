@@ -16,9 +16,9 @@ async function getCachedCatalogData(
   page?: number,
   limit?: number
 ) {
-  'use cache'
-  cacheLife('minutes')
-  cacheTag('products', 'catalog', 'categories')
+  // 'use cache'
+  // cacheLife('minutes')
+  // cacheTag('products', 'catalog', 'categories')
 
   const [productsRes, categoriesRes] = await Promise.all([
     getProductsAction({
@@ -73,7 +73,7 @@ async function CatalogContent({
         <PageHero
           eyebrow="Katalog Busana"
           title="Semua Produk"
-          subtitle="Jelajahi koleksi fashion muslim premium dengan desain minimalis dan bahan berkualitas."
+          subtitle="Jelajahi koleksi kerudung motif premium dengan desain minimalis dan bahan berkualitas."
         />
         <PageContainer className="py-10 page-content">
           <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -113,7 +113,7 @@ export default function CatalogPage({ searchParams }: CatalogPageProps): React.J
           <PageHero
             eyebrow="Katalog Busana"
             title="Semua Produk"
-            subtitle="Jelajahi koleksi fashion muslim premium dengan desain minimalis dan bahan berkualitas."
+            subtitle="Jelajahi koleksi kerudung motif premium dengan desain minimalis dan bahan berkualitas."
           />
           <PageContainer className="py-10 page-content">
             <div className="flex flex-col md:flex-row md:space-x-8">

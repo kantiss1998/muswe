@@ -99,7 +99,7 @@ export default function AdminProductListPage(): React.JSX.Element {
             <span className="font-semibold text-neutral-900 text-sm block hover:text-neutral-600 transition">
               {p.name}
             </span>
-            <span className="text-[10px] text-neutral-400 font-normal mt-0.5 block font-mono uppercase">
+            <span className="text-xs text-neutral-400 font-normal mt-0.5 block font-mono uppercase">
               Slug: {p.slug}
             </span>
           </div>
@@ -149,7 +149,7 @@ export default function AdminProductListPage(): React.JSX.Element {
         render: (p) => (
           <button
             onClick={() => handleToggleActive(p.id, p.is_active)}
-            className={`inline-flex items-center text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 transition ${
+            className={`inline-flex items-center text-xs uppercase font-bold tracking-wider px-2.5 py-1 transition ${
               p.is_active
                 ? 'bg-neutral-900 text-white border border-neutral-900'
                 : 'bg-white text-neutral-400 border border-neutral-200'
@@ -210,7 +210,7 @@ export default function AdminProductListPage(): React.JSX.Element {
         subtitle="Kelola katalog produk, harga, varian, dan stok."
       >
         <Link href="/admin/produk/tambah">
-          <Button className="text-xs uppercase font-bold tracking-widest flex items-center py-3 px-5">
+          <Button className="text-xs uppercase font-bold tracking-wider flex items-center py-3 px-5">
             <Plus size={14} className="mr-1.5" /> Tambah Produk
           </Button>
         </Link>

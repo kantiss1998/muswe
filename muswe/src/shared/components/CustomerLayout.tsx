@@ -21,8 +21,13 @@ import { useSiteSettings } from '@/shared/hooks/useSiteSettings'
 import { FloatingWhatsApp } from './FloatingWhatsApp'
 import { cn } from '@/lib/utils'
 
+import { Category } from '@/modules/categories/types'
+import { Collection } from '@/modules/collections/types'
+
 interface CustomerLayoutProps {
   children: React.ReactNode
+  categories?: Category[]
+  collections?: Collection[]
 }
 
 const navLinks = [
@@ -33,7 +38,7 @@ const navLinks = [
   { name: 'Tentang Kami', href: '/tentang' },
 ]
 
-export function CustomerLayout({ children }: CustomerLayoutProps): React.JSX.Element {
+export function CustomerLayout({ children, categories = [], collections = [] }: CustomerLayoutProps): React.JSX.Element {
   const pathname = usePathname()
   const router = useRouter()
   const [supabase] = useState(() => createBrowserClient())
@@ -119,18 +124,6 @@ export function CustomerLayout({ children }: CustomerLayoutProps): React.JSX.Ele
       >
         Lewati ke konten
       </a>
-      {/* Announcement bar */}
-      <div className="bg-brand-black text-white text-center py-2 px-4">
-        <p className="text-[10px] font-heading font-medium uppercase tracking-[0.15em]">
-          Gratis ongkir untuk pembelian di atas Rp 500.000 &mdash;{' '}
-          <Link
-            href="/produk"
-            className="underline underline-offset-2 hover:text-brand-gold-light transition-colors"
-          >
-            Belanja Sekarang
-          </Link>
-        </p>
-      </div>
 
       <ScrollProgressBar />
 
@@ -139,6 +132,8 @@ export function CustomerLayout({ children }: CustomerLayoutProps): React.JSX.Ele
         navLinks={navLinks}
         pathname={pathname}
         logoUrl={logoUrl}
+        categories={categories}
+        collections={collections}
         onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
         onToggleSearch={() => setIsSearchOpen(!isSearchOpen)}
         isSearchOpen={isSearchOpen}

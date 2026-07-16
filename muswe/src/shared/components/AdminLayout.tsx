@@ -67,12 +67,12 @@ const SidebarLogo = ({ logoUrl, isMobile }: { logoUrl?: string | null; isMobile?
             className="object-contain object-left"
           />
         </div>
-        <span className="text-brand-gold font-heading text-[10px] font-bold tracking-wider uppercase bg-brand-gold-muted/10 px-1.5 py-0.5 rounded-xs">
+        <span className="text-brand-gold font-heading text-xs font-bold tracking-wider uppercase bg-brand-gold-muted/10 px-1.5 py-0.5 rounded-xs">
           CMS
         </span>
       </div>
     ) : (
-      <span className="font-heading text-xs font-bold tracking-[0.15em] text-brand-black uppercase">
+      <span className="font-heading text-xs font-bold tracking-wider text-brand-black uppercase">
         MUSWE <span className="text-brand-gold">CMS</span>
       </span>
     )
@@ -89,14 +89,14 @@ const SidebarLogo = ({ logoUrl, isMobile }: { logoUrl?: string | null; isMobile?
           className="object-contain object-left"
         />
       </div>
-      <span className="text-brand-gold font-heading text-[10px] font-bold tracking-wider uppercase bg-brand-gold-muted/10 px-1.5 py-0.5 rounded-xs">
+      <span className="text-brand-gold font-heading text-xs font-bold tracking-wider uppercase bg-brand-gold-muted/10 px-1.5 py-0.5 rounded-xs">
         CMS
       </span>
     </Link>
   ) : (
     <Link
       href="/admin"
-      className="font-heading text-xs font-bold tracking-[0.15em] text-brand-black uppercase"
+      className="font-heading text-xs font-bold tracking-wider text-brand-black uppercase"
     >
       MUSWE <span className="text-brand-gold font-normal">CMS</span>
     </Link>
@@ -289,7 +289,7 @@ export function AdminLayout({ children }: AdminLayoutProps): React.JSX.Element {
                   <p className="text-xs font-semibold text-brand-black">
                     {profile?.name || 'Administrator'}
                   </p>
-                  <p className="text-[10px] text-neutral-400 font-heading uppercase tracking-wider">
+                  <p className="text-xs text-neutral-400 font-heading uppercase tracking-wider">
                     {profile?.role || 'admin'}
                   </p>
                 </div>

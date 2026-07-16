@@ -54,13 +54,13 @@ export function AdminRedirectsTable({
               <td className="py-4 px-6 font-mono text-neutral-900">{rule.from_path}</td>
               <td className="py-4 px-6 font-mono text-neutral-600">{rule.to_path}</td>
               <td className="py-4 px-6 text-center">
-                <span className="bg-neutral-100 text-neutral-800 text-[10px] px-2 py-0.5 border border-neutral-200 font-bold">
+                <span className="bg-neutral-100 text-neutral-800 text-xs px-2 py-0.5 border border-neutral-200 font-bold">
                   {rule.status_code}
                 </span>
               </td>
               <td className="py-4 px-6 text-center">
                 <span
-                  className={`inline-block text-[8px] uppercase tracking-wider font-bold px-1.5 py-0.5 ${
+                  className={`inline-block text-xs uppercase tracking-wider font-bold px-1.5 py-0.5 ${
                     rule.is_active
                       ? 'bg-green-50 text-green-700 border border-green-200'
                       : 'bg-red-50 text-red-700 border border-red-200'

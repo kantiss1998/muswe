@@ -37,7 +37,7 @@ export function SectionHeader({
       )}
     >
       {eyebrow && (
-        <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] font-heading font-medium text-brand-gold">
+        <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.1em] font-heading font-medium text-brand-gold">
           <span className="hidden sm:block w-6 h-px bg-brand-gold/50" aria-hidden />
           {eyebrow}
           <span className="hidden sm:block w-6 h-px bg-brand-gold/50" aria-hidden />

@@ -196,7 +196,7 @@ export function FlashSaleFormModal({
         </div>
 
         <div>
-          <label className="block text-[10px] font-heading font-bold text-neutral-400 uppercase tracking-widest mb-1.5">
+          <label className="block text-xs font-heading font-bold text-neutral-400 uppercase tracking-wider mb-1.5">
             Banner Promosi (Opsional)
           </label>
           <div className="flex items-center space-x-3">
@@ -227,7 +227,7 @@ export function FlashSaleFormModal({
         </div>
 
         <div>
-          <label className="block text-[10px] font-heading font-bold text-neutral-400 uppercase tracking-widest mb-1.5">
+          <label className="block text-xs font-heading font-bold text-neutral-400 uppercase tracking-wider mb-1.5">
             Deskripsi (Opsional)
           </label>
           <textarea
@@ -257,7 +257,7 @@ export function FlashSaleFormModal({
         {/* Produk / Variant Section */}
         <div className="pt-4 border-t border-neutral-200">
           <div className="flex justify-between items-center mb-3">
-            <h4 className="font-heading font-bold uppercase tracking-widest text-brand-black text-[10px]">
+            <h4 className="font-heading font-bold uppercase tracking-wider text-brand-black text-xs">
               Daftar Produk Flash Sale*
             </h4>
             <Button
@@ -267,7 +267,7 @@ export function FlashSaleFormModal({
                 setShowVariantList(!showVariantList)
                 setVariantSearch('')
               }}
-              className="py-1 px-3 text-[10px] uppercase font-bold tracking-wider"
+              className="py-1 px-3 text-xs uppercase font-bold tracking-wider"
             >
               <Plus size={12} className="mr-1" />
               Pilih Produk
@@ -304,7 +304,7 @@ export function FlashSaleFormModal({
           <Button
             type="submit"
             variant="primary"
-            className="px-5 py-2.5 text-xs font-bold uppercase tracking-widest"
+            className="px-5 py-2.5 text-xs font-bold uppercase tracking-wider"
           >
             Simpan Flash Sale
           </Button>

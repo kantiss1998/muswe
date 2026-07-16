@@ -439,7 +439,7 @@ export function ProductForm({
           <Button
             type="submit"
             isLoading={isSubmitting}
-            className="text-xs uppercase font-bold tracking-widest py-3 px-6"
+            className="text-xs uppercase font-bold tracking-wider py-3 px-6"
           >
             Simpan Produk
           </Button>

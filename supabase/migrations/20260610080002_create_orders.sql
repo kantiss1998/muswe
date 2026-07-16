@@ -7,7 +7,7 @@
 -- Table: orders
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS orders (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_number VARCHAR(50) NOT NULL UNIQUE,
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE RESTRICT,
   voucher_id UUID REFERENCES vouchers(id) ON DELETE SET NULL,
@@ -41,7 +41,7 @@ CREATE TRIGGER trg_orders_updated_at
 -- Table: voucher_usages (depends on orders)
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS voucher_usages (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   voucher_id UUID NOT NULL REFERENCES vouchers(id) ON DELETE RESTRICT,
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE RESTRICT,
   order_id UUID NOT NULL REFERENCES orders(id) ON DELETE RESTRICT UNIQUE,
@@ -58,7 +58,7 @@ CREATE INDEX IF NOT EXISTS idx_voucher_usages_user_id ON voucher_usages(user_id)
 -- Table: order_items
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS order_items (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
   variant_id UUID REFERENCES product_variants(id) ON DELETE SET NULL,
   flash_sale_item_id UUID REFERENCES flash_sale_items(id) ON DELETE SET NULL,
@@ -79,7 +79,7 @@ CREATE INDEX IF NOT EXISTS idx_order_items_variant_id ON order_items(variant_id)
 -- Table: order_shipping
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS order_shipping (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE UNIQUE,
   recipient_name VARCHAR(100) NOT NULL,
   phone VARCHAR(20) NOT NULL,

@@ -94,7 +94,7 @@ export default function KontakPage(): React.JSX.Element {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center space-x-2 bg-[#171717] text-white hover:bg-neutral-800 px-6 py-3.5 text-xs font-heading font-bold uppercase tracking-widest transition-all duration-300 rounded-none shadow-xs hover:shadow-md hover:-translate-y-[1px] active:translate-y-0 btn-shine"
+                className="w-full inline-flex items-center justify-center space-x-2 bg-[#171717] text-white hover:bg-neutral-800 px-6 py-3.5 text-xs font-heading font-bold uppercase tracking-wider transition-all duration-300 rounded-none shadow-xs hover:shadow-md hover:-translate-y-[1px] active:translate-y-0 btn-shine"
               >
                 <MessageSquare className="h-4 w-4" />
                 <span>Hubungi via WhatsApp</span>
@@ -109,7 +109,7 @@ export default function KontakPage(): React.JSX.Element {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="border-t border-neutral-100 pt-8 text-center text-xs text-neutral-400 uppercase tracking-widest font-bold font-sans"
+          className="border-t border-neutral-100 pt-8 text-center text-xs text-neutral-400 uppercase tracking-wider font-bold font-sans"
         >
           &ldquo;We value your experience. Let us know how we can assist you.&rdquo;
         </motion.div>

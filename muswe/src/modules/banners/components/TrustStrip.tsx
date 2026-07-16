@@ -50,10 +50,10 @@ export function TrustStrip(): React.JSX.Element {
                 <item.icon className="h-3.5 w-3.5 text-brand-gold-light" strokeWidth={1.5} />
               </div>
               <div className="space-y-0.5">
-                <h3 className="text-[9px] md:text-[10px] font-heading font-semibold uppercase tracking-widest text-white">
+                <h3 className="text-sm md:text-xs font-heading font-semibold uppercase tracking-wider text-white">
                   {item.title}
                 </h3>
-                <p className="text-[9px] text-neutral-500 font-sans leading-relaxed hidden sm:block">
+                <p className="text-sm text-neutral-500 font-sans leading-relaxed hidden sm:block">
                   {item.description}
                 </p>
               </div>

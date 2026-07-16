@@ -9,8 +9,6 @@ import type { Collection, AdminCollectionItem } from './types'
 export class CollectionRepository {
   async getActiveCollections(page = 1, limit = 20): Promise<ApiListResponse<Collection>> {
     const supabase = createStaticClient()
-    const now = new Date().toISOString()
-
     const from = (page - 1) * limit
     const to = from + limit - 1
 
@@ -20,8 +18,6 @@ export class CollectionRepository {
         count: 'exact',
       })
       .eq('is_active', true)
-      .or(`starts_at.is.null,starts_at.lte.${now}`)
-      .or(`ends_at.is.null,ends_at.gte.${now}`)
       .order('sort_order', { ascending: true })
       .range(from, to)
 

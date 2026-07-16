@@ -131,7 +131,7 @@ export function CategoryFormModal({
             />
             <label
               htmlFor="category-image-upload"
-              className="cursor-pointer inline-flex items-center text-[9px] font-bold uppercase tracking-wider py-1.5 px-3 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none bg-white"
+              className="cursor-pointer inline-flex items-center text-sm font-bold uppercase tracking-wider py-1.5 px-3 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none bg-white"
             >
               Unggah Gambar
             </label>
@@ -156,7 +156,7 @@ export function CategoryFormModal({
           />
           <label
             htmlFor="cat_is_active"
-            className="select-none text-[10px] text-neutral-700 font-semibold uppercase tracking-wider cursor-pointer"
+            className="select-none text-xs text-neutral-700 font-semibold uppercase tracking-wider cursor-pointer"
           >
             Kategori Aktif
           </label>

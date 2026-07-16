@@ -7,7 +7,7 @@
 -- Table: notification_templates
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS notification_templates (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(100) NOT NULL UNIQUE,
   subject VARCHAR(255) NOT NULL,
   html_body TEXT NOT NULL,
@@ -27,7 +27,7 @@ CREATE TRIGGER trg_notification_templates_updated_at
 -- Table: notifications (in-app)
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS notifications (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   type VARCHAR(50) NOT NULL,
   title VARCHAR(255) NOT NULL,

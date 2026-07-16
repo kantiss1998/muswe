@@ -58,11 +58,11 @@ export function CollectionSection({
                       {col.name}
                     </h3>
                     {col.description && (
-                      <p className="text-[10px] md:text-xs text-neutral-200 line-clamp-2 font-sans">
+                      <p className="text-xs md:text-xs text-neutral-200 line-clamp-2 font-sans">
                         {col.description}
                       </p>
                     )}
-                    <span className="inline-block pt-2 text-[10px] font-heading font-medium uppercase tracking-widest border-b border-white pb-0.5 hover:text-neutral-200 transition-colors">
+                    <span className="inline-block pt-2 text-xs font-heading font-medium uppercase tracking-wider border-b border-white pb-0.5 hover:text-neutral-200 transition-colors">
                       Lihat Koleksi
                     </span>
                   </div>

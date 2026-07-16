@@ -80,7 +80,7 @@ export function RedirectFormModal({
             />
             <label
               htmlFor="redirectActive"
-              className="text-[10px] font-bold uppercase tracking-wider text-neutral-700 cursor-pointer"
+              className="text-xs font-bold uppercase tracking-wider text-neutral-700 cursor-pointer"
             >
               Aktifkan pengalihan ini
             </label>
@@ -193,7 +193,7 @@ export function LandingPageFormModal({
             />
             <label
               htmlFor="pageActive"
-              className="text-[10px] font-bold uppercase tracking-wider text-neutral-700 cursor-pointer"
+              className="text-xs font-bold uppercase tracking-wider text-neutral-700 cursor-pointer"
             >
               Aktifkan halaman ini
             </label>

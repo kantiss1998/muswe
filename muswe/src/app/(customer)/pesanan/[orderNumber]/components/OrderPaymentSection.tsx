@@ -28,7 +28,7 @@ export function OrderPaymentSection({
   return (
     <div className="border border-neutral-200 p-5 card-hover-lift gold-border-hover bg-white h-fit space-y-5 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold to-brand-gold-light" />
-      <h2 className="text-[10px] uppercase tracking-widest font-heading font-medium text-brand-gold border-b border-neutral-100 pb-2">
+      <h2 className="text-xs uppercase tracking-wider font-heading font-medium text-brand-gold border-b border-neutral-100 pb-2">
         Rincian Pembayaran
       </h2>
       <div className="space-y-3 text-sm text-neutral-600">
@@ -74,7 +74,7 @@ export function OrderPaymentSection({
                   onClick={onPayOrder}
                   isLoading={isGeneratingToken}
                   disabled={isGeneratingToken}
-                  className="w-full py-3 text-xs uppercase tracking-widest font-semibold"
+                  className="w-full py-3 text-xs uppercase tracking-wider font-semibold"
                 >
                   Bayar Sekarang
                 </Button>
@@ -83,7 +83,7 @@ export function OrderPaymentSection({
                   isLoading={isCheckingPayment}
                   disabled={isCheckingPayment}
                   variant="outline"
-                  className="w-full py-3 text-xs uppercase tracking-widest font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
+                  className="w-full py-3 text-xs uppercase tracking-wider font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
                 >
                   Cek Status Pembayaran
                 </Button>
@@ -93,7 +93,7 @@ export function OrderPaymentSection({
               onClick={onCancelOrder}
               variant="outline"
               disabled={isVerifyingPayment}
-              className="w-full py-3 text-xs uppercase tracking-widest font-semibold border-red-200 text-red-500 hover:bg-red-50"
+              className="w-full py-3 text-xs uppercase tracking-wider font-semibold border-red-200 text-red-500 hover:bg-red-50"
             >
               Batalkan Pesanan
             </Button>
@@ -103,7 +103,7 @@ export function OrderPaymentSection({
         {order.status === 'shipped' && (
           <Button
             onClick={onConfirmDelivery}
-            className="w-full py-3 text-xs uppercase tracking-widest font-semibold"
+            className="w-full py-3 text-xs uppercase tracking-wider font-semibold"
           >
             Konfirmasi Penerimaan Barang
           </Button>
@@ -118,7 +118,7 @@ export function OrderPaymentSection({
             <Link href={`/pesanan/${order.order_number}/retur`} className="w-full">
               <Button
                 variant="outline"
-                className="w-full py-3 text-xs uppercase tracking-widest font-semibold border-neutral-800 text-neutral-800 hover:bg-neutral-50"
+                className="w-full py-3 text-xs uppercase tracking-wider font-semibold border-neutral-800 text-neutral-800 hover:bg-neutral-50"
               >
                 Ajukan Retur Barang
               </Button>

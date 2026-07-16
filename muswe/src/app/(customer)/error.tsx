@@ -45,11 +45,11 @@ export default function CustomerError({
         </div>
 
         <div className="flex justify-center space-x-3 w-full max-w-xs pt-2">
-          <Button onClick={() => reset()} variant="primary" className="flex-1 text-[10px] py-3">
+          <Button onClick={() => reset()} variant="primary" className="flex-1 text-xs py-3">
             Coba Lagi
           </Button>
           <Link href="/produk" className="flex-1">
-            <Button variant="outline" className="w-full text-[10px] py-3">
+            <Button variant="outline" className="w-full text-xs py-3">
               Katalog
             </Button>
           </Link>

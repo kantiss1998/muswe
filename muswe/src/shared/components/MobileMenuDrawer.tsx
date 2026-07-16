@@ -48,7 +48,7 @@ export function MobileMenuDrawer({
             tabIndex={-1}
           >
             <div className="flex items-center justify-between px-6 pb-4 border-b border-neutral-100">
-              <span className="font-heading text-sm font-bold tracking-[0.2em] text-brand-black uppercase">
+              <span className="font-heading text-sm font-bold tracking-[0.1em] text-brand-black uppercase">
                 MENU
               </span>
               <button
@@ -68,7 +68,7 @@ export function MobileMenuDrawer({
                     href={link.href}
                     onClick={onClose}
                     className={cn(
-                      'flex items-center justify-between py-2 text-xs font-heading font-medium uppercase tracking-widest text-neutral-600 hover:text-brand-black',
+                      'flex items-center justify-between py-2 text-xs font-heading font-medium uppercase tracking-wider text-neutral-600 hover:text-brand-black',
                       pathname === link.href && 'text-brand-black font-semibold'
                     )}
                   >
@@ -80,7 +80,7 @@ export function MobileMenuDrawer({
                   <Link
                     href="/masuk"
                     onClick={onClose}
-                    className="flex items-center justify-between py-2 text-xs font-heading font-medium uppercase tracking-widest text-brand-black border-t border-neutral-100 pt-4"
+                    className="flex items-center justify-between py-2 text-xs font-heading font-medium uppercase tracking-wider text-brand-black border-t border-neutral-100 pt-4"
                   >
                     <span>Masuk</span>
                     <ChevronRight className="h-3 w-3 text-brand-black" />

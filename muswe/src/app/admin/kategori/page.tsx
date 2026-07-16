@@ -197,7 +197,7 @@ export default function AdminCategoryPage(): React.JSX.Element {
       <AdminPageHeader title="Kategori Produk" subtitle="Kelola hierarki kategori produk.">
         <Button
           onClick={handleOpenAdd}
-          className="text-xs uppercase font-bold tracking-widest flex items-center py-3 px-5"
+          className="text-xs uppercase font-bold tracking-wider flex items-center py-3 px-5"
         >
           <Plus size={14} className="mr-1.5" /> Tambah Kategori
         </Button>
@@ -230,7 +230,7 @@ export default function AdminCategoryPage(): React.JSX.Element {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-sans">
               <thead>
-                <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-widest font-bold text-[10px]">
+                <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-wider font-bold text-xs">
                   <th className="py-3 px-5">Nama Kategori</th>
                   <th className="py-3 px-4">Slug</th>
                   <th className="py-3 px-4 text-center">No. Urut</th>
@@ -249,7 +249,7 @@ export default function AdminCategoryPage(): React.JSX.Element {
                           {cat.name}
                         </span>
                         {parent && (
-                          <span className="text-[10px] text-neutral-400 font-normal mt-0.5 block">
+                          <span className="text-xs text-neutral-400 font-normal mt-0.5 block">
                             Sub dari: {parent.name}
                           </span>
                         )}
@@ -261,7 +261,7 @@ export default function AdminCategoryPage(): React.JSX.Element {
                       <td className="py-4 px-4 text-center">
                         <button
                           onClick={() => handleToggleActive(cat)}
-                          className={`inline-flex items-center text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 transition ${
+                          className={`inline-flex items-center text-xs uppercase font-bold tracking-wider px-2.5 py-1 transition ${
                             cat.is_active
                               ? 'bg-neutral-900 text-white border border-neutral-900'
                               : 'bg-white text-neutral-400 border border-neutral-200'

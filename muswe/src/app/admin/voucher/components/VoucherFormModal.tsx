@@ -176,7 +176,7 @@ export function VoucherFormModal({
           />
           <label
             htmlFor="voucher_is_active"
-            className="select-none text-[10px] text-neutral-700 font-semibold uppercase tracking-wider cursor-pointer"
+            className="select-none text-xs text-neutral-700 font-semibold uppercase tracking-wider cursor-pointer"
           >
             Voucher Aktif & Dapat Digunakan
           </label>

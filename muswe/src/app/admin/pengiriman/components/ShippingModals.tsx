@@ -96,7 +96,7 @@ export function ShippingZoneModal({
                 <div
                   key={p}
                   onClick={() => handleToggleProvince(p)}
-                  className={`p-2 border text-[10px] font-medium text-center cursor-pointer transition select-none ${
+                  className={`p-2 border text-xs font-medium text-center cursor-pointer transition select-none ${
                     isSelected
                       ? 'bg-neutral-950 text-white border-neutral-950'
                       : 'bg-white text-neutral-600 border-neutral-200 hover:border-neutral-400'
@@ -117,7 +117,7 @@ export function ShippingZoneModal({
           />
           <label
             htmlFor="zoneActive"
-            className="font-bold text-[10px] uppercase tracking-wider text-neutral-700 cursor-pointer"
+            className="font-bold text-xs uppercase tracking-wider text-neutral-700 cursor-pointer"
           >
             Aktifkan Zona ini
           </label>
@@ -245,7 +245,7 @@ export function ShippingRateModal({
           />
           <label
             htmlFor="rateActive"
-            className="font-bold text-[10px] uppercase tracking-wider text-neutral-700 cursor-pointer"
+            className="font-bold text-xs uppercase tracking-wider text-neutral-700 cursor-pointer"
           >
             Aktifkan Layanan Kurir ini
           </label>

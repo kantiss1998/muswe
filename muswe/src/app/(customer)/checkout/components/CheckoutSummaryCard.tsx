@@ -59,7 +59,7 @@ export function CheckoutSummaryCard({
   return (
     <div className="border border-neutral-200 p-6 bg-white rounded-none shadow-sm hover:shadow-md transition-shadow duration-300 card-hover-lift gold-border-hover relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold to-brand-gold-light" />
-      <h2 className="text-xs uppercase tracking-widest font-heading font-bold text-brand-black mb-6 flex items-center border-b border-neutral-100 pb-3">
+      <h2 className="text-xs uppercase tracking-wider font-heading font-bold text-brand-black mb-6 flex items-center border-b border-neutral-100 pb-3">
         <ShoppingBag size={14} className="mr-2 text-neutral-500" /> Ringkasan Pesanan
       </h2>
 
@@ -79,15 +79,15 @@ export function CheckoutSummaryCard({
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="font-heading font-medium text-brand-black uppercase tracking-wide truncate text-[11px]">
+              <p className="font-heading font-medium text-brand-black uppercase tracking-wide truncate text-sm">
                 {item.productName || item.name}
               </p>
               {item.variantName && (
-                <p className="text-[9px] text-neutral-400 uppercase tracking-wider">
+                <p className="text-sm text-neutral-400 uppercase tracking-wider">
                   {item.variantName}
                 </p>
               )}
-              <p className="text-[10px] text-neutral-400 mt-0.5">Qty: {item.quantity}</p>
+              <p className="text-xs text-neutral-400 mt-0.5">Qty: {item.quantity}</p>
             </div>
             <div className="text-right">
               <p className="font-sans font-semibold text-brand-black">
@@ -100,7 +100,7 @@ export function CheckoutSummaryCard({
 
       {/* Voucher Code Form */}
       <div className="pb-6 border-b border-neutral-100 mb-6">
-        <label className="block text-[10px] uppercase tracking-widest font-heading font-bold text-neutral-400 mb-2">
+        <label className="block text-xs uppercase tracking-wider font-heading font-bold text-neutral-400 mb-2">
           Punya Kode Voucher?
         </label>
         <AnimatePresence mode="wait">
@@ -113,7 +113,7 @@ export function CheckoutSummaryCard({
               transition={{ type: 'spring', stiffness: 200, damping: 20 }}
               className="flex items-center justify-between bg-brand-gold-muted/10 border border-brand-gold px-4 py-2.5 rounded-none text-xs"
             >
-              <div className="flex items-center space-x-2 text-brand-gold font-heading font-medium uppercase tracking-wider text-[10px]">
+              <div className="flex items-center space-x-2 text-brand-gold font-heading font-medium uppercase tracking-wider text-xs">
                 <Tag size={12} className="text-neutral-500" />
                 <span>{appliedVoucher.code} diterapkan</span>
               </div>
@@ -150,7 +150,7 @@ export function CheckoutSummaryCard({
               {/* Available Vouchers suggestions */}
               {availableVouchers && availableVouchers.length > 0 && (
                 <div className="pt-1 space-y-1.5">
-                  <span className="text-[9px] uppercase tracking-widest font-heading font-medium text-neutral-400 block">
+                  <span className="text-sm uppercase tracking-wider font-heading font-medium text-neutral-400 block">
                     Voucher Tersedia (Klik untuk Memakai)
                   </span>
                   <div className="flex space-x-2 overflow-x-auto pb-1 scrollbar-none">
@@ -169,19 +169,19 @@ export function CheckoutSummaryCard({
                           }`}
                         >
                           <div className="flex justify-between items-center mb-0.5">
-                            <span className="font-heading font-bold text-[10px] text-brand-gold uppercase tracking-wider">
+                            <span className="font-heading font-bold text-xs text-brand-gold uppercase tracking-wider">
                               {voucher.code}
                             </span>
                           </div>
-                          <div className="text-[9px] text-neutral-500 font-sans line-clamp-1 mb-1">
+                          <div className="text-sm text-neutral-500 font-sans line-clamp-1 mb-1">
                             {voucher.name}
                           </div>
-                          <div className="text-[9px] font-heading font-bold text-neutral-700">
+                          <div className="text-sm font-heading font-bold text-neutral-700">
                             {voucher.discount_type === 'percentage'
                               ? `${voucher.value}% OFF`
                               : `${formatIDR(voucher.value)} OFF`}
                           </div>
-                          <div className="text-[8px] text-neutral-400 font-sans">
+                          <div className="text-xs text-neutral-400 font-sans">
                             Min. Belanja: {formatIDR(voucher.min_purchase)}
                           </div>
                         </button>
@@ -217,7 +217,7 @@ export function CheckoutSummaryCard({
 
       {/* Grand Total */}
       <div className="flex justify-between items-center text-brand-black font-heading mb-8">
-        <span className="text-xs uppercase tracking-widest font-medium">Total Pembayaran</span>
+        <span className="text-xs uppercase tracking-wider font-medium">Total Pembayaran</span>
         <span className="text-lg font-bold">{formatIDR(totalAmount)}</span>
       </div>
 
@@ -228,7 +228,7 @@ export function CheckoutSummaryCard({
         onClick={onPaymentSubmit}
         isLoading={isCheckoutProcessing}
         loadingText={isPaymentTokenLoading ? 'Menghubungi Midtrans...' : 'Memproses Pesanan...'}
-        className="w-full py-4 text-xs uppercase tracking-widest font-semibold"
+        className="w-full py-4 text-xs uppercase tracking-wider font-semibold"
         disabled={!canSubmit}
       >
         Bayar Sekarang

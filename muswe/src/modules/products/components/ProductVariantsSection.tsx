@@ -40,14 +40,14 @@ export function ProductVariantsSection({
   return (
     <div className="border border-neutral-200 bg-white p-6 rounded-none space-y-6">
       <div className="flex justify-between items-center border-b border-neutral-100 pb-2.5">
-        <h3 className="text-xs uppercase font-bold tracking-widest text-neutral-400">
+        <h3 className="text-xs uppercase font-bold tracking-wider text-neutral-400">
           Spesifikasi Varian Produk
         </h3>
         <Button
           type="button"
           onClick={onAddVariant}
           variant="outline"
-          className="text-[10px] font-bold uppercase py-1 px-3 border-neutral-800 text-neutral-800 hover:bg-neutral-50"
+          className="text-xs font-bold uppercase py-1 px-3 border-neutral-800 text-neutral-800 hover:bg-neutral-50"
         >
           <Plus size={12} className="mr-1 inline" /> Tambah Varian
         </Button>
@@ -80,7 +80,7 @@ export function ProductVariantsSection({
               )}
             </div>
 
-            <p className="font-semibold text-neutral-900 uppercase tracking-widest text-[10px]">
+            <p className="font-semibold text-neutral-900 uppercase tracking-wider text-xs">
               Varian #{vIdx + 1}
             </p>
 
@@ -156,13 +156,13 @@ export function ProductVariantsSection({
             {/* Variant Images Sub-section */}
             <div className="space-y-3 pt-2 border-t border-neutral-100">
               <div className="flex justify-between items-center">
-                <p className="text-[10px] uppercase font-bold tracking-widest text-neutral-400">
+                <p className="text-xs uppercase font-bold tracking-wider text-neutral-400">
                   Gambar Varian
                 </p>
                 <button
                   type="button"
                   onClick={() => onAddImage(v.id || null)}
-                  className="text-[9px] uppercase font-bold text-neutral-800 hover:underline inline"
+                  className="text-sm uppercase font-bold text-neutral-800 hover:underline inline"
                 >
                   + Tambah Gambar Varian
                 </button>
@@ -199,7 +199,7 @@ export function ProductVariantsSection({
 
                         <input
                           type="text"
-                          className="flex-1 px-2 py-1 border border-neutral-200 outline-none text-[10px] bg-white focus:border-neutral-800"
+                          className="flex-1 px-2 py-1 border border-neutral-200 outline-none text-xs bg-white focus:border-neutral-800"
                           value={img.url}
                           onChange={(e) => onUpdateImageField(imgIdx, 'url', e.target.value)}
                           placeholder="https://... atau unggah"
@@ -229,7 +229,7 @@ export function ProductVariantsSection({
                         />
                         <label
                           htmlFor={`variant-${vIdx}-file-upload-${imgIdx}`}
-                          className="cursor-pointer inline-flex items-center text-[8px] font-bold uppercase tracking-wider py-1 px-2 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none bg-white"
+                          className="cursor-pointer inline-flex items-center text-xs font-bold uppercase tracking-wider py-1 px-2 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none bg-white"
                         >
                           Unggah
                         </label>
@@ -251,13 +251,13 @@ export function ProductVariantsSection({
             {/* Attributes Sub-section */}
             <div className="space-y-3 pt-2 border-t border-neutral-100">
               <div className="flex justify-between items-center">
-                <p className="text-[10px] uppercase font-bold tracking-widest text-neutral-400">
+                <p className="text-xs uppercase font-bold tracking-wider text-neutral-400">
                   Atribut Varian (cth: Ukuran/Warna)
                 </p>
                 <button
                   type="button"
                   onClick={() => onAddVariantAttr(vIdx)}
-                  className="text-[9px] uppercase font-bold text-neutral-800 hover:underline inline"
+                  className="text-sm uppercase font-bold text-neutral-800 hover:underline inline"
                 >
                   + Tambah Atribut
                 </button>

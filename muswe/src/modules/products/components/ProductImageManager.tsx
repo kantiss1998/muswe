@@ -25,21 +25,21 @@ export function ProductImageManager({
   return (
     <div className="border border-neutral-200 bg-white p-6 rounded-none space-y-4">
       <div className="flex justify-between items-center border-b border-neutral-100 pb-2.5">
-        <h3 className="text-xs uppercase font-bold tracking-widest text-neutral-400">
+        <h3 className="text-xs uppercase font-bold tracking-wider text-neutral-400">
           Daftar URL Gambar
         </h3>
         <Button
           type="button"
           onClick={onAddImage}
           variant="outline"
-          className="text-[9px] font-bold uppercase py-0.5 px-2 border-neutral-850"
+          className="text-sm font-bold uppercase py-0.5 px-2 border-neutral-850"
         >
           + Tambah URL
         </Button>
       </div>
 
       {images.length === 0 ? (
-        <p className="text-[11px] text-neutral-400 italic">
+        <p className="text-sm text-neutral-400 italic">
           Belum ada gambar ditambahkan. Silakan tambah url gambar.
         </p>
       ) : (
@@ -74,7 +74,7 @@ export function ProductImageManager({
                         }}
                       />
                     ) : (
-                      <span className="text-[9px] text-neutral-400 uppercase font-semibold">
+                      <span className="text-sm text-neutral-400 uppercase font-semibold">
                         No Image
                       </span>
                     )}
@@ -118,18 +118,18 @@ export function ProductImageManager({
                       />
                       <label
                         htmlFor={`file-upload-${idx}`}
-                        className="cursor-pointer inline-flex items-center text-[9px] font-bold uppercase tracking-wider py-1 px-2.5 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none"
+                        className="cursor-pointer inline-flex items-center text-sm font-bold uppercase tracking-wider py-1 px-2.5 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none"
                       >
                         Unggah File
                       </label>
-                      <span className="text-[9px] text-neutral-400 font-medium">
+                      <span className="text-sm text-neutral-400 font-medium">
                         Format: JPG, PNG, WEBP (Max 2MB)
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-[10px]">
+                <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
                     <Input
                       label="Alt Text"
@@ -174,7 +174,7 @@ export function ProductImageManager({
                   />
                   <label
                     htmlFor={`img-primary-${idx}`}
-                    className="select-none text-[10px] text-neutral-600 font-bold uppercase cursor-pointer"
+                    className="select-none text-xs text-neutral-600 font-bold uppercase cursor-pointer"
                   >
                     Gambar Utama
                   </label>

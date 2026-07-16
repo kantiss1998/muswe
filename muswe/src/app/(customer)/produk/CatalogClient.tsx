@@ -114,7 +114,7 @@ export function CatalogClient({
       <PageHero
         eyebrow="Katalog Busana"
         title="Semua Produk"
-        subtitle="Jelajahi koleksi fashion muslim premium dengan desain minimalis dan bahan berkualitas."
+        subtitle="Jelajahi koleksi kerudung motif premium dengan desain minimalis dan bahan berkualitas."
       />
       <PageContainer
         className={cn(
@@ -144,12 +144,12 @@ export function CatalogClient({
 
           {/* Sort Selector */}
           <div className="flex items-center space-x-2">
-            <span className="text-[10px] uppercase tracking-wider font-heading font-medium text-neutral-400">
+            <span className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-400">
               Urutkan:
             </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center space-x-1 bg-transparent text-[10px] font-heading font-bold uppercase tracking-wider text-brand-black hover:text-brand-gold transition-colors p-1">
+                <button className="flex items-center space-x-1 bg-transparent text-xs font-heading font-bold uppercase tracking-wider text-brand-black hover:text-brand-gold transition-colors p-1">
                   <span>
                     {SORT_OPTIONS.find((opt) => opt.value === sortBy)?.label || 'Urutkan'}
                   </span>
@@ -210,7 +210,7 @@ export function CatalogClient({
                 {(categorySlug || searchQuery) && (
                   <button
                     onClick={handleClearAll}
-                    className="mt-6 text-xs font-heading font-bold uppercase tracking-widest text-brand-gold hover:text-brand-gold-light"
+                    className="mt-6 text-xs font-heading font-bold uppercase tracking-wider text-brand-gold hover:text-brand-gold-light"
                   >
                     Hapus Semua Filter
                   </button>

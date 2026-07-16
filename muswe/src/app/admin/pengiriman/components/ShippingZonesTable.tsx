@@ -61,7 +61,7 @@ export function ShippingZonesTable({
             <div className="flex justify-between items-start">
               <h3 className="font-serif font-bold text-neutral-900 text-base">{zone.name}</h3>
               <span
-                className={`inline-block text-[8px] uppercase tracking-wider font-bold px-1.5 py-0.5 ${
+                className={`inline-block text-xs uppercase tracking-wider font-bold px-1.5 py-0.5 ${
                   zone.is_active
                     ? 'bg-green-50 text-green-700 border border-green-200'
                     : 'bg-red-50 text-red-700 border border-red-200'
@@ -73,7 +73,7 @@ export function ShippingZonesTable({
             {zone.description && <p className="text-xs text-neutral-500">{zone.description}</p>}
 
             <div className="pt-2">
-              <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1.5">
+              <p className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1.5">
                 Cakupan Provinsi:
               </p>
               {zone.shipping_zone_coverage && zone.shipping_zone_coverage.length > 0 ? (
@@ -83,7 +83,7 @@ export function ShippingZonesTable({
                     zone.shipping_zone_coverage.map((c: any) => (
                       <span
                         key={c.province_name}
-                        className="bg-neutral-100 text-neutral-700 text-[10px] px-2 py-0.5 font-medium border border-neutral-200"
+                        className="bg-neutral-100 text-neutral-700 text-xs px-2 py-0.5 font-medium border border-neutral-200"
                       >
                         {c.province_name}
                       </span>
@@ -102,14 +102,14 @@ export function ShippingZonesTable({
             <Button
               onClick={() => onEdit(zone)}
               variant="outline"
-              className="text-[10px] py-1.5 px-3 font-bold uppercase border-neutral-200"
+              className="text-xs py-1.5 px-3 font-bold uppercase border-neutral-200"
             >
               <Edit size={11} className="mr-1" /> Edit
             </Button>
             <Button
               onClick={() => onDelete(zone.id, zone.name)}
               variant="outline"
-              className="text-[10px] py-1.5 px-3 font-bold uppercase border-red-200 text-red-500 hover:bg-red-50"
+              className="text-xs py-1.5 px-3 font-bold uppercase border-red-200 text-red-500 hover:bg-red-50"
             >
               <Trash2 size={11} className="mr-1" /> Hapus
             </Button>

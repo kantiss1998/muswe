@@ -56,13 +56,13 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         </label>
 
         {error && (
-          <span id={errorId} className="text-[10px] text-red-500 tracking-wide font-sans mt-1">
+          <span id={errorId} className="text-xs text-red-500 tracking-wide font-sans mt-1">
             {error}
           </span>
         )}
 
         {!error && helperText && (
-          <span id={helperId} className="text-[10px] text-neutral-500 tracking-wide font-sans mt-1">
+          <span id={helperId} className="text-xs text-neutral-500 tracking-wide font-sans mt-1">
             {helperText}
           </span>
         )}

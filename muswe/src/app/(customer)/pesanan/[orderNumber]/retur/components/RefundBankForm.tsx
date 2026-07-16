@@ -21,7 +21,7 @@ export function RefundBankForm({
   return (
     <div className="border border-neutral-200 p-5 sm:p-6 card-hover-lift gold-border-hover bg-white space-y-4 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold to-brand-gold-light" />
-      <h2 className="text-[10px] uppercase tracking-widest font-heading font-medium text-brand-gold border-b border-neutral-100 pb-2">
+      <h2 className="text-xs uppercase tracking-wider font-heading font-medium text-brand-gold border-b border-neutral-100 pb-2">
         Rekening Bank untuk Pengembalian Dana*
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

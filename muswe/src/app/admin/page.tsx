@@ -49,7 +49,7 @@ export default function AdminDashboardPage(): React.JSX.Element {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-neutral-400 text-xs tracking-widest uppercase animate-pulse font-heading">
+        <p className="text-neutral-400 text-xs tracking-wider uppercase animate-pulse font-heading">
           Memuat dashboard...
         </p>
       </div>
@@ -140,7 +140,7 @@ export default function AdminDashboardPage(): React.JSX.Element {
                       <tr key={item.id}>
                         <td>
                           <p className="font-semibold text-brand-black">{item.products?.name}</p>
-                          <p className="text-[10px] text-neutral-400 font-normal">{item.name}</p>
+                          <p className="text-xs text-neutral-400 font-normal">{item.name}</p>
                         </td>
                         <td className="font-mono">{item.sku || '-'}</td>
                         <td className="text-center">
@@ -164,14 +164,14 @@ export default function AdminDashboardPage(): React.JSX.Element {
                             <div className="flex justify-end space-x-1">
                               <Button
                                 onClick={() => handleSaveStock(item.id)}
-                                className="text-[10px] py-1 px-2.5 font-bold uppercase"
+                                className="text-xs py-1 px-2.5 font-bold uppercase"
                               >
                                 Simpan
                               </Button>
                               <Button
                                 onClick={() => setUpdatingStockId(null)}
                                 variant="outline"
-                                className="text-[10px] py-1 px-2.5 font-bold uppercase border-neutral-200"
+                                className="text-xs py-1 px-2.5 font-bold uppercase border-neutral-200"
                               >
                                 Batal
                               </Button>
@@ -180,7 +180,7 @@ export default function AdminDashboardPage(): React.JSX.Element {
                             <Button
                               onClick={() => handleQuickStockUpdate(item.id, item.stock)}
                               variant="outline"
-                              className="text-[10px] py-1 px-2.5 font-bold uppercase border-neutral-200"
+                              className="text-xs py-1 px-2.5 font-bold uppercase border-neutral-200"
                             >
                               Ubah Stok
                             </Button>
@@ -211,7 +211,7 @@ export default function AdminDashboardPage(): React.JSX.Element {
                       >
                         {order.order_number}
                       </Link>
-                      <p className="text-[10px] text-neutral-400 mt-0.5">
+                      <p className="text-xs text-neutral-400 mt-0.5">
                         {order.order_shipping?.recipient_name || 'Pelanggan'} |{' '}
                         {new Date(order.created_at).toLocaleDateString('id-ID', {
                           day: 'numeric',
@@ -226,7 +226,7 @@ export default function AdminDashboardPage(): React.JSX.Element {
                         Rp {order.total_amount.toLocaleString('id-ID')}
                       </p>
                       <span
-                        className={`inline-block text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 mt-1 ${
+                        className={`inline-block text-sm uppercase tracking-wider font-bold px-2 py-0.5 mt-1 ${
                           order.status === 'completed'
                             ? 'bg-green-50 text-green-700 border border-green-200'
                             : order.status === 'cancelled'
@@ -266,16 +266,16 @@ export default function AdminDashboardPage(): React.JSX.Element {
                     <p className="font-semibold text-neutral-800">
                       {log.profiles?.name || 'Administrator'}
                     </p>
-                    <p className="text-neutral-600 leading-relaxed text-[11px]">
+                    <p className="text-neutral-600 leading-relaxed text-sm">
                       Melakukan tindakan{' '}
-                      <span className="font-semibold text-brand-black font-mono text-[10px] bg-neutral-100 px-1 py-0.5">
+                      <span className="font-semibold text-brand-black font-mono text-xs bg-neutral-100 px-1 py-0.5">
                         {log.action}
                       </span>{' '}
                       pada sumber data{' '}
                       <span className="font-semibold text-brand-black">{log.resource_type}</span>{' '}
                       (ID: {log.resource_id || '-'})
                     </p>
-                    <p className="text-[10px] text-neutral-400 font-normal">
+                    <p className="text-xs text-neutral-400 font-normal">
                       <ClientDateTime
                         date={log.created_at}
                         options={{

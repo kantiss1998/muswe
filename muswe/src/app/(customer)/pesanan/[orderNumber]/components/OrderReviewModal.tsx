@@ -135,7 +135,7 @@ export function OrderReviewModal({
       {selectedReviewItem && (
         <form onSubmit={handleSubmitReview} className="space-y-6">
           <div>
-            <p className="text-[10px] uppercase tracking-widest text-brand-gold font-semibold mb-1">
+            <p className="text-xs uppercase tracking-wider text-brand-gold font-semibold mb-1">
               Nama Produk
             </p>
             <h4 className="text-sm font-semibold text-neutral-800 font-heading">
@@ -149,7 +149,7 @@ export function OrderReviewModal({
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase tracking-widest text-neutral-500 font-semibold mb-2">
+            <label className="block text-xs uppercase tracking-wider text-neutral-500 font-semibold mb-2">
               Rating Produk
             </label>
             <div className="flex gap-2">
@@ -206,7 +206,7 @@ export function OrderReviewModal({
           </div>
 
           <div className="space-y-2">
-            <label className="block text-[10px] uppercase tracking-widest text-neutral-500 font-semibold">
+            <label className="block text-xs uppercase tracking-wider text-neutral-500 font-semibold">
               Lampirkan Foto (Maks 2 Foto, 2MB/Foto)
             </label>
 
@@ -231,7 +231,7 @@ export function OrderReviewModal({
               {reviewFiles.length < 2 && (
                 <label className="w-20 h-20 border-2 border-dashed border-neutral-300 flex flex-col items-center justify-center text-neutral-400 hover:text-brand-gold hover:border-brand-gold cursor-pointer transition-colors">
                   <ImageIcon size={20} className="mb-1" />
-                  <span className="text-[9px] uppercase tracking-wider font-semibold">Tambah</span>
+                  <span className="text-sm uppercase tracking-wider font-semibold">Tambah</span>
                   <input
                     type="file"
                     accept="image/*"
@@ -249,7 +249,7 @@ export function OrderReviewModal({
               type="button"
               onClick={onClose}
               variant="outline"
-              className="flex-1 py-3 text-xs uppercase tracking-widest font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
+              className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
             >
               Batal
             </Button>
@@ -257,7 +257,7 @@ export function OrderReviewModal({
               type="submit"
               isLoading={submitReviewMutation.isPending || isUploading}
               disabled={submitReviewMutation.isPending || isUploading}
-              className="flex-1 py-3 text-xs uppercase tracking-widest font-semibold"
+              className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold"
             >
               {isUploading ? 'Mengunggah...' : 'Kirim Ulasan'}
             </Button>

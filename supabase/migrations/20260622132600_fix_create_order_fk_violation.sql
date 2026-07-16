@@ -67,7 +67,7 @@ BEGIN
   END IF;
 
   -- ========== VALIDATE & CALCULATE TOTALS (Loop 1) ==========
-  v_order_id := uuid_generate_v4();
+  v_order_id := gen_random_uuid();
   v_order_number := public.generate_order_number();
 
   FOR v_item IN

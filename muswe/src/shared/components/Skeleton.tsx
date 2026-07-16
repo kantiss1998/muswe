@@ -14,7 +14,7 @@ export function Skeleton({
       className={cn(
         'skeleton-shimmer',
         {
-          'rounded-none': variant === 'rect',
+          'rounded-lg': variant === 'rect',
           'rounded-full': variant === 'circle',
         },
         className

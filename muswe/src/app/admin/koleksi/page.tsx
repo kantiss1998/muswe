@@ -216,7 +216,7 @@ export default function AdminCollectionPage(): React.JSX.Element {
       >
         <Button
           onClick={handleOpenAdd}
-          className="text-xs uppercase font-bold tracking-widest flex items-center py-3 px-5"
+          className="text-xs uppercase font-bold tracking-wider flex items-center py-3 px-5"
         >
           <Plus size={14} className="mr-1.5" /> Tambah Koleksi
         </Button>

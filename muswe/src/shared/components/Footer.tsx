@@ -12,15 +12,12 @@ export function Footer(): React.JSX.Element {
   return (
     <footer className="bg-brand-cream border-t border-neutral-200">
       {/* Newsletter CTA band */}
-      <div className="border-b border-neutral-200 bg-brand-black py-12 md:py-14">
+      <div className="border-b border-neutral-200 bg-brand-cream py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <span className="text-[10px] uppercase tracking-[0.2em] font-heading font-medium text-brand-gold-light">
-            Tetap Terhubung
-          </span>
-          <h3 className="text-lg md:text-xl font-heading font-light uppercase tracking-wider text-white">
-            Dapatkan Info Koleksi Terbaru
+          <h3 className="text-2xl md:text-3xl font-heading font-normal tracking-wide text-brand-black">
+            Subscribe to our emails
           </h3>
-          <p className="text-xs text-neutral-400 font-sans max-w-md mx-auto">
+          <p className="text-sm text-neutral-600 font-sans max-w-md mx-auto">
             Berlangganan newsletter untuk promo eksklusif dan akses early ke koleksi baru.
           </p>
           <form
@@ -28,23 +25,23 @@ export function Footer(): React.JSX.Element {
               e.preventDefault()
               toast.success('Terima kasih! Fitur newsletter segera hadir.')
             }}
-            className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto pt-2"
+            className="flex flex-col sm:flex-row gap-0 max-w-md mx-auto mt-6"
           >
-            <Input
+            <input
               type="email"
-              label="Email"
               placeholder="Email Anda"
               required
-              className="flex-1 [&_input]:bg-white/10 [&_input]:border-white/20 [&_input]:text-white [&_input]:placeholder:text-neutral-500 [&_label]:text-neutral-400"
+              className="flex-1 bg-transparent border-b border-brand-black text-brand-black placeholder:text-neutral-400 py-3 px-2 text-sm focus:outline-none focus:border-brand-gold transition-colors"
             />
-            <Button
+            <button
               type="submit"
-              variant="primary"
-              size="sm"
-              className="sm:self-end bg-white text-brand-black border-white hover:bg-brand-gold hover:text-white hover:border-brand-gold transition-all duration-300"
+              className="text-brand-black p-3 border-b border-brand-black hover:text-brand-gold hover:border-brand-gold transition-colors flex items-center justify-center"
+              aria-label="Submit"
             >
-              Daftar
-            </Button>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
           </form>
         </div>
       </div>
@@ -54,37 +51,31 @@ export function Footer(): React.JSX.Element {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
             {/* Col 1: Brand Info */}
             <div className="flex flex-col space-y-4">
-              {logoUrl ? (
-                <div className="relative h-10 md:h-14 w-full max-w-[200px] animate-fade-in">
-                  <Image
-                    src={logoUrl}
-                    alt="Muswe Logo"
-                    fill
-                    sizes="200px"
-                    className="object-contain object-left"
-                  />
-                </div>
-              ) : (
-                <span className="font-heading text-base font-bold tracking-[0.2em] text-brand-black uppercase">
-                  MUSWE
-                </span>
-              )}
-              <p className="text-[11px] text-neutral-500 leading-relaxed max-w-xs font-sans">
-                Muswe menghadirkan fashion muslim premium modern untuk wanita Indonesia dengan
+              <div className="relative h-10 md:h-14 w-full max-w-[200px] animate-fade-in">
+                <Image
+                  src={'/logo/Alternate.png'}
+                  alt="Muswe Logo"
+                  fill
+                  sizes="200px"
+                  className="object-contain object-left"
+                />
+              </div>
+              <p className="text-sm text-neutral-500 leading-relaxed max-w-xs font-sans">
+                Muswe menghadirkan kerudung motif premium modern untuk wanita Indonesia dengan
                 desain minimalis, bahan berkualitas, dan kenyamanan terbaik.
               </p>
             </div>
 
             {/* Col 2: Pelayanan Pelanggan */}
             <div className="flex flex-col space-y-3">
-              <h4 className="text-[10px] font-heading font-bold uppercase tracking-widest text-brand-black">
+              <h4 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black">
                 Pelayanan
               </h4>
               <ul className="space-y-2">
                 <li>
                   <Link
                     href="/cara-belanja"
-                    className="text-[11px] text-neutral-500 hover:text-brand-gold transition-colors font-sans"
+                    className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
                     Cara Belanja
                   </Link>
@@ -92,7 +83,7 @@ export function Footer(): React.JSX.Element {
                 <li>
                   <Link
                     href="/pengiriman"
-                    className="text-[11px] text-neutral-500 hover:text-brand-gold transition-colors font-sans"
+                    className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
                     Informasi Pengiriman
                   </Link>
@@ -100,7 +91,7 @@ export function Footer(): React.JSX.Element {
                 <li>
                   <Link
                     href="/retur"
-                    className="text-[11px] text-neutral-500 hover:text-brand-gold transition-colors font-sans"
+                    className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
                     Kebijakan Pengembalian (Retur)
                   </Link>
@@ -108,7 +99,7 @@ export function Footer(): React.JSX.Element {
                 <li>
                   <Link
                     href="/kontak"
-                    className="text-[11px] text-neutral-500 hover:text-brand-gold transition-colors font-sans"
+                    className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
                     Hubungi Kami
                   </Link>
@@ -118,14 +109,14 @@ export function Footer(): React.JSX.Element {
 
             {/* Col 3: Kebijakan & Hukum */}
             <div className="flex flex-col space-y-3">
-              <h4 className="text-[10px] font-heading font-bold uppercase tracking-widest text-brand-black">
+              <h4 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black">
                 Informasi
               </h4>
               <ul className="space-y-2">
                 <li>
                   <Link
                     href="/syarat-ketentuan"
-                    className="text-[11px] text-neutral-500 hover:text-brand-gold transition-colors font-sans"
+                    className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
                     Syarat & Ketentuan
                   </Link>
@@ -133,7 +124,7 @@ export function Footer(): React.JSX.Element {
                 <li>
                   <Link
                     href="/kebijakan-privasi"
-                    className="text-[11px] text-neutral-500 hover:text-brand-gold transition-colors font-sans"
+                    className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
                     Kebijakan Privasi
                   </Link>
@@ -141,7 +132,7 @@ export function Footer(): React.JSX.Element {
                 <li>
                   <Link
                     href="/tentang"
-                    className="text-[11px] text-neutral-500 hover:text-brand-gold transition-colors font-sans"
+                    className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
                     Tentang Kami
                   </Link>
@@ -151,10 +142,10 @@ export function Footer(): React.JSX.Element {
 
             {/* Col 4: Social */}
             <div className="flex flex-col space-y-4">
-              <h4 className="text-[10px] font-heading font-bold uppercase tracking-widest text-brand-black">
+              <h4 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black">
                 Ikuti Kami
               </h4>
-              <p className="text-[11px] text-neutral-500 font-sans">
+              <p className="text-sm text-neutral-500 font-sans">
                 Temukan inspirasi gaya modest di media sosial kami.
               </p>
               <div className="flex space-x-3 pt-1">
@@ -241,10 +232,10 @@ export function Footer(): React.JSX.Element {
           </div>
 
           <div className="border-t border-neutral-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-[10px] text-neutral-400 font-sans">
+            <p className="text-xs text-neutral-400 font-sans">
               &copy; <CurrentYear /> Muswe Store. All rights reserved.
             </p>
-            <div className="flex space-x-6 text-[10px] text-neutral-400 font-heading uppercase tracking-wider">
+            <div className="flex space-x-6 text-xs text-neutral-400 font-heading uppercase tracking-wider">
               <Link href="/syarat-ketentuan" className="hover:text-brand-gold transition-colors">
                 Syarat
               </Link>

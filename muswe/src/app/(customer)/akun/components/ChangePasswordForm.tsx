@@ -29,7 +29,7 @@ export function ChangePasswordForm({
       className="border border-neutral-200 p-6 sm:p-8 rounded-none bg-white shadow-sm hover:shadow-md transition-shadow duration-300 card-hover-lift gold-border-hover relative overflow-hidden group"
     >
       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold to-brand-gold-light" />
-      <h2 className="text-sm uppercase tracking-widest font-heading font-bold text-brand-black mb-6 flex items-center">
+      <h2 className="text-sm uppercase tracking-wider font-heading font-bold text-brand-black mb-6 flex items-center">
         <motion.div whileHover={{ y: [0, -2, 2, -2, 0] }} className="mr-2">
           <Key
             size={16}
@@ -63,7 +63,7 @@ export function ChangePasswordForm({
             type="submit"
             variant="primary"
             isLoading={isSavingPassword}
-            className="text-xs uppercase tracking-widest font-semibold py-3 px-6"
+            className="text-xs uppercase tracking-wider font-semibold py-3 px-6"
           >
             Perbarui Kata Sandi
           </Button>

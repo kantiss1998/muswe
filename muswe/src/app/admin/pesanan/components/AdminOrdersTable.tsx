@@ -56,7 +56,7 @@ export function AdminOrdersTable({
     <div className="overflow-x-auto">
       <table className="w-full text-left text-xs font-sans">
         <thead>
-          <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-widest font-bold text-[10px]">
+          <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-wider font-bold text-xs">
             <th className="py-3 px-5">No. Pesanan</th>
             <th className="py-3 px-4">Penerima</th>
             <th className="py-3 px-4 text-center">Total Belanja</th>
@@ -69,7 +69,7 @@ export function AdminOrdersTable({
             <tr key={o.id} className="hover:bg-neutral-50/20 transition duration-150">
               <td className="py-4 px-5">
                 <span className="font-semibold text-neutral-900 block">{o.order_number}</span>
-                <span className="text-[10px] text-neutral-400 font-normal mt-0.5 block">
+                <span className="text-xs text-neutral-400 font-normal mt-0.5 block">
                   Tgl Beli:{' '}
                   {new Date(o.created_at).toLocaleDateString('id-ID', {
                     day: 'numeric',
@@ -80,7 +80,7 @@ export function AdminOrdersTable({
               </td>
               <td className="py-4 px-4">
                 <p>{o.order_shipping?.recipient_name || 'Pelanggan'}</p>
-                <p className="text-[10px] text-neutral-400 font-normal">
+                <p className="text-xs text-neutral-400 font-normal">
                   {o.order_shipping?.courier_name} | {o.order_shipping?.phone}
                 </p>
               </td>
@@ -89,7 +89,7 @@ export function AdminOrdersTable({
               </td>
               <td className="py-4 px-4 text-center">
                 <span
-                  className={`inline-block text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 ${
+                  className={`inline-block text-sm uppercase tracking-wider font-bold px-2 py-0.5 ${
                     o.status === 'completed'
                       ? 'bg-green-50 text-green-700 border border-green-200'
                       : o.status === 'cancelled'

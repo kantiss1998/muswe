@@ -16,7 +16,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center font-heading font-medium uppercase tracking-widest text-[9px] rounded-none border border-transparent select-none transition-all duration-200',
+        'inline-flex items-center font-heading font-medium uppercase tracking-wider text-sm rounded-none border border-transparent select-none transition-all duration-200',
         {
           // Variants (THENBLANK muted elegant color schema)
           'bg-neutral-100 text-neutral-600': variant === 'neutral',

@@ -7,7 +7,7 @@
 -- Table: stock_mutations
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS stock_mutations (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   variant_id UUID NOT NULL REFERENCES product_variants(id) ON DELETE RESTRICT,
   order_item_id UUID, -- FK ke order_items, ditambahkan nanti via ALTER
   type TEXT NOT NULL CHECK (type IN ('in', 'out', 'adjustment', 'reserved', 'released')),

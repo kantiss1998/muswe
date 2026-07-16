@@ -27,7 +27,7 @@ export function ProductAccordionTabs({
 
   return (
     <motion.div variants={itemVariants} className="space-y-2 pt-2">
-      <div className="flex border-b border-neutral-200 font-heading text-[10px] font-medium uppercase tracking-widest relative">
+      <div className="flex border-b border-neutral-200 font-heading text-xs font-medium uppercase tracking-wider relative">
         <button
           onClick={() => setActiveTab('details')}
           className={cn(
@@ -93,7 +93,7 @@ export function ProductAccordionTabs({
                   {formatProductDescription(product.description)}
                 </p>
                 {selectedVariant && (
-                  <p className="text-[10px] text-neutral-400 font-sans">
+                  <p className="text-xs text-neutral-400 font-sans">
                     SKU: {selectedVariant.sku}
                   </p>
                 )}
@@ -135,7 +135,7 @@ export function ProductAccordionTabs({
                 ) : (
                   <ul className="list-disc pl-4 space-y-1">
                     <li>Cuci dengan suhu dingin menggunakan warna senada</li>
-                    <li>Hindari pemutih pakaian</li>
+                    <li>Hindari pemutih</li>
                     <li>Setrika dengan suhu rendah jika diperlukan</li>
                   </ul>
                 )}

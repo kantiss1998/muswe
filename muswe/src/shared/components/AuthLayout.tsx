@@ -21,15 +21,15 @@ export function AuthLayout({ children }: AuthLayoutProps): React.JSX.Element {
         <div className="relative z-10 flex flex-col justify-between p-12 xl:p-16 w-full">
           <Link
             href="/"
-            className="font-heading text-sm font-bold tracking-[0.25em] text-white uppercase hover:text-brand-gold-light transition-colors duration-300"
+            className="font-heading text-sm font-bold tracking-[0.1em] text-white uppercase hover:text-brand-gold-light transition-colors duration-300"
           >
             MUSWE
           </Link>
 
           <div className="space-y-6 max-w-md">
             <div className="accent-line">
-              <span className="text-[10px] uppercase tracking-[0.25em] font-heading font-medium text-brand-gold-light">
-                Fashion Muslim Premium
+              <span className="text-xs uppercase tracking-[0.1em] font-heading font-medium text-brand-gold-light">
+                Kerudung Motif Premium
               </span>
             </div>
             <h1 className="text-3xl xl:text-4xl font-heading font-light uppercase tracking-wider text-white leading-tight">
@@ -41,7 +41,7 @@ export function AuthLayout({ children }: AuthLayoutProps): React.JSX.Element {
             </p>
           </div>
 
-          <p className="text-[10px] text-neutral-500 font-sans tracking-wide">
+          <p className="text-xs text-neutral-500 font-sans tracking-wide">
             &copy; <CurrentYear /> Muswe Store
           </p>
         </div>
@@ -51,7 +51,7 @@ export function AuthLayout({ children }: AuthLayoutProps): React.JSX.Element {
       <div className="flex-1 flex flex-col items-center justify-center bg-brand-cream py-12 px-4 sm:px-6 lg:px-8 section-texture">
         <Link
           href="/"
-          className="mb-8 lg:hidden font-heading text-sm font-bold tracking-[0.2em] text-brand-black uppercase hover:text-brand-gold transition-colors"
+          className="mb-8 lg:hidden font-heading text-sm font-bold tracking-[0.1em] text-brand-black uppercase hover:text-brand-gold transition-colors"
         >
           MUSWE
         </Link>

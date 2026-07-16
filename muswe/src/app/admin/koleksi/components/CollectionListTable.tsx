@@ -29,7 +29,7 @@ export function CollectionListTable({
   if (isLoading) {
     return (
       <div className="py-24 text-center">
-        <p className="text-neutral-400 text-xs tracking-widest uppercase animate-pulse">
+        <p className="text-neutral-400 text-xs tracking-wider uppercase animate-pulse">
           Memuat koleksi...
         </p>
       </div>
@@ -65,7 +65,7 @@ export function CollectionListTable({
     <div className="overflow-x-auto">
       <table className="w-full text-left text-xs font-sans">
         <thead>
-          <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-widest font-bold text-[10px]">
+          <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-wider font-bold text-xs">
             <th className="py-3 px-5">Nama Koleksi</th>
             <th className="py-3 px-4">Slug</th>
             <th className="py-3 px-4 text-center">Produk Terkait</th>
@@ -80,7 +80,7 @@ export function CollectionListTable({
               <td className="py-4 px-5">
                 <span className="font-semibold text-neutral-900 text-sm block">{col.name}</span>
                 {col.starts_at && (
-                  <span className="text-[10px] text-neutral-400 font-normal mt-0.5 block">
+                  <span className="text-xs text-neutral-400 font-normal mt-0.5 block">
                     Periode: {new Date(col.starts_at).toLocaleDateString()} -{' '}
                     {col.ends_at ? new Date(col.ends_at).toLocaleDateString() : 'Selamanya'}
                   </span>
@@ -96,7 +96,7 @@ export function CollectionListTable({
               <td className="py-4 px-4 text-center">
                 <button
                   onClick={() => onToggleActive(col)}
-                  className={`inline-flex items-center text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 transition ${
+                  className={`inline-flex items-center text-xs uppercase font-bold tracking-wider px-2.5 py-1 transition ${
                     col.is_active
                       ? 'bg-neutral-900 text-white border border-neutral-900'
                       : 'bg-white text-neutral-400 border border-neutral-200'

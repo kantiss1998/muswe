@@ -37,23 +37,23 @@ export function FlashSaleVariantSearch({
               onClick={() => handleAddVariantItem(v)}
             >
               <div>
-                <p className="font-bold text-[10px] uppercase tracking-wider text-brand-black">
+                <p className="font-bold text-xs uppercase tracking-wider text-brand-black">
                   {v.sku}
                 </p>
-                <p className="text-[10px] text-neutral-600 line-clamp-1">
+                <p className="text-xs text-neutral-600 line-clamp-1">
                   {v.products?.name} - {v.name}
                 </p>
               </div>
               <div className="text-right pl-2 shrink-0">
-                <p className="text-[10px] font-bold text-neutral-800">
+                <p className="text-xs font-bold text-neutral-800">
                   Rp {v.price.toLocaleString()}
                 </p>
-                <p className="text-[9px] text-neutral-400">Stok: {v.stock}</p>
+                <p className="text-sm text-neutral-400">Stok: {v.stock}</p>
               </div>
             </div>
           ))}
           {filteredVariants.length === 0 && (
-            <p className="text-[10px] text-center py-2 text-neutral-400">Tidak ada varian cocok.</p>
+            <p className="text-xs text-center py-2 text-neutral-400">Tidak ada varian cocok.</p>
           )}
         </div>
       )}

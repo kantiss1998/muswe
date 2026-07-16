@@ -7,7 +7,7 @@
 -- Table: payments
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS payments (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID NOT NULL REFERENCES orders(id) ON DELETE RESTRICT UNIQUE,
   midtrans_transaction_id VARCHAR(100) UNIQUE,
   midtrans_order_id VARCHAR(100) UNIQUE,
@@ -39,7 +39,7 @@ CREATE TRIGGER trg_payments_updated_at
 -- Table: payment_logs
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS payment_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   payment_id UUID REFERENCES payments(id) ON DELETE SET NULL,
   midtrans_order_id VARCHAR(100),
   event_type VARCHAR(50) NOT NULL,

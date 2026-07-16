@@ -143,7 +143,7 @@ export default function AdminOrdersPage(): React.JSX.Element {
           >
             {tab.label}
             {tab.id === 'returns' && returnsData.length > 0 && (
-              <span className="ml-1.5 bg-red-500 text-white font-bold px-1.5 py-0.5 text-[9px] rounded-full">
+              <span className="ml-1.5 bg-red-500 text-white font-bold px-1.5 py-0.5 text-sm rounded-full">
                 {
                   returnsData.filter((r: AdminReturnRequestListItem) => r.status === 'pending')
                     .length

@@ -7,7 +7,7 @@
 -- Table: products
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS products (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   category_id UUID NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
   name VARCHAR(255) NOT NULL,
   slug VARCHAR(280) NOT NULL UNIQUE,
@@ -62,7 +62,7 @@ COMMENT ON TABLE collection_products IS 'Many-to-many: collections <-> products'
 -- Table: product_variants
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS product_variants (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
   sku VARCHAR(100) NOT NULL UNIQUE,
   name VARCHAR(255) NOT NULL,
@@ -84,7 +84,7 @@ CREATE INDEX IF NOT EXISTS idx_product_variants_is_active ON product_variants(is
 -- Table: product_variant_attrs
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS product_variant_attrs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   variant_id UUID NOT NULL REFERENCES product_variants(id) ON DELETE CASCADE,
   attr_name VARCHAR(50) NOT NULL,
   attr_value VARCHAR(100) NOT NULL
@@ -99,7 +99,7 @@ CREATE INDEX IF NOT EXISTS idx_product_variant_attrs_variant_id ON product_varia
 -- Table: product_images
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS product_images (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
   variant_id UUID REFERENCES product_variants(id) ON DELETE SET NULL,
   url VARCHAR(500) NOT NULL,
@@ -117,7 +117,7 @@ CREATE INDEX IF NOT EXISTS idx_product_images_product_id ON product_images(produ
 -- Table: product_marketplace_links
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS product_marketplace_links (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
   platform VARCHAR(50) NOT NULL CHECK (platform IN ('shopee', 'tiktok', 'tokopedia', 'lazada', 'bukalapak', 'other')),
   url TEXT NOT NULL,

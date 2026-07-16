@@ -26,7 +26,7 @@ export default function RootNotFound(): React.JSX.Element {
           <Link href="/" className="flex-1">
             <Button
               variant="primary"
-              className="w-full text-[10px] py-3 uppercase tracking-wider font-bold rounded-none"
+              className="w-full text-xs py-3 uppercase tracking-wider font-bold rounded-none"
             >
               Beranda
             </Button>
@@ -34,7 +34,7 @@ export default function RootNotFound(): React.JSX.Element {
           <Link href="/produk" className="flex-1">
             <Button
               variant="outline"
-              className="w-full text-[10px] py-3 uppercase tracking-wider font-bold border-neutral-200 rounded-none"
+              className="w-full text-xs py-3 uppercase tracking-wider font-bold border-neutral-200 rounded-none"
             >
               Katalog
             </Button>

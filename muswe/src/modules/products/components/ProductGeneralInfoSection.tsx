@@ -65,7 +65,7 @@ export function ProductGeneralInfoSection({
 }: ProductGeneralInfoSectionProps): React.JSX.Element {
   return (
     <div className="border border-neutral-200 bg-white p-6 rounded-none space-y-5">
-      <h3 className="text-xs uppercase font-bold tracking-widest text-neutral-400 border-b border-neutral-100 pb-2.5">
+      <h3 className="text-xs uppercase font-bold tracking-wider text-neutral-400 border-b border-neutral-100 pb-2.5">
         Informasi Umum
       </h3>
 
@@ -112,11 +112,11 @@ export function ProductGeneralInfoSection({
           Koleksi Kurasi (Opsional)
         </label>
         {colsLoading ? (
-          <p className="text-neutral-400 italic text-[11px] animate-pulse">
+          <p className="text-neutral-400 italic text-sm animate-pulse">
             Memuat daftar koleksi...
           </p>
         ) : !collections || collections.length === 0 ? (
-          <p className="text-neutral-400 italic text-[11px]">Belum ada koleksi yang dibuat.</p>
+          <p className="text-neutral-400 italic text-sm">Belum ada koleksi yang dibuat.</p>
         ) : (
           <div className="flex flex-wrap gap-x-6 gap-y-2.5 p-3 border border-neutral-200 bg-neutral-50/20">
             {collections.map((col) => {
@@ -151,7 +151,7 @@ export function ProductGeneralInfoSection({
       />
 
       <div className="space-y-2">
-        <label className="block text-[10px] font-semibold text-neutral-500 uppercase tracking-wider mb-2">
+        <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">
           Panduan Ukuran (Size Guide)
         </label>
         <div className="flex gap-4 items-start border border-neutral-200 p-3 bg-neutral-50/20">
@@ -169,7 +169,7 @@ export function ProductGeneralInfoSection({
                 }}
               />
             ) : (
-              <span className="text-[8px] text-neutral-400 uppercase font-semibold text-center">
+              <span className="text-xs text-neutral-400 uppercase font-semibold text-center">
                 No Image
               </span>
             )}
@@ -205,7 +205,7 @@ export function ProductGeneralInfoSection({
               />
               <label
                 htmlFor="size-guide-upload"
-                className="cursor-pointer inline-flex items-center text-[10px] font-bold uppercase tracking-wider py-1.5 px-3 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none bg-white"
+                className="cursor-pointer inline-flex items-center text-xs font-bold uppercase tracking-wider py-1.5 px-3 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none bg-white"
               >
                 Unggah Gambar
               </label>

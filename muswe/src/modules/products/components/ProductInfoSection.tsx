@@ -57,7 +57,7 @@ export function ProductInfoSection({
       {/* Title, Category & Price */}
       <motion.div variants={itemVariants} className="space-y-2">
         {product.categories && (
-          <span className="text-[10px] uppercase tracking-[0.25em] font-heading font-medium text-brand-gold">
+          <span className="text-xs uppercase tracking-[0.1em] font-heading font-medium text-brand-gold">
             {product.categories.name}
           </span>
         )}
@@ -109,7 +109,7 @@ export function ProductInfoSection({
             <button
               type="button"
               onClick={onSizeGuideOpen}
-              className="text-[9px] uppercase tracking-wider font-heading font-semibold text-brand-gold hover:text-brand-gold-light transition-colors underline underline-offset-2 cursor-pointer"
+              className="text-sm uppercase tracking-wider font-heading font-semibold text-brand-gold hover:text-brand-gold-light transition-colors underline underline-offset-2 cursor-pointer"
             >
               Panduan Ukuran
             </button>
@@ -124,7 +124,7 @@ export function ProductInfoSection({
 
       {/* Varian Stock indicator */}
       {selectedVariant && (
-        <motion.div variants={itemVariants} className="text-[11px] text-neutral-500 font-sans">
+        <motion.div variants={itemVariants} className="text-sm text-neutral-500 font-sans">
           {selectedVariant.stock > 0 ? (
             <span>
               Stok Tersedia:{' '}
@@ -199,7 +199,7 @@ export function ProductInfoSection({
           <Button
             onClick={onBuyNow}
             variant="primary"
-            className="flex-1"
+            className="flex-1 btn-shine shadow-[0_8px_24px_rgba(23,23,23,0.15)] hover:shadow-[0_12px_32px_rgba(23,23,23,0.25)] hover:-translate-y-0.5 rounded-lg"
             isLoading={isBuying}
             disabled={!selectedVariant || selectedVariant.stock === 0}
           >
@@ -215,40 +215,40 @@ export function ProductInfoSection({
       {/* Info Badges (Shipping / Return / Guarantee) */}
       <motion.div
         variants={itemVariants}
-        className="grid grid-cols-3 gap-2 border border-neutral-100 py-4 px-2 card-hover-lift gold-border-hover bg-brand-cream/30"
+        className="grid grid-cols-3 gap-2 py-4"
       >
         <motion.div
-          whileHover={{ y: -3 }}
+          whileHover={{ y: -2 }}
           transition={{ duration: 0.2 }}
-          className="flex flex-col items-center text-center space-y-1 cursor-default group"
+          className="flex flex-col items-center text-center space-y-1.5 cursor-default group bg-neutral-50/80 hover:bg-neutral-100 rounded-xl p-3 transition-colors"
         >
-          <Truck className="h-4 w-4 text-brand-gold/70 group-hover:text-brand-gold transition-colors" />
-          <span className="text-[9px] uppercase tracking-wider font-heading font-medium text-brand-black">
+          <Truck className="h-4 w-4 text-brand-black/70 group-hover:text-brand-black transition-colors" />
+          <span className="text-[10px] uppercase tracking-wider font-heading font-semibold text-brand-black">
             Ongkir Flat
           </span>
-          <span className="text-[8px] text-neutral-400 font-sans">Tarif murah per zona</span>
+          <span className="text-[9px] text-neutral-500 font-sans">Tarif murah per zona</span>
         </motion.div>
         <motion.div
-          whileHover={{ y: -3 }}
+          whileHover={{ y: -2 }}
           transition={{ duration: 0.2 }}
-          className="flex flex-col items-center text-center space-y-1 cursor-default group"
+          className="flex flex-col items-center text-center space-y-1.5 cursor-default group bg-neutral-50/80 hover:bg-neutral-100 rounded-xl p-3 transition-colors"
         >
-          <RefreshCw className="h-4 w-4 text-brand-gold/70 group-hover:text-brand-gold transition-colors" />
-          <span className="text-[9px] uppercase tracking-wider font-heading font-medium text-brand-black">
+          <RefreshCw className="h-4 w-4 text-brand-black/70 group-hover:text-brand-black transition-colors" />
+          <span className="text-[10px] uppercase tracking-wider font-heading font-semibold text-brand-black">
             7 Hari Retur
           </span>
-          <span className="text-[8px] text-neutral-400 font-sans">Bebas tukar ukuran</span>
+          <span className="text-[9px] text-neutral-500 font-sans">Bebas tukar ukuran</span>
         </motion.div>
         <motion.div
-          whileHover={{ y: -3 }}
+          whileHover={{ y: -2 }}
           transition={{ duration: 0.2 }}
-          className="flex flex-col items-center text-center space-y-1 cursor-default group"
+          className="flex flex-col items-center text-center space-y-1.5 cursor-default group bg-neutral-50/80 hover:bg-neutral-100 rounded-xl p-3 transition-colors"
         >
-          <Shield className="h-4 w-4 text-brand-gold/70 group-hover:text-brand-gold transition-colors" />
-          <span className="text-[9px] uppercase tracking-wider font-heading font-medium text-brand-black">
+          <Shield className="h-4 w-4 text-brand-black/70 group-hover:text-brand-black transition-colors" />
+          <span className="text-[10px] uppercase tracking-wider font-heading font-semibold text-brand-black">
             Kualitas Premium
           </span>
-          <span className="text-[8px] text-neutral-400 font-sans">Bahan terkurasi</span>
+          <span className="text-[9px] text-neutral-500 font-sans">Bahan terkurasi</span>
         </motion.div>
       </motion.div>
     </>

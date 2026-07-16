@@ -84,7 +84,7 @@ export default function NotifikasiPage(): React.JSX.Element {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Quick Navigation Menu */}
           <div className="space-y-2 md:col-span-1">
-            <h2 className="text-[10px] uppercase tracking-widest font-heading font-medium text-neutral-400 mb-4">
+            <h2 className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-400 mb-4">
               Navigasi Akun
             </h2>
 
@@ -182,10 +182,10 @@ export default function NotifikasiPage(): React.JSX.Element {
                     }`}
                   >
                     <div className="flex justify-between items-start mb-1.5">
-                      <span className="font-semibold uppercase tracking-wider text-[10px] text-neutral-400">
+                      <span className="font-semibold uppercase tracking-wider text-xs text-neutral-400">
                         {n.type.replace('_', ' ')}
                       </span>
-                      <span className="text-[10px] text-neutral-400 font-normal">
+                      <span className="text-xs text-neutral-400 font-normal">
                         {formatDate(n.created_at)}
                       </span>
                     </div>

@@ -18,7 +18,7 @@ export function TentangClient(): React.JSX.Element {
       <PageHero
         eyebrow="Kisah & Visi"
         title="Tentang Kami"
-        subtitle="Kenali perjalanan Muswe dalam menghadirkan fashion muslim premium modern."
+        subtitle="Kenali perjalanan Muswe dalam menghadirkan kerudung motif premium modern."
       />
 
       <PageContainer size="md" className="py-12 md:py-16 page-content">
@@ -28,10 +28,10 @@ export function TentangClient(): React.JSX.Element {
             className="space-y-6 text-sm leading-relaxed text-neutral-600 font-medium"
           >
             <p>
-              Didirikan dengan visi untuk menghadirkan alternatif pakaian muslim yang bersahaja
+              Didirikan dengan visi untuk menghadirkan alternatif kerudung motif yang bersahaja
               namun tetap berkarakter,{' '}
               <span className="font-semibold text-brand-black">Muswe</span> lahir dari
-              perpaduan kecintaan terhadap tekstil berkualitas dan kebutuhan akan fashion yang
+              perpaduan kecintaan terhadap tekstil berkualitas dan kebutuhan akan kerudung yang
               praktis serta elegan untuk wanita modern Indonesia.
             </p>
             <p>
@@ -47,14 +47,14 @@ export function TentangClient(): React.JSX.Element {
               transition={{ ...fadeUp.transition, delay: 0.1 }}
               className="border border-neutral-200 p-6 md:p-8 space-y-3 card-hover-lift gold-border-hover bg-brand-cream/50"
             >
-              <span className="text-[10px] uppercase tracking-[0.2em] font-heading font-medium text-brand-gold">
+              <span className="text-xs uppercase tracking-[0.1em] font-heading font-medium text-brand-gold">
                 Kualitas
               </span>
               <h3 className="font-heading text-brand-black font-semibold uppercase tracking-wider text-sm">
                 Bahan Premium Pilihan
               </h3>
               <p className="text-xs text-neutral-500 leading-relaxed font-medium">
-                Kami menyeleksi bahan katun, linen, dan serat alam terbaik secara ketat. Pakaian
+                Kami menyeleksi bahan voal dan serat alam terbaik secara ketat. Kerudung
                 kami didesain agar tetap adem, menyerap keringat, dan nyaman dipakai seharian di
                 iklim tropis Indonesia.
               </p>
@@ -65,16 +65,16 @@ export function TentangClient(): React.JSX.Element {
               transition={{ ...fadeUp.transition, delay: 0.2 }}
               className="border border-neutral-200 p-6 md:p-8 space-y-3 card-hover-lift gold-border-hover bg-brand-cream/50"
             >
-              <span className="text-[10px] uppercase tracking-[0.2em] font-heading font-medium text-brand-gold">
+              <span className="text-xs uppercase tracking-[0.1em] font-heading font-medium text-brand-gold">
                 Craftsmanship
               </span>
               <h3 className="font-heading text-brand-black font-semibold uppercase tracking-wider text-sm">
                 Jahitan Standar Butik
               </h3>
               <p className="text-xs text-neutral-500 leading-relaxed font-medium">
-                Setiap pakaian dijahit secara presisi oleh pengrajin lokal berpengalaman. Kami
+                Setiap kerudung dijahit secara presisi oleh pengrajin lokal berpengalaman. Kami
                 memastikan keliman rapi, pola presisi, serta ketahanan jahitan yang kuat untuk
-                investasi jangka panjang lemari pakaian Anda.
+                investasi jangka panjang koleksi kerudung Anda.
               </p>
             </motion.div>
           </div>
@@ -86,11 +86,11 @@ export function TentangClient(): React.JSX.Element {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="border-t border-neutral-200 pt-10 text-center"
           >
-            <p className="text-sm md:text-base font-heading font-light uppercase tracking-[0.2em] text-brand-black leading-relaxed">
+            <p className="text-sm md:text-base font-heading font-light uppercase tracking-[0.1em] text-brand-black leading-relaxed">
               &ldquo;Elegan dalam Kesederhanaan&rdquo;
             </p>
             <div className="accent-line accent-line-center mt-4" />
-            <p className="text-[10px] text-neutral-400 uppercase tracking-widest font-heading mt-4">
+            <p className="text-xs text-neutral-400 uppercase tracking-wider font-heading mt-4">
               — Filosofi Muswe
             </p>
           </motion.div>

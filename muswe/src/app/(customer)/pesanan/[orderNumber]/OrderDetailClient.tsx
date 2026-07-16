@@ -321,7 +321,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
         <div className="flex flex-wrap items-center gap-4 mt-2">
           <Link
             href="/pesanan"
-            className="inline-flex items-center text-[10px] uppercase tracking-wider font-semibold text-neutral-500 hover:text-brand-gold transition"
+            className="inline-flex items-center text-xs uppercase tracking-wider font-semibold text-neutral-500 hover:text-brand-gold transition"
           >
             <ArrowLeft size={13} className="mr-1" /> Kembali
           </Link>
@@ -330,7 +330,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
               onClick={handleDownloadInvoice}
               variant="outline"
               isLoading={isInvoiceLoading}
-              className="flex items-center text-[10px] uppercase tracking-wider font-bold py-2 px-4"
+              className="flex items-center text-xs uppercase tracking-wider font-bold py-2 px-4"
             >
               <Download size={14} className="mr-2" /> Unduh Invoice
             </Button>
@@ -373,7 +373,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
             <Button
               onClick={() => setCancelConfirmOpen(false)}
               variant="outline"
-              className="flex-1 py-3 text-xs uppercase tracking-widest font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
+              className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
             >
               Kembali
             </Button>
@@ -381,7 +381,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
               onClick={executeCancelOrder}
               isLoading={cancelMutation.isPending}
               disabled={cancelMutation.isPending}
-              className="flex-1 py-3 text-xs uppercase tracking-widest font-semibold bg-red-600 border-red-600 text-white hover:bg-red-700 hover:border-red-700"
+              className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold bg-red-600 border-red-600 text-white hover:bg-red-700 hover:border-red-700"
             >
               Batalkan
             </Button>
@@ -403,7 +403,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
             <Button
               onClick={() => setReceiptConfirmOpen(false)}
               variant="outline"
-              className="flex-1 py-3 text-xs uppercase tracking-widest font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
+              className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
             >
               Kembali
             </Button>
@@ -411,7 +411,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
               onClick={executeConfirmDelivery}
               isLoading={confirmMutation.isPending}
               disabled={confirmMutation.isPending}
-              className="flex-1 py-3 text-xs uppercase tracking-widest font-semibold"
+              className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold"
             >
               Konfirmasi
             </Button>

@@ -34,7 +34,7 @@ export function AdminStatCard({
       )}
     >
       <div className="flex justify-between items-start">
-        <span className="text-[10px] uppercase font-heading font-semibold tracking-widest text-neutral-400">
+        <span className="text-xs uppercase font-heading font-semibold tracking-wider text-neutral-400">
           {label}
         </span>
         <div className={cn('p-2', accentStyles[accent])}>
@@ -42,7 +42,7 @@ export function AdminStatCard({
         </div>
       </div>
       <p className="text-2xl font-heading font-semibold text-brand-black tracking-tight">{value}</p>
-      {hint && <p className="text-[10px] text-neutral-400 font-sans">{hint}</p>}
+      {hint && <p className="text-xs text-neutral-400 font-sans">{hint}</p>}
     </div>
   )
 }

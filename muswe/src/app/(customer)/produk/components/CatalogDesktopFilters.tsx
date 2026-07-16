@@ -20,13 +20,13 @@ export function CatalogDesktopFilters({
   return (
     <aside className="hidden md:block w-48 flex-shrink-0 space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-[10px] font-heading font-bold uppercase tracking-widest text-brand-black">
+        <h3 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black">
           Kategori
         </h3>
         {(categorySlug || searchQuery) && (
           <button
             onClick={handleClearAll}
-            className="text-[9px] font-heading font-semibold uppercase tracking-widest text-neutral-400 hover:text-brand-black"
+            className="text-sm font-heading font-semibold uppercase tracking-wider text-neutral-400 hover:text-brand-black"
           >
             Reset
           </button>

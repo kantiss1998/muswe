@@ -21,7 +21,7 @@ export default function AdminCustomerDetailPage({ params }: AdminCustomerDetailP
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <p className="text-neutral-400 text-xs tracking-widest uppercase animate-pulse">
+        <p className="text-neutral-400 text-xs tracking-wider uppercase animate-pulse">
           Memuat detail pelanggan...
         </p>
       </div>
@@ -85,7 +85,7 @@ export default function AdminCustomerDetailPage({ params }: AdminCustomerDetailP
                 <div className="flex justify-between items-center text-xs border-b border-neutral-100 pb-2">
                   <span className="text-neutral-500">Status</span>
                   <span
-                    className={`font-bold uppercase tracking-wider px-2 py-0.5 rounded-none text-[9px] ${
+                    className={`font-bold uppercase tracking-wider px-2 py-0.5 rounded-none text-sm ${
                       customer.is_active
                         ? 'bg-green-50 text-green-700 border border-green-200'
                         : 'bg-red-50 text-red-700 border border-red-200'
@@ -102,7 +102,7 @@ export default function AdminCustomerDetailPage({ params }: AdminCustomerDetailP
                 </div>
                 <div className="flex justify-between items-center text-xs pb-2">
                   <span className="text-neutral-500">ID Pelanggan</span>
-                  <span className="text-neutral-900 font-mono text-[10px]">{customer.id}</span>
+                  <span className="text-neutral-900 font-mono text-xs">{customer.id}</span>
                 </div>
               </div>
             </div>
@@ -136,7 +136,7 @@ export default function AdminCustomerDetailPage({ params }: AdminCustomerDetailP
                           <span className="text-neutral-500">({address.phone})</span>
                         </div>
                         {address.is_default && (
-                          <span className="bg-neutral-900 text-white text-[9px] px-1.5 py-0.5 font-bold uppercase">
+                          <span className="bg-neutral-900 text-white text-sm px-1.5 py-0.5 font-bold uppercase">
                             Utama
                           </span>
                         )}

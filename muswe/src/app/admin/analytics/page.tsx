@@ -24,7 +24,7 @@ export default function AdminAnalyticsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <p className="text-neutral-400 text-xs tracking-widest uppercase animate-pulse">
+        <p className="text-neutral-400 text-xs tracking-wider uppercase animate-pulse">
           Memuat data analitik...
         </p>
       </div>
@@ -62,41 +62,41 @@ export default function AdminAnalyticsPage() {
         <div className="bg-white border border-neutral-200 p-4 rounded-none">
           <div className="flex items-center text-neutral-500 mb-2">
             <TrendingUp size={16} className="mr-2" />
-            <h3 className="text-[10px] font-bold uppercase tracking-wider">Total Pendapatan</h3>
+            <h3 className="text-xs font-bold uppercase tracking-wider">Total Pendapatan</h3>
           </div>
           <p className="text-2xl font-bold text-neutral-900">{formatIDR(analytics.totalRevenue)}</p>
-          <p className="text-[10px] text-neutral-400 mt-1">Dalam {days} hari terakhir</p>
+          <p className="text-xs text-neutral-400 mt-1">Dalam {days} hari terakhir</p>
         </div>
 
         <div className="bg-white border border-neutral-200 p-4 rounded-none">
           <div className="flex items-center text-neutral-500 mb-2">
             <ShoppingBag size={16} className="mr-2" />
-            <h3 className="text-[10px] font-bold uppercase tracking-wider">Total Pesanan Sukses</h3>
+            <h3 className="text-xs font-bold uppercase tracking-wider">Total Pesanan Sukses</h3>
           </div>
           <p className="text-2xl font-bold text-neutral-900">{analytics.totalOrders}</p>
-          <p className="text-[10px] text-neutral-400 mt-1">Dalam {days} hari terakhir</p>
+          <p className="text-xs text-neutral-400 mt-1">Dalam {days} hari terakhir</p>
         </div>
 
         <div className="bg-white border border-neutral-200 p-4 rounded-none">
           <div className="flex items-center text-neutral-500 mb-2">
             <ShoppingCart size={16} className="mr-2" />
-            <h3 className="text-[10px] font-bold uppercase tracking-wider">
+            <h3 className="text-xs font-bold uppercase tracking-wider">
               Keranjang Ditinggalkan
             </h3>
           </div>
           <p className="text-2xl font-bold text-neutral-900">{analytics.abandonedCartsCount}</p>
-          <p className="text-[10px] text-neutral-400 mt-1">Total Abandoned Carts (&gt;24j)</p>
+          <p className="text-xs text-neutral-400 mt-1">Total Abandoned Carts (&gt;24j)</p>
         </div>
 
         <div className="bg-white border border-neutral-200 p-4 rounded-none">
           <div className="flex items-center text-neutral-500 mb-2">
             <Ticket size={16} className="mr-2" />
-            <h3 className="text-[10px] font-bold uppercase tracking-wider">Voucher Digunakan</h3>
+            <h3 className="text-xs font-bold uppercase tracking-wider">Voucher Digunakan</h3>
           </div>
           <p className="text-2xl font-bold text-neutral-900">
             {analytics.voucherUsage.reduce((acc, curr) => acc + curr.count, 0)}
           </p>
-          <p className="text-[10px] text-neutral-400 mt-1">Pada pesanan sukses</p>
+          <p className="text-xs text-neutral-400 mt-1">Pada pesanan sukses</p>
         </div>
       </div>
 

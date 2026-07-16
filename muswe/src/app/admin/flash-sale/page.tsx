@@ -186,7 +186,7 @@ export default function AdminFlashSalesPage(): React.JSX.Element {
       <AdminPageHeader title="Flash Sale" subtitle="Kelola promo kilat dengan slot waktu terbatas.">
         <Button
           onClick={handleOpenAdd}
-          className="text-xs uppercase font-bold tracking-widest flex items-center py-3 px-5"
+          className="text-xs uppercase font-bold tracking-wider flex items-center py-3 px-5"
         >
           <Plus size={14} className="mr-1.5" /> Tambah Flash Sale
         </Button>

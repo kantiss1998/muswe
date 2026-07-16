@@ -88,7 +88,7 @@ export default function AlamatPage(): React.JSX.Element {
               setAddressToEdit(null)
               setModalOpen(true)
             }}
-            className="flex items-center justify-center text-xs uppercase tracking-widest font-semibold py-3 px-5"
+            className="flex items-center justify-center text-xs uppercase tracking-wider font-semibold py-3 px-5"
           >
             <Plus size={14} className="mr-2" /> Tambah Alamat
           </Button>
@@ -120,7 +120,7 @@ export default function AlamatPage(): React.JSX.Element {
                 setModalOpen(true)
               }}
               variant="outline"
-              className="text-xs uppercase tracking-widest font-semibold"
+              className="text-xs uppercase tracking-wider font-semibold"
             >
               Tambah Alamat Pertama
             </Button>

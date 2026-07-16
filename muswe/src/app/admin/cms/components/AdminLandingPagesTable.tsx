@@ -47,10 +47,10 @@ export function AdminLandingPagesTable({
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="font-serif font-bold text-neutral-900 text-base">{page.title}</h3>
-                <p className="text-[10px] font-mono text-neutral-400 mt-0.5">Slug: /{page.slug}</p>
+                <p className="text-xs font-mono text-neutral-400 mt-0.5">Slug: /{page.slug}</p>
               </div>
               <span
-                className={`inline-block text-[8px] uppercase tracking-wider font-bold px-1.5 py-0.5 ${
+                className={`inline-block text-xs uppercase tracking-wider font-bold px-1.5 py-0.5 ${
                   page.is_active
                     ? 'bg-green-50 text-green-700 border border-green-200'
                     : 'bg-red-50 text-red-700 border border-red-200'
@@ -72,7 +72,7 @@ export function AdminLandingPagesTable({
             )}
 
             <div className="pt-2">
-              <span className="text-[9px] uppercase font-bold text-neutral-400 tracking-wider flex items-center">
+              <span className="text-sm uppercase font-bold text-neutral-400 tracking-wider flex items-center">
                 <FileCode size={11} className="mr-1" /> JSON Content Keys:
               </span>
               <div className="flex flex-wrap gap-1 mt-1">
@@ -82,7 +82,7 @@ export function AdminLandingPagesTable({
                   Object.keys(page.content).map((key) => (
                     <span
                       key={key}
-                      className="bg-neutral-50 border border-neutral-200 text-[9px] px-1.5 py-0.5 text-neutral-600 font-mono"
+                      className="bg-neutral-50 border border-neutral-200 text-sm px-1.5 py-0.5 text-neutral-600 font-mono"
                     >
                       {key}
                     </span>
@@ -92,21 +92,21 @@ export function AdminLandingPagesTable({
           </div>
 
           <div className="pt-4 border-t border-neutral-100 flex justify-between items-center">
-            <span className="text-[9px] text-neutral-400 font-mono">
+            <span className="text-sm text-neutral-400 font-mono">
               Dibuat: {formatDate(page.created_at)}
             </span>
             <div className="flex space-x-2">
               <Button
                 onClick={() => onEdit(page)}
                 variant="outline"
-                className="text-[10px] py-1.5 px-3 font-bold uppercase border-neutral-200"
+                className="text-xs py-1.5 px-3 font-bold uppercase border-neutral-200"
               >
                 <Edit size={11} className="mr-1" /> Edit
               </Button>
               <Button
                 onClick={() => onDelete(page.id, page.title)}
                 variant="outline"
-                className="text-[10px] py-1.5 px-3 font-bold uppercase border-red-200 text-red-500 hover:bg-red-50"
+                className="text-xs py-1.5 px-3 font-bold uppercase border-red-200 text-red-500 hover:bg-red-50"
               >
                 <Trash2 size={11} className="mr-1" /> Hapus
               </Button>

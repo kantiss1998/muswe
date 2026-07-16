@@ -48,7 +48,7 @@ export function AddressCard({
         <div className="flex items-center space-x-2">
           <span className="font-semibold text-neutral-800">{address.label}</span>
           {address.is_default && (
-            <Badge variant="gold" className="text-[10px] py-0 px-2 rounded-none">
+            <Badge variant="gold" className="text-xs py-0 px-2 rounded-none">
               Utama
             </Badge>
           )}

@@ -46,13 +46,13 @@ export function ProductSizeGuideModal({
 
             <div className="space-y-4">
               <div className="space-y-1">
-                <span className="text-[9px] uppercase tracking-widest font-heading font-medium text-brand-gold">
+                <span className="text-sm uppercase tracking-wider font-heading font-medium text-brand-gold">
                   Panduan
                 </span>
                 <h3 className="text-sm font-heading font-bold uppercase tracking-wider text-brand-black">
-                  Panduan Ukuran Pakaian (Size Chart)
+                  Panduan Ukuran Kerudung (Size Chart)
                 </h3>
-                <p className="text-[10px] text-neutral-400 font-sans">
+                <p className="text-xs text-neutral-400 font-sans">
                   Semua ukuran dalam centimeter (cm). Toleransi perbedaan ukuran 1-2 cm wajar
                   terjadi.
                 </p>
@@ -75,7 +75,7 @@ export function ProductSizeGuideModal({
                 )
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse text-[10px] font-sans">
+                  <table className="w-full text-left border-collapse text-xs font-sans">
                     <thead>
                       <tr className="border-b border-neutral-200 bg-neutral-50">
                         <th className="py-2.5 px-3 font-heading font-bold uppercase tracking-wider text-brand-black">
@@ -91,7 +91,7 @@ export function ProductSizeGuideModal({
                           Panjang Lengan
                         </th>
                         <th className="py-2.5 px-3 font-heading font-bold uppercase tracking-wider text-brand-black">
-                          Panjang Baju
+                          Panjang / Lebar
                         </th>
                       </tr>
                     </thead>
@@ -130,10 +130,10 @@ export function ProductSizeGuideModal({
               )}
 
               <div className="pt-2 border-t border-neutral-100">
-                <h4 className="text-[9px] uppercase tracking-widest font-heading font-medium text-brand-black/70 mb-1">
+                <h4 className="text-sm uppercase tracking-wider font-heading font-medium text-brand-black/70 mb-1">
                   Tips Menentukan Ukuran:
                 </h4>
-                <ul className="list-disc list-inside text-[9px] text-neutral-500 space-y-1 leading-relaxed">
+                <ul className="list-disc list-inside text-sm text-neutral-500 space-y-1 leading-relaxed">
                   <li>
                     <strong>Lingkar Dada</strong>: Ukur di sekeliling bagian dada terlebar Anda
                     dengan pas.
@@ -142,8 +142,8 @@ export function ProductSizeGuideModal({
                     <strong>Lebar Bahu</strong>: Ukur dari ujung bahu kiri ke ujung bahu kanan.
                   </li>
                   <li>
-                    <strong>Panjang Baju</strong>: Ukur secara vertikal dari pangkal leher/bahu
-                    hingga batas bawah baju yang diinginkan.
+                    <strong>Panjang / Lebar</strong>: Ukur secara vertikal dan horizontal
+                    sesuai ukuran standar kerudung yang diinginkan.
                   </li>
                 </ul>
               </div>

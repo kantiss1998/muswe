@@ -136,7 +136,7 @@ export function VariantPicker({
         <div key={name} className="flex flex-col space-y-2">
           <span
             id={`label-variant-${name}`}
-            className="text-[10px] uppercase tracking-wider font-heading font-medium text-brand-black/70"
+            className="text-xs uppercase tracking-wider font-heading font-medium text-brand-black/70"
           >
             Pilih {name}
           </span>

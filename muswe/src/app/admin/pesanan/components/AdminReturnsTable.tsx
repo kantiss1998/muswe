@@ -54,7 +54,7 @@ export function AdminReturnsTable({
     <div className="overflow-x-auto">
       <table className="w-full text-left text-xs font-sans">
         <thead>
-          <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-widest font-bold text-[10px]">
+          <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-wider font-bold text-xs">
             <th className="py-3 px-5">No. Pesanan</th>
             <th className="py-3 px-4">Pengaju</th>
             <th className="py-3 px-4">Alasan</th>
@@ -70,13 +70,13 @@ export function AdminReturnsTable({
                 <span className="font-semibold text-neutral-900 block">
                   {ret.orders?.order_number}
                 </span>
-                <span className="text-[10px] text-neutral-400 font-normal mt-0.5 block">
+                <span className="text-xs text-neutral-400 font-normal mt-0.5 block">
                   Tgl Ajuan: {new Date(ret.created_at).toLocaleDateString()}
                 </span>
               </td>
               <td className="py-4 px-4">
                 <p>{ret.profiles?.name}</p>
-                <p className="text-[10px] text-neutral-400 font-normal">{ret.profiles?.email}</p>
+                <p className="text-xs text-neutral-400 font-normal">{ret.profiles?.email}</p>
               </td>
               <td className="py-4 px-4 text-neutral-600 truncate max-w-[200px]">
                 <span className="font-bold text-neutral-800">
@@ -93,7 +93,7 @@ export function AdminReturnsTable({
                             : 'Lainnya'}
                 </span>
                 {ret.customer_notes && (
-                  <p className="text-[10px] text-neutral-400 truncate mt-0.5">
+                  <p className="text-xs text-neutral-400 truncate mt-0.5">
                     {ret.customer_notes}
                   </p>
                 )}
@@ -102,13 +102,13 @@ export function AdminReturnsTable({
                 <p className="font-bold">
                   Rp {(ret.refund_amount || ret.orders?.total_amount || 0).toLocaleString('id-ID')}
                 </p>
-                <p className="text-[10px] text-neutral-500 font-normal">
+                <p className="text-xs text-neutral-500 font-normal">
                   {ret.refund_bank_name} - {ret.refund_account_number}
                 </p>
               </td>
               <td className="py-4 px-4 text-center">
                 <span
-                  className={`inline-block text-[9px] uppercase tracking-wider font-bold px-2.5 py-1 ${
+                  className={`inline-block text-sm uppercase tracking-wider font-bold px-2.5 py-1 ${
                     ret.status === 'completed'
                       ? 'bg-green-50 text-green-700 border border-green-200'
                       : ret.status === 'rejected'

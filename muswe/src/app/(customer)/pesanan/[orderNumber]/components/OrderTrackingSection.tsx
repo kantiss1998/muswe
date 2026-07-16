@@ -22,7 +22,7 @@ export function OrderTrackingSection({
   if (status === 'cancelled') {
     return (
       <div className="border border-error-border p-5 bg-error-bg card-hover-lift gold-border-hover">
-        <p className="text-[10px] uppercase tracking-widest font-heading font-medium text-error mb-4">
+        <p className="text-xs uppercase tracking-wider font-heading font-medium text-error mb-4">
           Status Pesanan
         </p>
         <div className="flex items-center space-x-3 text-error text-xs font-semibold">
@@ -40,7 +40,7 @@ export function OrderTrackingSection({
 
   return (
     <div className="border border-neutral-200 p-5 bg-brand-cream/30 card-hover-lift gold-border-hover">
-      <p className="text-[10px] uppercase tracking-widest font-heading font-medium text-brand-gold mb-6">
+      <p className="text-xs uppercase tracking-wider font-heading font-medium text-brand-gold mb-6">
         Status Pesanan
       </p>
       <div className="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-6 md:gap-0">

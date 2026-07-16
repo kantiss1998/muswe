@@ -59,7 +59,7 @@ export function PageHero({
             {eyebrow && (
               <span
                 className={cn(
-                  'inline-block text-[10px] uppercase tracking-[0.25em] font-heading font-medium',
+                  'inline-block text-xs uppercase tracking-[0.1em] font-heading font-medium',
                   colors.eyebrow
                 )}
               >

@@ -82,7 +82,7 @@ export function ShippingRatesTable({
               </td>
               <td className="py-4 px-6 text-center">
                 <span
-                  className={`inline-block text-[8px] uppercase tracking-wider font-bold px-1.5 py-0.5 ${
+                  className={`inline-block text-xs uppercase tracking-wider font-bold px-1.5 py-0.5 ${
                     rate.is_active
                       ? 'bg-green-50 text-green-700 border border-green-200'
                       : 'bg-red-50 text-red-700 border border-red-200'

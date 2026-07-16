@@ -59,7 +59,7 @@ export function BannerFormModal({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Desktop Banner Image Uploader & Preview */}
           <div className="border border-neutral-200 p-4 space-y-3 bg-neutral-50/10">
-            <span className="block text-[10px] uppercase tracking-wider font-heading font-medium text-brand-black/70">
+            <span className="block text-xs uppercase tracking-wider font-heading font-medium text-brand-black/70">
               Gambar Desktop*
             </span>
             <div className="flex gap-3 items-start">
@@ -77,7 +77,7 @@ export function BannerFormModal({
                     }}
                   />
                 ) : (
-                  <span className="text-[8px] text-neutral-400 uppercase font-semibold">
+                  <span className="text-xs text-neutral-400 uppercase font-semibold">
                     No Image
                   </span>
                 )}
@@ -85,7 +85,7 @@ export function BannerFormModal({
               <div className="flex-1 space-y-2">
                 <input
                   type="text"
-                  className="w-full px-2 py-1.5 border border-neutral-200 outline-none text-[11px] bg-white focus:border-neutral-800"
+                  className="w-full px-2 py-1.5 border border-neutral-200 outline-none text-sm bg-white focus:border-neutral-800"
                   value={image_url}
                   onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="https://... atau unggah gambar"
@@ -115,7 +115,7 @@ export function BannerFormModal({
                   />
                   <label
                     htmlFor="banner-upload-desktop"
-                    className="cursor-pointer inline-flex items-center text-[9px] font-bold uppercase tracking-wider py-1 px-2.5 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none"
+                    className="cursor-pointer inline-flex items-center text-sm font-bold uppercase tracking-wider py-1 px-2.5 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none"
                   >
                     Unggah Desktop
                   </label>
@@ -126,7 +126,7 @@ export function BannerFormModal({
 
           {/* Mobile Banner Image Uploader & Preview */}
           <div className="border border-neutral-200 p-4 space-y-3 bg-neutral-50/10">
-            <span className="block text-[10px] uppercase tracking-wider font-heading font-medium text-brand-black/70">
+            <span className="block text-xs uppercase tracking-wider font-heading font-medium text-brand-black/70">
               Gambar Mobile (Opsional)
             </span>
             <div className="flex gap-3 items-start">
@@ -144,7 +144,7 @@ export function BannerFormModal({
                     }}
                   />
                 ) : (
-                  <span className="text-[8px] text-neutral-400 uppercase font-semibold">
+                  <span className="text-xs text-neutral-400 uppercase font-semibold">
                     No Image
                   </span>
                 )}
@@ -152,7 +152,7 @@ export function BannerFormModal({
               <div className="flex-1 space-y-2">
                 <input
                   type="text"
-                  className="w-full px-2 py-1.5 border border-neutral-200 outline-none text-[11px] bg-white focus:border-neutral-800"
+                  className="w-full px-2 py-1.5 border border-neutral-200 outline-none text-sm bg-white focus:border-neutral-800"
                   value={image_mobile_url}
                   onChange={(e) => setImageMobileUrl(e.target.value)}
                   placeholder="https://... atau unggah gambar"
@@ -181,7 +181,7 @@ export function BannerFormModal({
                   />
                   <label
                     htmlFor="banner-upload-mobile"
-                    className="cursor-pointer inline-flex items-center text-[9px] font-bold uppercase tracking-wider py-1 px-2.5 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none"
+                    className="cursor-pointer inline-flex items-center text-sm font-bold uppercase tracking-wider py-1 px-2.5 border border-neutral-800 text-neutral-850 hover:bg-neutral-900 hover:text-white transition duration-150 rounded-none"
                   >
                     Unggah Mobile
                   </label>
@@ -244,7 +244,7 @@ export function BannerFormModal({
           />
           <label
             htmlFor="banner_is_active"
-            className="select-none text-[10px] text-neutral-700 font-semibold uppercase tracking-wider cursor-pointer"
+            className="select-none text-xs text-neutral-700 font-semibold uppercase tracking-wider cursor-pointer"
           >
             Banner Aktif & Ditampilkan
           </label>

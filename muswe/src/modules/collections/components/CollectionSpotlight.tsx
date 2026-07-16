@@ -6,18 +6,22 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { Collection } from '@/modules/collections/types'
+import { ProductListItem } from '@/modules/products/types'
+import { ProductCard } from '@/modules/products/components/ProductCard'
 import { PageContainer } from '@/shared/components'
 import { EASE_PREMIUM } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
 interface CollectionSpotlightProps {
   collection: Collection
+  products?: ProductListItem[]
   variant?: 'light' | 'dark'
   index?: number
 }
 
 export function CollectionSpotlight({
   collection,
+  products = [],
   variant = 'light',
   index = 0,
 }: CollectionSpotlightProps): React.JSX.Element {
@@ -31,24 +35,24 @@ export function CollectionSpotlight({
         isDark ? 'bg-brand-black' : 'bg-brand-cream section-texture'
       )}
     >
-      <PageContainer className="py-12 md:py-16">
+      <div className="mx-auto w-full max-w-[1920px] px-0 lg:px-8 py-12 md:py-16">
         <div
           className={cn(
-            'grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center',
-            isReversed && 'lg:[&>*:first-child]:order-2 lg:[&>*:last-child]:order-1'
+            'flex flex-col lg:flex-row gap-8 lg:gap-16',
+            isReversed && 'lg:flex-row-reverse'
           )}
         >
-          {/* Image */}
+          {/* Left Side: Large Image */}
           <motion.div
             initial={{ opacity: 0, x: isReversed ? 30 : -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.7, ease: EASE_PREMIUM }}
-            className="relative"
+            className="w-full lg:w-1/2 relative px-4 lg:px-0"
           >
             <Link
               href={`/koleksi/${collection.slug}`}
-              className="group relative block aspect-[4/5] md:aspect-[3/4] w-full overflow-hidden"
+              className="group relative block aspect-[4/5] w-full overflow-hidden"
             >
               {collection.image_url ? (
                 <Image
@@ -63,80 +67,76 @@ export function CollectionSpotlight({
                   {collection.name}
                 </div>
               )}
-              <div className="absolute inset-0 gradient-overlay-dark opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
-
-              {/* Floating badge */}
-              <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/90 backdrop-blur-sm border border-white/50">
-                <span className="text-[9px] font-heading font-semibold uppercase tracking-[0.2em] text-brand-black">
-                  Koleksi Eksklusif
-                </span>
-              </div>
+              <div className="absolute inset-0 gradient-overlay-dark opacity-40 group-hover:opacity-60 transition-opacity duration-500" />
             </Link>
-
-            {/* Decorative frame offset */}
-            <div
-              className={cn(
-                'absolute -bottom-3 -right-3 w-full h-full border pointer-events-none hidden md:block',
-                isDark ? 'border-brand-gold/30' : 'border-brand-gold/40'
-              )}
-              aria-hidden
-            />
           </motion.div>
 
-          {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.15, ease: EASE_PREMIUM }}
-            className="space-y-6"
-          >
-            <div className="space-y-3">
-              <span
+          {/* Right Side: Content and Products */}
+          <div className="w-full lg:w-1/2 flex flex-col justify-center px-4 lg:px-0">
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.15, ease: EASE_PREMIUM }}
+              className="space-y-6 max-w-xl mb-10"
+            >
+              <div className="space-y-3">
+                <h2
+                  className={cn(
+                    'text-3xl md:text-5xl font-heading font-medium tracking-wider',
+                    isDark ? 'text-white' : 'text-brand-black'
+                  )}
+                >
+                  {collection.name}
+                </h2>
+              </div>
+
+              {collection.description && (
+                <p
+                  className={cn(
+                    'text-sm font-sans leading-relaxed',
+                    isDark ? 'text-neutral-300' : 'text-neutral-600'
+                  )}
+                >
+                  {collection.description}
+                </p>
+              )}
+
+              <Link
+                href={`/koleksi/${collection.slug}`}
                 className={cn(
-                  'inline-block text-[10px] uppercase tracking-[0.25em] font-heading font-medium',
-                  isDark ? 'text-brand-gold-light' : 'text-brand-gold'
-                )}
-              >
-                Koleksi Kurasi
-              </span>
-              <h2
-                className={cn(
-                  'text-2xl md:text-4xl font-heading font-light uppercase tracking-wider leading-tight',
+                  'inline-flex items-center gap-2 text-xs font-sans border-b border-current pb-1 transition-all duration-300 group/link hover:opacity-70 mt-2',
                   isDark ? 'text-white' : 'text-brand-black'
                 )}
               >
-                {collection.name}
-              </h2>
-              <div className="accent-line" />
-            </div>
+                <span>Jelajahi {collection.name}</span>
+              </Link>
+            </motion.div>
 
-            {collection.description && (
-              <p
-                className={cn(
-                  'text-xs md:text-sm font-sans leading-relaxed max-w-md',
-                  isDark ? 'text-neutral-400' : 'text-neutral-500'
-                )}
+            {/* Scrollable Product Carousel */}
+            {products.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="w-full relative"
               >
-                {collection.description}
-              </p>
+                <div className="flex gap-4 md:gap-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory pr-4 lg:pr-12">
+                  {products.map((product) => (
+                    <div
+                      key={product.id}
+                      className="w-[60vw] md:w-[35vw] lg:w-[22vw] flex-shrink-0 snap-start"
+                    >
+                      <ProductCard product={product} />
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
             )}
-
-            <Link
-              href={`/koleksi/${collection.slug}`}
-              className={cn(
-                'inline-flex items-center gap-2 text-[10px] font-heading font-semibold uppercase tracking-[0.2em] transition-all duration-300 group/link',
-                isDark
-                  ? 'text-white hover:text-brand-gold-light'
-                  : 'text-brand-black hover:text-brand-gold'
-              )}
-            >
-              <span className="border-b border-current pb-0.5">Jelajahi Koleksi</span>
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/link:translate-x-1" />
-            </Link>
-          </motion.div>
+          </div>
         </div>
-      </PageContainer>
+      </div>
     </section>
   )
 }

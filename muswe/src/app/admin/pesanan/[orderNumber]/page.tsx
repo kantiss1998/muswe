@@ -126,7 +126,7 @@ function AdminOrderDetailContent({ params }: AdminOrderDetailPageProps): React.J
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-neutral-400 text-xs tracking-widest uppercase animate-pulse">
+        <p className="text-neutral-400 text-xs tracking-wider uppercase animate-pulse">
           Memuat detail pesanan...
         </p>
       </div>
@@ -165,7 +165,7 @@ function AdminOrderDetailContent({ params }: AdminOrderDetailPageProps): React.J
             onClick={handleDownloadInvoice}
             variant="outline"
             isLoading={isInvoiceLoading}
-            className="text-[10px] font-bold uppercase py-2.5 px-4 border-neutral-800 text-neutral-800 hover:bg-neutral-50"
+            className="text-xs font-bold uppercase py-2.5 px-4 border-neutral-800 text-neutral-800 hover:bg-neutral-50"
           >
             <Download size={13} className="mr-1.5" /> Unduh Invoice
           </Button>

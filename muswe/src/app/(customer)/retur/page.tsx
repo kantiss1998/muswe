@@ -123,7 +123,7 @@ export default function ReturPage(): React.JSX.Element {
                   <h4 className="font-serif text-xs font-bold text-neutral-950 uppercase tracking-wide">
                     {step.title}
                   </h4>
-                  <p className="text-[11px] text-neutral-500 leading-relaxed font-medium">
+                  <p className="text-sm text-neutral-500 leading-relaxed font-medium">
                     {step.desc}
                   </p>
                 </div>

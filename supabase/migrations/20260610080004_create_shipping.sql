@@ -7,7 +7,7 @@
 -- Table: shipping_zones
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS shipping_zones (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(100) NOT NULL,
   description TEXT,
   is_active BOOLEAN NOT NULL DEFAULT true,
@@ -20,7 +20,7 @@ COMMENT ON TABLE shipping_zones IS 'Shipping zone groupings (e.g. Pulau Jawa, Lu
 -- Table: shipping_zone_coverage
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS shipping_zone_coverage (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   zone_id UUID NOT NULL REFERENCES shipping_zones(id) ON DELETE CASCADE,
   province_name VARCHAR(100) NOT NULL,
   UNIQUE (zone_id, province_name)
@@ -35,7 +35,7 @@ CREATE INDEX IF NOT EXISTS idx_shipping_zone_coverage_province ON shipping_zone_
 -- Table: shipping_rates
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS shipping_rates (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   zone_id UUID NOT NULL REFERENCES shipping_zones(id) ON DELETE CASCADE,
   courier_name VARCHAR(100) NOT NULL,
   price_per_kg NUMERIC(10,2) NOT NULL CHECK (price_per_kg >= 0),
@@ -56,7 +56,7 @@ CREATE INDEX IF NOT EXISTS idx_shipping_rates_is_active ON shipping_rates(is_act
 -- Table: districts
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS districts (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   province_name VARCHAR(100) NOT NULL,
   city_name VARCHAR(100) NOT NULL,
   district_name VARCHAR(100) NOT NULL,

@@ -26,7 +26,7 @@ export function FlashSaleListTable({
     <div className="border border-neutral-200 bg-white rounded-none overflow-hidden">
       {isLoading ? (
         <div className="py-24 text-center">
-          <p className="text-neutral-400 text-xs tracking-widest uppercase animate-pulse">
+          <p className="text-neutral-400 text-xs tracking-wider uppercase animate-pulse">
             Memuat flash sale...
           </p>
         </div>
@@ -38,7 +38,7 @@ export function FlashSaleListTable({
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-sans">
             <thead>
-              <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-widest font-bold text-[10px]">
+              <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-wider font-bold text-xs">
                 <th className="py-3 px-5">Nama Kampanye</th>
                 <th className="py-3 px-4">Slot Jadwal</th>
                 <th className="py-3 px-4 text-center">Item Promo</th>
@@ -60,14 +60,14 @@ export function FlashSaleListTable({
                         {camp.name}
                       </span>
                       {isRunning && (
-                        <span className="inline-block mt-1 text-[8px] bg-red-600 text-white font-bold tracking-wider uppercase px-2 py-0.5 rounded-none">
+                        <span className="inline-block mt-1 text-xs bg-red-600 text-white font-bold tracking-wider uppercase px-2 py-0.5 rounded-none">
                           Sedang Berjalan (LIVE)
                         </span>
                       )}
                     </td>
                     <td className="py-4 px-4 text-neutral-600 font-medium leading-relaxed">
                       <p>Mulai: {new Date(camp.starts_at).toLocaleString()}</p>
-                      <p className="text-[10px] text-neutral-400">
+                      <p className="text-xs text-neutral-400">
                         Selesai: {new Date(camp.ends_at).toLocaleString()}
                       </p>
                     </td>
@@ -77,7 +77,7 @@ export function FlashSaleListTable({
                     <td className="py-4 px-4 text-center">
                       <button
                         onClick={() => onToggleActive(camp)}
-                        className={`inline-flex items-center text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 transition ${
+                        className={`inline-flex items-center text-xs uppercase font-bold tracking-wider px-2.5 py-1 transition ${
                           camp.is_active
                             ? 'bg-neutral-900 text-white border border-neutral-900'
                             : 'bg-white text-neutral-400 border border-neutral-200'

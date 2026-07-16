@@ -24,7 +24,7 @@ export function AuthLoading({
         <div className="text-lg font-light tracking-[0.3em] uppercase text-brand-black select-none text-shimmer">
           MUSWE
         </div>
-        <p className="text-[9px] uppercase tracking-[0.2em] text-neutral-400 font-sans animate-pulse">
+        <p className="text-sm uppercase tracking-[0.1em] text-neutral-400 font-sans animate-pulse">
           {message}
         </p>
         <div className="w-12 h-[1px] bg-neutral-100 overflow-hidden relative">

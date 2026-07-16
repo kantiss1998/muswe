@@ -93,13 +93,13 @@ export default function RegisterPage(): React.JSX.Element {
       <Card bordered={true} className="w-full max-w-md shadow-lg p-8 md:p-10 border-neutral-200">
         <motion.div variants={staggerContainer} initial="hidden" animate="visible">
           <motion.div variants={fadeUpItem} className="flex flex-col space-y-2 text-center mb-8">
-            <span className="text-[10px] font-heading font-medium uppercase tracking-[0.3em] text-neutral-400 mb-2">
+            <span className="text-xs font-heading font-medium uppercase tracking-[0.3em] text-neutral-400 mb-2">
               MUSWE
             </span>
             <h2 className="text-xl md:text-2xl font-heading font-semibold uppercase tracking-wider text-brand-black">
               Daftar Akun
             </h2>
-            <p className="text-[11px] md:text-xs text-neutral-400 font-sans">
+            <p className="text-sm md:text-xs text-neutral-400 font-sans">
               Lengkapi data di bawah ini untuk bergabung dengan Muswe.
             </p>
           </motion.div>
@@ -174,7 +174,7 @@ export default function RegisterPage(): React.JSX.Element {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-neutral-200" />
             </div>
-            <div className="relative flex justify-center text-[10px] uppercase tracking-widest font-heading">
+            <div className="relative flex justify-center text-xs uppercase tracking-wider font-heading">
               <span className="bg-white px-3 text-neutral-400">Atau daftar dengan</span>
             </div>
           </motion.div>

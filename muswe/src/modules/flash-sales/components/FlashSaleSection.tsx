@@ -124,7 +124,7 @@ export function FlashSaleSection({ flashSale }: FlashSaleSectionProps): React.JS
           className="md:flex-row md:items-end md:justify-between md:mb-8 [&>span:first-child]:text-error [&_h2]:text-white"
         >
           <div className="flex items-center space-x-2 mt-4 md:mt-0">
-            <span className="text-[10px] uppercase tracking-wider font-heading font-medium text-neutral-500 mr-2">
+            <span className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-500 mr-2">
               Berakhir Dalam:
             </span>
             <div className="flex items-center space-x-1.5 font-heading text-xs font-semibold">

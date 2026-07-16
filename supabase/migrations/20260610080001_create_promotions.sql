@@ -7,7 +7,7 @@
 -- Table: vouchers
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS vouchers (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   code VARCHAR(50) NOT NULL UNIQUE,
   name VARCHAR(150) NOT NULL,
   discount_type TEXT NOT NULL CHECK (discount_type IN ('percentage', 'fixed')),
@@ -39,7 +39,7 @@ CREATE TRIGGER trg_vouchers_updated_at
 -- Table: flash_sales
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS flash_sales (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(150) NOT NULL,
   description TEXT,
   banner_url VARCHAR(500),
@@ -59,7 +59,7 @@ CREATE INDEX IF NOT EXISTS idx_flash_sales_dates ON flash_sales(starts_at, ends_
 -- Table: flash_sale_items
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS flash_sale_items (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   flash_sale_id UUID NOT NULL REFERENCES flash_sales(id) ON DELETE CASCADE,
   variant_id UUID NOT NULL REFERENCES product_variants(id) ON DELETE CASCADE,
   original_price NUMERIC(15,2) NOT NULL,

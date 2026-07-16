@@ -31,7 +31,7 @@ export function PageHeader({
     >
       <div className="flex flex-col space-y-2">
         {eyebrow && (
-          <span className="text-[10px] uppercase tracking-[0.25em] font-heading font-medium text-brand-gold">
+          <span className="text-xs uppercase tracking-[0.1em] font-heading font-medium text-brand-gold">
             {eyebrow}
           </span>
         )}

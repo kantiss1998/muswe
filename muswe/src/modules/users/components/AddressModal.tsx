@@ -415,7 +415,7 @@ export function AddressModal({
                   <p className="font-bold text-neutral-800">
                     {district.district_name}, {district.city_name}
                   </p>
-                  <p className="text-[10px] text-neutral-400 uppercase tracking-wider">
+                  <p className="text-xs text-neutral-400 uppercase tracking-wider">
                     {district.province_name}{' '}
                     {district.postal_code ? `• ${district.postal_code}` : ''}
                   </p>

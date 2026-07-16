@@ -7,7 +7,7 @@
 -- Table: banners
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS banners (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title VARCHAR(150) NOT NULL,
   subtitle VARCHAR(255),
   image_url VARCHAR(500) NOT NULL,
@@ -32,7 +32,7 @@ CREATE INDEX IF NOT EXISTS idx_banners_is_active ON banners(is_active);
 -- Table: landing_pages
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS landing_pages (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug VARCHAR(180) NOT NULL UNIQUE,
   title VARCHAR(255) NOT NULL,
   content JSONB NOT NULL DEFAULT '{}',
@@ -56,7 +56,7 @@ CREATE TRIGGER trg_landing_pages_updated_at
 -- Table: redirects
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS redirects (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   from_path VARCHAR(500) NOT NULL,
   to_path VARCHAR(500) NOT NULL,
   status_code INT NOT NULL DEFAULT 301 CHECK (status_code IN (301, 302)),
@@ -97,7 +97,7 @@ CREATE TRIGGER trg_site_settings_updated_at
 -- Table: admin_activity_logs
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS admin_activity_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   admin_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   action VARCHAR(100) NOT NULL,
   resource_type VARCHAR(50) NOT NULL,

@@ -38,7 +38,7 @@ export default function SyaratKetentuanPage(): React.JSX.Element {
     {
       title: '6. Hak Kekayaan Intelektual',
       content:
-        'Seluruh konten yang terdapat di situs ini, termasuk namun tidak terbatas pada logo, teks, foto produk, grafik, ilustrasi, source code, dan desain koleksi baju adalah hak kekayaan intelektual milik Muswe. Dilarang keras menggandakan, mendistribusikan, atau menyalahgunakan konten tersebut untuk kepentingan komersial pribadi tanpa izin tertulis dari kami.',
+        'Seluruh konten yang terdapat di situs ini, termasuk namun tidak terbatas pada logo, teks, foto produk, grafik, ilustrasi, source code, dan desain koleksi kerudung adalah hak kekayaan intelektual milik Muswe. Dilarang keras menggandakan, mendistribusikan, atau menyalahgunakan konten tersebut untuk kepentingan komersial pribadi tanpa izin tertulis dari kami.',
     },
   ]
 
@@ -53,7 +53,7 @@ export default function SyaratKetentuanPage(): React.JSX.Element {
       <PageContainer size="md" className="py-12 page-content">
         <div className="max-w-3xl mx-auto space-y-10">
           <div className="text-xs leading-relaxed text-neutral-500 font-sans">
-            <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-3">
+            <p className="text-neutral-400 text-xs uppercase tracking-wider mb-3">
               Terakhir diperbarui: 10 Juni 2026
             </p>
             <p>
@@ -79,7 +79,7 @@ export default function SyaratKetentuanPage(): React.JSX.Element {
             ))}
           </div>
 
-          <div className="border-t border-neutral-100 pt-8 text-center text-[10px] text-neutral-400 uppercase tracking-[0.2em] font-heading">
+          <div className="border-t border-neutral-100 pt-8 text-center text-xs text-neutral-400 uppercase tracking-[0.1em] font-heading">
             Governing fair transactions, ensuring premium experiences.
           </div>
         </div>

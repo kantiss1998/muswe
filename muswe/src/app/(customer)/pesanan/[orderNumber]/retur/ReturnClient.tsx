@@ -268,7 +268,7 @@ export default function ReturnPageClient({ params }: ReturnPageProps): React.JSX
       >
         <Link
           href={`/pesanan/${order.order_number}`}
-          className="inline-flex items-center text-[10px] uppercase tracking-wider font-semibold text-neutral-500 hover:text-brand-gold transition mt-2"
+          className="inline-flex items-center text-xs uppercase tracking-wider font-semibold text-neutral-500 hover:text-brand-gold transition mt-2"
         >
           <ArrowLeft size={13} className="mr-1" /> Kembali ke Detail Pesanan
         </Link>
@@ -309,7 +309,7 @@ export default function ReturnPageClient({ params }: ReturnPageProps): React.JSX
           <div className="flex justify-between items-center pt-4 border-t border-neutral-100">
             <Link
               href={`/pesanan/${order.order_number}`}
-              className="inline-flex items-center text-[10px] uppercase tracking-wider font-semibold text-neutral-500 hover:text-brand-gold transition"
+              className="inline-flex items-center text-xs uppercase tracking-wider font-semibold text-neutral-500 hover:text-brand-gold transition"
             >
               <ArrowLeft size={13} className="mr-1" /> Batal
             </Link>
@@ -317,7 +317,7 @@ export default function ReturnPageClient({ params }: ReturnPageProps): React.JSX
               type="submit"
               variant="primary"
               isLoading={isSubmitting}
-              className="text-[10px] uppercase tracking-widest font-bold py-3 px-6"
+              className="text-xs uppercase tracking-wider font-bold py-3 px-6"
             >
               Kirim Pengajuan
             </Button>

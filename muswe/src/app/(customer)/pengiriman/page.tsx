@@ -89,7 +89,7 @@ export default function PengirimanPage(): React.JSX.Element {
             <div className="border border-neutral-200 overflow-hidden rounded-none">
               <table className="w-full text-left border-collapse text-xs font-sans">
                 <thead>
-                  <tr className="bg-neutral-50 border-b border-neutral-200 text-neutral-900 font-bold uppercase tracking-wider text-[10px]">
+                  <tr className="bg-neutral-50 border-b border-neutral-200 text-neutral-900 font-bold uppercase tracking-wider text-xs">
                     <th className="p-4">Ekspedisi</th>
                     <th className="p-4">Cakupan Wilayah</th>
                     <th className="p-4">Estimasi Pengiriman</th>

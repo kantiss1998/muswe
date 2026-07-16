@@ -24,7 +24,7 @@ export function ActivityLogsTable({ logsList }: ActivityLogsTableProps): React.J
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs font-sans">
           <thead>
-            <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-widest font-bold text-[10px]">
+            <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-wider font-bold text-xs">
               <th className="py-3 px-5">Waktu Tulis</th>
               <th className="py-3 px-4">Operator</th>
               <th className="py-3 px-4">Tindakan / Resource</th>
@@ -49,15 +49,15 @@ export function ActivityLogsTable({ logsList }: ActivityLogsTableProps): React.J
                 </td>
                 <td className="py-3 px-4">
                   <p>{log.profiles?.name || 'Administrator'}</p>
-                  <p className="text-[10px] text-neutral-400 font-normal">
+                  <p className="text-xs text-neutral-400 font-normal">
                     {log.profiles?.email || 'admin@site.com'}
                   </p>
                 </td>
                 <td className="py-3 px-4 leading-relaxed">
-                  <span className="font-semibold text-neutral-900 font-mono text-[10px] bg-neutral-100 px-1 py-0.5 select-all">
+                  <span className="font-semibold text-neutral-900 font-mono text-xs bg-neutral-100 px-1 py-0.5 select-all">
                     {log.action}
                   </span>
-                  <p className="text-[10px] text-neutral-400 font-normal mt-0.5">
+                  <p className="text-xs text-neutral-400 font-normal mt-0.5">
                     Tipe: {log.resource_type} | ID: {log.resource_id || '-'}
                   </p>
                 </td>

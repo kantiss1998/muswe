@@ -287,7 +287,7 @@ export default function PesananPage(): React.JSX.Element {
             <Button
               onClick={() => setCancelOrderInfo(null)}
               variant="outline"
-              className="flex-1 py-3 text-xs uppercase tracking-widest font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
+              className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
             >
               Kembali
             </Button>
@@ -295,7 +295,7 @@ export default function PesananPage(): React.JSX.Element {
               onClick={executeCancelOrder}
               isLoading={cancelMutation.isPending}
               disabled={cancelMutation.isPending}
-              className="flex-1 py-3 text-xs uppercase tracking-widest font-semibold bg-red-600 border-red-600 text-white hover:bg-red-700 hover:border-red-700"
+              className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold bg-red-600 border-red-600 text-white hover:bg-red-700 hover:border-red-700"
             >
               Batalkan
             </Button>
@@ -319,7 +319,7 @@ export default function PesananPage(): React.JSX.Element {
             <Button
               onClick={() => setReceiptOrderInfo(null)}
               variant="outline"
-              className="flex-1 py-3 text-xs uppercase tracking-widest font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
+              className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
             >
               Kembali
             </Button>
@@ -327,7 +327,7 @@ export default function PesananPage(): React.JSX.Element {
               onClick={executeConfirmDelivery}
               isLoading={confirmMutation.isPending}
               disabled={confirmMutation.isPending}
-              className="flex-1 py-3 text-xs uppercase tracking-widest font-semibold"
+              className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold"
             >
               Konfirmasi
             </Button>

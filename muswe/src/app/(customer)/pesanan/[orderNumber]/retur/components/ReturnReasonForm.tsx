@@ -34,7 +34,7 @@ export function ReturnReasonForm({
   return (
     <div className="border border-neutral-200 p-5 sm:p-6 card-hover-lift gold-border-hover bg-white space-y-4 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold to-brand-gold-light" />
-      <h2 className="text-[10px] uppercase tracking-widest font-heading font-medium text-brand-gold border-b border-neutral-100 pb-2">
+      <h2 className="text-xs uppercase tracking-wider font-heading font-medium text-brand-gold border-b border-neutral-100 pb-2">
         Alasan Pengembalian*
       </h2>
       <div className="space-y-4">
@@ -50,7 +50,7 @@ export function ReturnReasonForm({
 
       {/* Media Upload */}
       <div className="space-y-3 pt-4 border-t border-neutral-100">
-        <label className="block text-xs uppercase tracking-widest font-semibold text-neutral-500">
+        <label className="block text-xs uppercase tracking-wider font-semibold text-neutral-500">
           Lampirkan Bukti Foto (Opsional, Maks 2 Foto)
         </label>
 
@@ -75,7 +75,7 @@ export function ReturnReasonForm({
           {returnFiles.length < 2 && (
             <label className="w-24 h-24 border-2 border-dashed border-neutral-300 flex flex-col items-center justify-center text-neutral-500 cursor-pointer hover:border-brand-gold hover:text-brand-gold transition group">
               <ImageIcon size={20} className="mb-1 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] uppercase font-bold tracking-wider">Tambah</span>
+              <span className="text-xs uppercase font-bold tracking-wider">Tambah</span>
               <input
                 type="file"
                 accept="image/*"
@@ -86,7 +86,7 @@ export function ReturnReasonForm({
             </label>
           )}
         </div>
-        <p className="text-[10px] text-neutral-400">Format: JPG/PNG, maks 2MB per foto.</p>
+        <p className="text-xs text-neutral-400">Format: JPG/PNG, maks 2MB per foto.</p>
       </div>
     </div>
   )

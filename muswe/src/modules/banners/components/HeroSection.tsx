@@ -27,14 +27,14 @@ export function HeroSection({ banners }: HeroSectionProps): React.JSX.Element {
   }, [banners])
 
   if (banners.length === 0) {
-    // Elegant high fashion fallback placeholder banner
+    // Elegant premium hijab fallback placeholder banner
     return (
       <div className="relative w-full bg-brand-cream flex items-center justify-center aspect-[21/9] md:aspect-[16/9]">
         <div className="text-center space-y-4 max-w-lg px-4">
-          <span className="text-[10px] uppercase tracking-widest font-heading font-medium text-neutral-400">
+          <span className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-400">
             Koleksi Baru
           </span>
-          <h2 className="text-3xl md:text-5xl font-heading font-light uppercase tracking-widest text-brand-black leading-tight">
+          <h2 className="text-3xl md:text-5xl font-heading font-light uppercase tracking-wider text-brand-black leading-tight">
             Elegan dalam Kesederhanaan
           </h2>
           <p className="text-xs text-neutral-500 font-sans max-w-sm mx-auto">
@@ -127,7 +127,7 @@ export function HeroSection({ banners }: HeroSectionProps): React.JSX.Element {
           <div className="absolute inset-0 bg-gradient-to-r from-neutral-900/60 via-neutral-900/25 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/40 via-transparent to-neutral-900/10" />
 
-          <div className="absolute inset-0 flex items-center">
+          <div className="absolute inset-0 flex items-end pb-24">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
               <div className="max-w-md md:max-w-xl text-left space-y-4 md:space-y-6">
                 <motion.span
@@ -137,7 +137,7 @@ export function HeroSection({ banners }: HeroSectionProps): React.JSX.Element {
                     opacity: 1,
                     transition: { delay: 0.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] },
                   }}
-                  className="inline-block text-[10px] font-heading font-medium uppercase tracking-[0.25em] text-brand-gold-light bg-brand-black/40 backdrop-blur-sm px-4 py-1.5 border border-brand-gold/30"
+                  className="inline-block text-xs font-sans font-semibold uppercase tracking-[0.1em] text-white"
                 >
                   {currentBanner.subtitle || 'Koleksi Terbaru'}
                 </motion.span>
@@ -149,7 +149,7 @@ export function HeroSection({ banners }: HeroSectionProps): React.JSX.Element {
                     opacity: 1,
                     transition: { delay: 0.5, duration: 0.7, ease: [0.16, 1, 0.3, 1] },
                   }}
-                  className="text-3xl md:text-5xl lg:text-7xl font-heading font-light uppercase tracking-wider text-white leading-[1.1]"
+                  className="text-4xl md:text-6xl lg:text-7xl font-heading font-medium tracking-wide text-white leading-tight"
                 >
                   {currentBanner.title}
                 </motion.h1>
@@ -165,8 +165,8 @@ export function HeroSection({ banners }: HeroSectionProps): React.JSX.Element {
                     className="pt-4"
                   >
                     <Link href={currentBanner.link_url}>
-                      <Button variant="primary" size="md">
-                        Jelajahi Koleksi
+                      <Button variant="outline" size="md" className="border-white text-white hover:bg-white hover:text-brand-black">
+                        Shop Now
                       </Button>
                     </Link>
                   </motion.div>

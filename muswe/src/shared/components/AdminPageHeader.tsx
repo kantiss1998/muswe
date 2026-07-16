@@ -22,7 +22,7 @@ export function AdminPageHeader({
       )}
     >
       <div className="space-y-1">
-        <span className="text-[10px] uppercase tracking-[0.2em] font-heading font-medium text-brand-gold">
+        <span className="text-xs uppercase tracking-[0.1em] font-heading font-medium text-brand-gold">
           Admin Panel
         </span>
         <h2 className="text-xl md:text-2xl font-heading font-light uppercase tracking-wider text-brand-black">

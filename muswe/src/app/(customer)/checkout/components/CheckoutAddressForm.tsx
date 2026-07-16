@@ -39,14 +39,14 @@ export function CheckoutAddressForm({
       {/* Address Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xs uppercase tracking-widest font-heading font-bold text-brand-black flex items-center">
+          <h2 className="text-xs uppercase tracking-wider font-heading font-bold text-brand-black flex items-center">
             <MapPin size={14} className="mr-2 text-neutral-500" /> Alamat Pengiriman
           </h2>
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={onAddNewAddress}
-            className="inline-flex items-center text-[11px] text-neutral-600 hover:text-brand-black font-heading font-medium uppercase tracking-wider transition-colors duration-200"
+            className="inline-flex items-center text-sm text-neutral-600 hover:text-brand-black font-heading font-medium uppercase tracking-wider transition-colors duration-200"
           >
             <Plus size={12} className="mr-1" /> Tambah Alamat
           </motion.button>
@@ -71,7 +71,7 @@ export function CheckoutAddressForm({
                 <p className="text-neutral-500 text-xs mt-1 leading-relaxed">
                   {selectedAddress.full_address}
                 </p>
-                <p className="text-[10px] text-neutral-400 mt-1 font-sans">
+                <p className="text-xs text-neutral-400 mt-1 font-sans">
                   {selectedAddress.district_name}, {selectedAddress.city_name},{' '}
                   {selectedAddress.province_name} {selectedAddress.postal_code}
                 </p>
@@ -85,7 +85,7 @@ export function CheckoutAddressForm({
             {/* Other Addresses */}
             {addresses.length > 1 && (
               <div className="border border-neutral-200 p-4 space-y-3 bg-white">
-                <p className="text-[10px] text-neutral-400 font-heading font-medium uppercase tracking-widest">
+                <p className="text-xs text-neutral-400 font-heading font-medium uppercase tracking-wider">
                   Pilih Alamat Lain:
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto pr-1">
@@ -107,13 +107,13 @@ export function CheckoutAddressForm({
                         }}
                         className="p-3 border border-neutral-200 text-xs cursor-pointer bg-white transition-all duration-200"
                       >
-                        <p className="font-heading font-medium text-[10px] text-brand-black uppercase tracking-wider">
+                        <p className="font-heading font-medium text-xs text-brand-black uppercase tracking-wider">
                           {address.label}
                         </p>
                         <p className="font-sans text-neutral-700 mt-1 font-medium">
                           {address.recipient_name}
                         </p>
-                        <p className="text-neutral-500 truncate mt-0.5 text-[11px]">
+                        <p className="text-neutral-500 truncate mt-0.5 text-sm">
                           {address.full_address}
                         </p>
                       </motion.div>
@@ -138,7 +138,7 @@ export function CheckoutAddressForm({
 
       {/* Shipping Method Section */}
       <div className="space-y-4 pt-4 border-t border-neutral-100">
-        <h2 className="text-xs uppercase tracking-widest font-heading font-bold text-brand-black flex items-center">
+        <h2 className="text-xs uppercase tracking-wider font-heading font-bold text-brand-black flex items-center">
           <Truck size={14} className="mr-2 text-neutral-500" /> Opsi Pengiriman
         </h2>
 
@@ -185,7 +185,7 @@ export function CheckoutAddressForm({
                     {formatIDR(option.price)}
                   </span>
                 </div>
-                <p className="text-[11px] text-neutral-400">
+                <p className="text-sm text-neutral-400">
                   Estimasi tiba: {option.etd_min} - {option.etd_max} Hari
                 </p>
                 {selectedCourier?.id === option.id && (

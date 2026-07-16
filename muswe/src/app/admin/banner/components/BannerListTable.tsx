@@ -32,7 +32,7 @@ export function BannerListTable({
   if (isLoading) {
     return (
       <div className="py-24 text-center">
-        <p className="text-neutral-400 text-xs tracking-widest uppercase animate-pulse">
+        <p className="text-neutral-400 text-xs tracking-wider uppercase animate-pulse">
           Memuat banner...
         </p>
       </div>
@@ -68,7 +68,7 @@ export function BannerListTable({
     <div className="overflow-x-auto">
       <table className="w-full text-left text-xs font-sans">
         <thead>
-          <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-widest font-bold text-[10px]">
+          <tr className="bg-neutral-50/50 border-b border-neutral-200 text-neutral-400 uppercase tracking-wider font-bold text-xs">
             <th className="py-3 px-5">Banner Preview</th>
             <th className="py-3 px-4">Posisi</th>
             <th className="py-3 px-4 text-center">No. Urut</th>
@@ -99,13 +99,13 @@ export function BannerListTable({
                     {b.title || 'Untitled Banner'}
                   </span>
                   {b.subtitle && (
-                    <span className="text-[10px] text-neutral-400 font-normal mt-0.5 block">
+                    <span className="text-xs text-neutral-400 font-normal mt-0.5 block">
                       {b.subtitle}
                     </span>
                   )}
                 </div>
               </td>
-              <td className="py-4 px-4 font-mono text-neutral-500 uppercase text-[10px] tracking-wider font-semibold">
+              <td className="py-4 px-4 font-mono text-neutral-500 uppercase text-xs tracking-wider font-semibold">
                 {b.position === 'homepage_hero' ? 'Hero Slider' : 'Mid Banner'}
               </td>
               <td className="py-4 px-4 text-center font-semibold text-neutral-900">
@@ -115,7 +115,7 @@ export function BannerListTable({
                 {b.starts_at ? (
                   <>
                     <p>{new Date(b.starts_at).toLocaleDateString()}</p>
-                    <p className="text-[10px] text-neutral-400">
+                    <p className="text-xs text-neutral-400">
                       s.d {b.ends_at ? new Date(b.ends_at).toLocaleDateString() : 'Selamanya'}
                     </p>
                   </>
@@ -126,7 +126,7 @@ export function BannerListTable({
               <td className="py-4 px-4 text-center">
                 <button
                   onClick={() => onToggleActive(b)}
-                  className={`inline-flex items-center text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 transition ${
+                  className={`inline-flex items-center text-xs uppercase font-bold tracking-wider px-2.5 py-1 transition ${
                     b.is_active
                       ? 'bg-neutral-900 text-white border border-neutral-900'
                       : 'bg-white text-neutral-400 border border-neutral-200'

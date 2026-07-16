@@ -79,7 +79,7 @@ export function MiniCartDrawer(): React.JSX.Element {
             <div className="flex items-center justify-between p-6 border-b border-neutral-100 mt-[3px]">
               <div className="flex items-center space-x-2">
                 <ShoppingBag className="h-4 w-4 text-brand-gold" aria-hidden="true" />
-                <span className="font-heading text-sm font-bold tracking-[0.15em] text-brand-black uppercase">
+                <span className="font-heading text-sm font-bold tracking-wider text-brand-black uppercase">
                   KERANJANG ({totalQuantity})
                 </span>
               </div>
@@ -106,7 +106,7 @@ export function MiniCartDrawer(): React.JSX.Element {
                     <p className="text-xs font-heading font-semibold uppercase tracking-wider text-brand-black">
                       Keranjang Anda Kosong
                     </p>
-                    <p className="text-[10px] text-neutral-400 font-sans max-w-[200px]">
+                    <p className="text-xs text-neutral-400 font-sans max-w-[200px]">
                       Simpan produk impian Anda untuk memproses checkout.
                     </p>
                   </div>
@@ -114,7 +114,7 @@ export function MiniCartDrawer(): React.JSX.Element {
                     onClick={() => setCartDrawerOpen(false)}
                     variant="outline"
                     size="sm"
-                    className="text-[10px] uppercase font-bold tracking-wider mt-2"
+                    className="text-xs uppercase font-bold tracking-wider mt-2"
                   >
                     Jelajahi Produk
                   </Button>
@@ -139,7 +139,7 @@ export function MiniCartDrawer(): React.JSX.Element {
                           className="object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[8px] text-neutral-400 uppercase font-sans">
+                        <div className="w-full h-full flex items-center justify-center text-xs text-neutral-400 uppercase font-sans">
                           No Img
                         </div>
                       )}
@@ -173,7 +173,7 @@ export function MiniCartDrawer(): React.JSX.Element {
                         </button>
                       </div>
 
-                      <p className="text-[9px] uppercase tracking-wider font-heading font-medium text-neutral-400">
+                      <p className="text-sm uppercase tracking-wider font-heading font-medium text-neutral-400">
                         Varian: {item.variantName || 'Default'}
                       </p>
 
@@ -190,7 +190,7 @@ export function MiniCartDrawer(): React.JSX.Element {
                             <Minus className="h-2.5 w-2.5" aria-hidden="true" />
                           </button>
                           <span
-                            className="px-2 text-[10px] font-sans font-semibold text-brand-black w-6 text-center select-none"
+                            className="px-2 text-xs font-sans font-semibold text-brand-black w-6 text-center select-none"
                             aria-live="polite"
                           >
                             {item.quantity}
@@ -233,7 +233,7 @@ export function MiniCartDrawer(): React.JSX.Element {
                   <Link href="/cart" onClick={() => setCartDrawerOpen(false)} className="w-full">
                     <Button
                       variant="outline"
-                      className="w-full text-[10px] uppercase font-bold py-3.5"
+                      className="w-full text-xs uppercase font-bold py-3.5"
                     >
                       Lihat Keranjang
                     </Button>
@@ -245,7 +245,7 @@ export function MiniCartDrawer(): React.JSX.Element {
                   >
                     <Button
                       variant="primary"
-                      className="w-full text-[10px] uppercase font-bold py-3.5 flex items-center justify-center space-x-1.5"
+                      className="w-full text-xs uppercase font-bold py-3.5 flex items-center justify-center space-x-1.5"
                     >
                       <span>Checkout</span>
                       <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -253,7 +253,7 @@ export function MiniCartDrawer(): React.JSX.Element {
                   </Link>
                 </div>
 
-                <p className="text-[8px] text-center text-neutral-400 leading-normal font-sans">
+                <p className="text-xs text-center text-neutral-400 leading-normal font-sans">
                   * Biaya pengiriman dan kode diskon akan dihitung di halaman checkout.
                 </p>
               </div>

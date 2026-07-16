@@ -79,13 +79,13 @@ export default function ResetPasswordPage(): React.JSX.Element {
       >
         <Card bordered={true} className="w-full max-w-md shadow-lg p-8 md:p-10 border-neutral-200">
           <div className="flex flex-col space-y-2 text-center mb-8">
-            <span className="text-[10px] font-heading font-medium uppercase tracking-[0.3em] text-neutral-400 mb-2">
+            <span className="text-xs font-heading font-medium uppercase tracking-[0.3em] text-neutral-400 mb-2">
               MUSWE
             </span>
             <h2 className="text-xl md:text-2xl font-heading font-semibold uppercase tracking-wider text-brand-black">
               Reset Kata Sandi
             </h2>
-            <p className="text-[11px] md:text-xs text-neutral-400 font-sans">
+            <p className="text-sm md:text-xs text-neutral-400 font-sans">
               Masukkan kata sandi baru Anda di bawah ini.
             </p>
           </div>

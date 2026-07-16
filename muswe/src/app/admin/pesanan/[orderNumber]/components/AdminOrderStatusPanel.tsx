@@ -44,14 +44,14 @@ export function AdminOrderStatusPanel({
           <>
             <Button
               onClick={() => handleUpdateStatus('processing')}
-              className="w-full py-3 text-[10px] uppercase tracking-wider font-bold"
+              className="w-full py-3 text-xs uppercase tracking-wider font-bold"
             >
               Konfirmasi Pembayaran Manual
             </Button>
             <Button
               onClick={() => handleUpdateStatus('cancelled')}
               variant="outline"
-              className="w-full py-3 text-[10px] uppercase tracking-wider font-bold border-red-150 text-red-500 hover:bg-red-50"
+              className="w-full py-3 text-xs uppercase tracking-wider font-bold border-red-150 text-red-500 hover:bg-red-50"
             >
               Batalkan Transaksi
             </Button>
@@ -68,14 +68,14 @@ export function AdminOrderStatusPanel({
             />
             <Button
               onClick={() => handleUpdateStatus('shipped')}
-              className="w-full py-3 text-[10px] uppercase tracking-wider font-bold"
+              className="w-full py-3 text-xs uppercase tracking-wider font-bold"
             >
               Kirim & Input Resi
             </Button>
             <Button
               onClick={() => handleUpdateStatus('cancelled')}
               variant="outline"
-              className="w-full py-3 text-[10px] uppercase tracking-wider font-bold border-red-150 text-red-500 hover:bg-red-50"
+              className="w-full py-3 text-xs uppercase tracking-wider font-bold border-red-150 text-red-500 hover:bg-red-50"
             >
               Batalkan Transaksi
             </Button>
@@ -85,7 +85,7 @@ export function AdminOrderStatusPanel({
         {status === 'shipped' && (
           <Button
             onClick={() => handleUpdateStatus('completed')}
-            className="w-full py-3 text-[10px] uppercase tracking-wider font-bold mt-2"
+            className="w-full py-3 text-xs uppercase tracking-wider font-bold mt-2"
           >
             Tandai Selesai (Diterima)
           </Button>

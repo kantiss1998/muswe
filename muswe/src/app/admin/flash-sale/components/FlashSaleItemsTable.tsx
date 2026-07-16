@@ -16,13 +16,13 @@ export function FlashSaleItemsTable({
   return (
     <div className="border border-neutral-200 bg-neutral-50/50">
       {items.length === 0 ? (
-        <p className="text-center text-neutral-400 py-6 text-[10px] italic uppercase tracking-wider">
+        <p className="text-center text-neutral-400 py-6 text-xs italic uppercase tracking-wider">
           Belum ada produk untuk promo ini
         </p>
       ) : (
         <div className="overflow-x-auto max-h-60">
           <table className="w-full text-left">
-            <thead className="bg-neutral-100 border-b border-neutral-200 text-[9px] uppercase tracking-widest text-neutral-500 font-bold sticky top-0">
+            <thead className="bg-neutral-100 border-b border-neutral-200 text-sm uppercase tracking-wider text-neutral-500 font-bold sticky top-0">
               <tr>
                 <th className="py-2 px-3">Produk & Varian</th>
                 <th className="py-2 px-3">Harga Asli</th>
@@ -31,14 +31,14 @@ export function FlashSaleItemsTable({
                 <th className="py-2 px-3">Hapus</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100 text-[11px] font-medium bg-white">
+            <tbody className="divide-y divide-neutral-100 text-sm font-medium bg-white">
               {items.map((it, idx) => (
                 <tr key={it.variant_id}>
                   <td className="py-2 px-3">
                     <span className="block font-bold text-neutral-800 line-clamp-1">
                       {it.prodName}
                     </span>
-                    <span className="text-[9px] text-neutral-500 uppercase">{it.name}</span>
+                    <span className="text-sm text-neutral-500 uppercase">{it.name}</span>
                   </td>
                   <td className="py-2 px-3 text-neutral-500">
                     Rp {it.original_price.toLocaleString()}
@@ -46,7 +46,7 @@ export function FlashSaleItemsTable({
                   <td className="py-2 px-3">
                     <input
                       type="number"
-                      className="w-20 border border-neutral-200 p-1 outline-none focus:border-brand-gold text-[10px]"
+                      className="w-20 border border-neutral-200 p-1 outline-none focus:border-brand-gold text-xs"
                       value={it.sale_price}
                       onChange={(e) =>
                         handleUpdateItemField(idx, 'sale_price', Number(e.target.value))
@@ -56,7 +56,7 @@ export function FlashSaleItemsTable({
                   <td className="py-2 px-3">
                     <input
                       type="number"
-                      className="w-16 border border-neutral-200 p-1 outline-none focus:border-brand-gold text-[10px]"
+                      className="w-16 border border-neutral-200 p-1 outline-none focus:border-brand-gold text-xs"
                       value={it.quota}
                       onChange={(e) => handleUpdateItemField(idx, 'quota', Number(e.target.value))}
                     />

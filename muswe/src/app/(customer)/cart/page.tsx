@@ -40,7 +40,7 @@ export default function CartPage(): React.JSX.Element {
           subtitle="Memuat keranjang belanja Anda..."
         />
         <PageContainer className="py-10 page-content">
-          <div className="py-20 text-center text-xs text-neutral-400 uppercase tracking-widest animate-pulse">
+          <div className="py-20 text-center text-xs text-neutral-400 uppercase tracking-wider animate-pulse">
             Memuat keranjang...
           </div>
         </PageContainer>
@@ -119,7 +119,7 @@ export default function CartPage(): React.JSX.Element {
                             className="object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-[8px] text-neutral-400 uppercase font-sans">
+                          <div className="w-full h-full flex items-center justify-center text-xs text-neutral-400 uppercase font-sans">
                             No Img
                           </div>
                         )}
@@ -133,10 +133,10 @@ export default function CartPage(): React.JSX.Element {
                               {item.productName || item.name}
                             </h3>
                           </Link>
-                          <p className="text-[10px] uppercase tracking-wider font-heading font-medium text-neutral-400">
+                          <p className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-400">
                             Varian: {item.variantName || 'Default'}
                           </p>
-                          <p className="text-[9px] text-neutral-400 font-sans">SKU: {item.sku}</p>
+                          <p className="text-sm text-neutral-400 font-sans">SKU: {item.sku}</p>
 
                           {/* Remove Action */}
                           <motion.button
@@ -144,7 +144,7 @@ export default function CartPage(): React.JSX.Element {
                             onClick={() =>
                               handleRemove(item.variantId, item.productName || item.name)
                             }
-                            className="flex items-center text-[10px] text-red-500 hover:text-red-700 space-x-1 pt-2 font-sans"
+                            className="flex items-center text-xs text-red-500 hover:text-red-700 space-x-1 pt-2 font-sans"
                           >
                             <Trash2 className="h-3 w-3" />
                             <span>Hapus</span>
@@ -159,7 +159,7 @@ export default function CartPage(): React.JSX.Element {
                               {formatIDR(item.price * item.quantity)}
                             </span>
                             {item.comparePrice && item.comparePrice > item.price && (
-                              <span className="text-[10px] font-sans text-neutral-400 line-through">
+                              <span className="text-xs font-sans text-neutral-400 line-through">
                                 {formatIDR(item.comparePrice * item.quantity)}
                               </span>
                             )}
@@ -176,7 +176,7 @@ export default function CartPage(): React.JSX.Element {
                             >
                               <Minus className="h-2.5 w-2.5" />
                             </motion.button>
-                            <span className="px-3 text-[11px] font-sans font-semibold text-brand-black w-6 text-center select-none">
+                            <span className="px-3 text-sm font-sans font-semibold text-brand-black w-6 text-center select-none">
                               {item.quantity}
                             </span>
                             <motion.button
@@ -248,7 +248,7 @@ export default function CartPage(): React.JSX.Element {
                   </Button>
                 </Link>
 
-                <div className="bg-neutral-50/50 border border-neutral-200 border-l-2 border-l-brand-gold p-4 rounded-none text-[10px] text-neutral-400 leading-relaxed font-sans">
+                <div className="bg-neutral-50/50 border border-neutral-200 border-l-2 border-l-brand-gold p-4 rounded-none text-xs text-neutral-400 leading-relaxed font-sans">
                   Selesaikan pemesanan Anda dengan aman. Kami mendukung pembayaran Transfer Bank
                   otomatis, QRIS, GoPay, dan ShopeePay via Midtrans.
                 </div>

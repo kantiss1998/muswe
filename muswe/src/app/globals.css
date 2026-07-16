@@ -388,7 +388,11 @@ select:focus {
 
 .card-hover-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(23, 23, 23, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.spring-transition {
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 /* Gradient mesh background for hero sections */

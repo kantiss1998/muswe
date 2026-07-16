@@ -31,7 +31,7 @@ export function SettingsForm({
     <form onSubmit={handleSaveSettings} className="space-y-8 max-w-3xl">
       {Object.entries(settingsByGroup).map(([group, list]) => (
         <div key={group} className="border border-neutral-200 bg-white p-5 rounded-none space-y-4">
-          <h3 className="text-xs uppercase font-bold tracking-widest text-neutral-400 border-b border-neutral-100 pb-2">
+          <h3 className="text-xs uppercase font-bold tracking-wider text-neutral-400 border-b border-neutral-100 pb-2">
             {groupLabels[group] || group}
           </h3>
 
@@ -83,7 +83,7 @@ export function SettingsForm({
         <Button
           type="submit"
           isLoading={isPending}
-          className="text-xs uppercase font-bold tracking-widest py-3 px-6"
+          className="text-xs uppercase font-bold tracking-wider py-3 px-6"
         >
           Simpan Semua Pengaturan
         </Button>

@@ -23,7 +23,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && (
           <label
             htmlFor={textareaId}
-            className="text-[10px] uppercase tracking-wider font-heading font-medium text-brand-black/70 transition-colors duration-200"
+            className="text-xs uppercase tracking-wider font-heading font-medium text-brand-black/70 transition-colors duration-200"
           >
             {label}
           </label>
@@ -52,13 +52,13 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         </div>
 
         {error && (
-          <span id={errorId} className="text-[10px] text-red-500 tracking-wide font-sans">
+          <span id={errorId} className="text-xs text-red-500 tracking-wide font-sans">
             {error}
           </span>
         )}
 
         {!error && helperText && (
-          <span id={helperId} className="text-[10px] text-neutral-500 tracking-wide font-sans">
+          <span id={helperId} className="text-xs text-neutral-500 tracking-wide font-sans">
             {helperText}
           </span>
         )}

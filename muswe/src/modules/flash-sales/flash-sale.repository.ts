@@ -3,6 +3,7 @@ import { adminLogRepository } from '@/modules/admin-logs/admin-log.repository'
 import { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/shared/types/database'
 import { FlashSaleItemDetail, FlashSaleDetail, AdminFlashSaleListItem } from './types'
+
 import { ApiListResponse, ApiResponse, ok, paginated, fail } from '@/lib/api-response'
 import { ApiErrorCode } from '@/lib/api-errors'
 import { createServerClient } from '@/lib/supabase/server'
@@ -12,8 +13,7 @@ export class FlashSaleRepository {
     client?: SupabaseClient<Database>
   ): Promise<ApiResponse<FlashSaleDetail | null>> {
     const supabase = client || (await createServerClient())
-    const now = new Date().toISOString()
-
+    
     // Fetch active flash sale that is currently running
     const { data, error } = await supabase
       .from('flash_sales')
@@ -33,8 +33,6 @@ export class FlashSaleRepository {
         `
       )
       .eq('is_active', true)
-      .lte('starts_at', now)
-      .gte('ends_at', now)
       .limit(1)
       .maybeSingle()
 

@@ -14,7 +14,7 @@ export function OrderItemsList({
   return (
     <div className="border border-neutral-200 p-5 sm:p-6 card-hover-lift gold-border-hover bg-white space-y-4 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold to-brand-gold-light" />
-      <h2 className="text-[10px] uppercase tracking-widest font-heading font-medium text-brand-gold border-b border-neutral-100 pb-2">
+      <h2 className="text-xs uppercase tracking-wider font-heading font-medium text-brand-gold border-b border-neutral-100 pb-2">
         Item Pesanan
       </h2>
       <div className="divide-y divide-neutral-100">
@@ -41,7 +41,7 @@ export function OrderItemsList({
                     <Button
                       onClick={() => onOpenReviewModal(item)}
                       variant="outline"
-                      className="text-[10px] py-1 px-3 h-fit uppercase tracking-wider font-semibold border-neutral-300 hover:bg-neutral-50"
+                      className="text-xs py-1 px-3 h-fit uppercase tracking-wider font-semibold border-neutral-300 hover:bg-neutral-50"
                     >
                       Tulis Ulasan
                     </Button>

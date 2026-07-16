@@ -94,7 +94,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
             <div className="space-y-6">
               <div className="space-y-1">
-                <span className="text-[10px] uppercase tracking-widest font-heading font-medium text-neutral-400">
+                <span className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-400">
                   Cari Koleksi
                 </span>
                 <h3 className="text-sm font-heading font-semibold uppercase tracking-wider text-brand-black">
@@ -120,13 +120,13 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
               {searchQuery.trim().length >= 2 && (
                 <div className="border border-neutral-100 bg-neutral-50/50 p-4 -mt-2 space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[9px] uppercase tracking-widest font-heading font-medium text-neutral-400">
+                    <span className="text-sm uppercase tracking-wider font-heading font-medium text-neutral-400">
                       Hasil Pencarian Instan
                     </span>
                     {isSearchingInstant && (
                       <div className="flex items-center space-x-1.5 text-brand-gold">
                         <Loader2 className="h-3 w-3 animate-spin" />
-                        <span className="text-[8px] font-heading font-semibold uppercase tracking-wider">
+                        <span className="text-xs font-heading font-semibold uppercase tracking-wider">
                           Mencari...
                         </span>
                       </div>
@@ -167,10 +167,10 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-[11px] font-heading font-semibold uppercase tracking-wider text-brand-black truncate group-hover:text-brand-gold transition-colors">
+                              <h4 className="text-sm font-heading font-semibold uppercase tracking-wider text-brand-black truncate group-hover:text-brand-gold transition-colors">
                                 {product.name}
                               </h4>
-                              <p className="text-[10px] font-sans font-medium text-neutral-500 mt-0.5">
+                              <p className="text-xs font-sans font-medium text-neutral-500 mt-0.5">
                                 {formatIDR(minPrice)}
                               </p>
                             </div>
@@ -183,14 +183,14 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
                       <button
                         onClick={handleSearchSubmit}
-                        className="w-full pt-2 pb-1 text-[10px] uppercase tracking-widest font-heading font-semibold text-brand-gold hover:text-brand-black transition-colors"
+                        className="w-full pt-2 pb-1 text-xs uppercase tracking-wider font-heading font-semibold text-brand-gold hover:text-brand-black transition-colors"
                       >
                         Lihat semua hasil untuk "{searchQuery}"
                       </button>
                     </div>
                   ) : !isSearchingInstant ? (
                     <div className="py-4 text-center">
-                      <p className="text-[10px] text-neutral-500 font-sans">
+                      <p className="text-xs text-neutral-500 font-sans">
                         Tidak ada produk yang cocok dengan "{searchQuery}"
                       </p>
                     </div>

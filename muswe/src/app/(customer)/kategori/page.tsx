@@ -48,7 +48,7 @@ export default async function CategoriesIndexPage(): Promise<React.JSX.Element> 
                 />
               ) : (
                 <div className="absolute inset-0 bg-neutral-100 flex items-center justify-center">
-                  <span className="text-[10px] uppercase tracking-widest text-neutral-400">
+                  <span className="text-xs uppercase tracking-wider text-neutral-400">
                     {cat.name}
                   </span>
                 </div>
@@ -56,18 +56,18 @@ export default async function CategoriesIndexPage(): Promise<React.JSX.Element> 
               <div className="absolute inset-0 gradient-overlay-dark opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
 
               <div className="absolute top-4 left-4 px-2.5 py-1 bg-white/10 backdrop-blur-sm border border-white/20">
-                <span className="text-[9px] font-heading font-semibold uppercase tracking-widest text-white/90">
+                <span className="text-sm font-heading font-semibold uppercase tracking-wider text-white/90">
                   0{index + 1}
                 </span>
               </div>
 
               <div className="absolute inset-0 flex flex-col items-center justify-end p-6 md:p-8 text-white text-center space-y-2 z-10">
-                <h2 className="text-xl md:text-2xl font-heading font-light uppercase tracking-widest leading-none">
+                <h2 className="text-xl md:text-2xl font-heading font-light uppercase tracking-wider leading-none">
                   {cat.name}
                 </h2>
                 <div className="w-8 h-px bg-brand-gold-light group-hover:w-16 transition-all duration-500" />
                 {cat.description && (
-                  <p className="text-[10px] text-neutral-300 font-sans line-clamp-2 max-w-xs opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <p className="text-xs text-neutral-300 font-sans line-clamp-2 max-w-xs opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     {cat.description}
                   </p>
                 )}

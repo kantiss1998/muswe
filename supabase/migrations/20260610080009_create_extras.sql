@@ -7,7 +7,7 @@
 -- Table: stock_notifications (Back-in-Stock)
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS stock_notifications (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   variant_id UUID NOT NULL REFERENCES product_variants(id) ON DELETE CASCADE,
   is_notified BOOLEAN NOT NULL DEFAULT false,
@@ -65,7 +65,7 @@ CREATE TRIGGER trg_back_in_stock
 -- Table: search_logs (optional, analytics)
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS search_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   query VARCHAR(255) NOT NULL,
   results_count INT NOT NULL DEFAULT 0,
   user_id UUID REFERENCES profiles(id) ON DELETE SET NULL,

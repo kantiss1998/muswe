@@ -30,23 +30,23 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-disabled={disabled || isLoading}
         aria-busy={isLoading}
         className={cn(
-          // Base styles — THENBLANK premium minimalist design (sharp corners, elegant transitions)
-          'inline-flex items-center justify-center font-heading font-medium tracking-wide uppercase transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.97] active:translate-y-[1px] focus-ring-premium',
+          // Base styles — Modern premium design (rounded corners, elegant transitions)
+          'inline-flex items-center justify-center font-heading font-medium tracking-wide uppercase transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.97] active:translate-y-[1px] focus:outline-none focus:ring-4 focus:ring-brand-black/10 rounded-lg',
           {
             // Variants
-            'bg-brand-black text-white hover:bg-neutral-800 border border-brand-black btn-shine hover:shadow-[0_4px_14px_rgba(23,23,23,0.15)]':
+            'bg-brand-black text-white hover:bg-neutral-800 border border-brand-black btn-shine hover:shadow-[0_8px_24px_rgba(23,23,23,0.15)]':
               variant === 'primary',
-            'bg-brand-cream text-brand-black hover:bg-brand-beige border border-brand-cream hover:shadow-sm':
+            'bg-brand-cream text-brand-black hover:bg-brand-beige border border-brand-cream hover:shadow-md':
               variant === 'secondary',
-            'bg-transparent text-brand-black border border-brand-black hover:bg-brand-black hover:text-white hover:shadow-[0_4px_14px_rgba(23,23,23,0.1)]':
+            'bg-transparent text-brand-black border border-brand-black hover:bg-brand-black hover:text-white hover:shadow-[0_8px_24px_rgba(23,23,23,0.1)]':
               variant === 'outline',
             'bg-transparent text-brand-black hover:bg-neutral-100 border border-transparent':
               variant === 'ghost',
-            'bg-red-700 text-white hover:bg-red-800 border border-red-700 hover:shadow-[0_4px_14px_rgba(185,28,28,0.2)]':
+            'bg-red-700 text-white hover:bg-red-800 border border-red-700 hover:shadow-[0_8px_24px_rgba(185,28,28,0.2)]':
               variant === 'danger',
 
             // Sizes
-            'text-[10px] px-4 py-2': size === 'sm',
+            'text-xs px-4 py-2': size === 'sm',
             'text-xs px-6 py-3': size === 'md',
             'text-xs md:text-sm px-8 py-4': size === 'lg',
           },

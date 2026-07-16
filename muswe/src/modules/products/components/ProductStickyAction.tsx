@@ -84,7 +84,7 @@ export function ProductStickyAction({
                   onClick={onAddToCart}
                   variant="outline"
                   size="sm"
-                  className="py-2.5 px-4 text-[10px]"
+                  className="py-2.5 px-4 text-xs"
                   isLoading={isAdding}
                   disabled={!selectedVariant || selectedVariant.stock === 0}
                 >
@@ -94,7 +94,7 @@ export function ProductStickyAction({
                   onClick={onBuyNow}
                   variant="primary"
                   size="sm"
-                  className="py-2.5 px-4 text-[10px]"
+                  className="py-2.5 px-4 text-xs"
                   isLoading={isBuying}
                   disabled={!selectedVariant || selectedVariant.stock === 0}
                 >

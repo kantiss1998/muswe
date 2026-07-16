@@ -90,13 +90,13 @@ function LoginContent() {
         <motion.div variants={staggerContainer} initial="hidden" animate="visible">
           <motion.div variants={fadeUpItem} className="flex flex-col space-y-2 text-center mb-8">
             {/* Brand identity */}
-            <span className="text-[10px] font-heading font-medium uppercase tracking-[0.3em] text-neutral-400 mb-2">
+            <span className="text-xs font-heading font-medium uppercase tracking-[0.3em] text-neutral-400 mb-2">
               MUSWE
             </span>
             <h2 className="text-xl md:text-2xl font-heading font-semibold uppercase tracking-wider text-brand-black">
               Masuk Akun
             </h2>
-            <p className="text-[11px] md:text-xs text-neutral-400 font-sans">
+            <p className="text-sm md:text-xs text-neutral-400 font-sans">
               Silakan masukkan email dan kata sandi Anda untuk melanjutkan.
             </p>
           </motion.div>
@@ -116,12 +116,12 @@ function LoginContent() {
 
             <motion.div variants={fadeUpItem} className="flex flex-col space-y-1">
               <div className="flex justify-between items-center">
-                <label className="text-[10px] uppercase tracking-wider font-heading font-medium text-brand-black/70">
+                <label className="text-xs uppercase tracking-wider font-heading font-medium text-brand-black/70">
                   Kata Sandi
                 </label>
                 <Link
                   href="/lupa-password"
-                  className="text-[10px] uppercase tracking-wider font-heading font-medium text-neutral-400 hover:text-brand-black transition-colors"
+                  className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-400 hover:text-brand-black transition-colors"
                 >
                   Lupa sandi?
                 </Link>
@@ -149,7 +149,7 @@ function LoginContent() {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-neutral-200"></div>
             </div>
-            <div className="relative flex justify-center text-[10px] uppercase tracking-widest font-heading">
+            <div className="relative flex justify-center text-xs uppercase tracking-wider font-heading">
               <span className="bg-white px-3 text-neutral-400">Atau masuk dengan</span>
             </div>
           </motion.div>
