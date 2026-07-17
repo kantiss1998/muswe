@@ -26,7 +26,7 @@ export interface VariantSimple {
   sku: string
   products: {
     name: string
-  } | null
+  } | { name: string }[] | null
 }
 
 export default function AdminFlashSalesPage(): React.JSX.Element {

@@ -28,7 +28,7 @@ export interface VariantSimple {
   sku: string
   products: {
     name: string
-  } | null
+  } | { name: string }[] | null
 }
 
 interface FlashSaleFormModalProps {
@@ -94,7 +94,7 @@ export function FlashSaleFormModal({
         sale_price: Math.floor(Number(v.price) * 0.9),
         quota: 5,
         name: v.name,
-        prodName: v.products?.name || '',
+        prodName: Array.isArray(v.products) ? (v.products[0]?.name || '') : (v.products?.name || ''),
       },
     ])
     setShowVariantList(false)
@@ -155,10 +155,11 @@ export function FlashSaleFormModal({
   const filteredVariants = allVariants
     .filter((v) => {
       const term = variantSearch.toLowerCase()
+      const prodName = Array.isArray(v.products) ? v.products[0]?.name : v.products?.name
       return (
         v.sku?.toLowerCase().includes(term) ||
         v.name?.toLowerCase().includes(term) ||
-        v.products?.name?.toLowerCase().includes(term)
+        prodName?.toLowerCase().includes(term)
       )
     })
     .slice(0, 5)

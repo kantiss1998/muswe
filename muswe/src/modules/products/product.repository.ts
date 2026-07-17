@@ -74,7 +74,22 @@ export class ProductRepository {
         .replace(/\\/g, '\\\\')
         .replace(/%/g, '\\%')
         .replace(/_/g, '\\_')
-      query = query.ilike('name', `%${escapedSearch}%`)
+
+      // Cari apakah ada varian yang name atau SKU-nya mengandung kata kunci pencarian
+      const { data: matchedVariants } = await supabase
+        .from('product_variants')
+        .select('product_id')
+        .or(`name.ilike.%${escapedSearch}%,sku.ilike.%${escapedSearch}%`)
+
+      const matchedProductIds = Array.from(new Set(matchedVariants?.map((v) => v.product_id) || []))
+
+      if (matchedProductIds.length > 0) {
+        // Jika ada varian yang cocok, cari produk dengan ID tersebut ATAU namanya cocok
+        query = query.or(`name.ilike.%${escapedSearch}%,id.in.(${matchedProductIds.join(',')})`)
+      } else {
+        // Jika tidak ada varian yang cocok, cukup cari dari nama produk
+        query = query.ilike('name', `%${escapedSearch}%`)
+      }
     }
 
     if (minPrice !== undefined) {
@@ -175,7 +190,19 @@ export class ProductRepository {
 
     if (search) {
       const escapedSearch = search.replace(/\\/g, '\\\\').replace(/%/g, '\\%').replace(/_/g, '\\_')
-      query = query.ilike('name', `%${escapedSearch}%`)
+      
+      const { data: matchedVariants } = await supabase
+        .from('product_variants')
+        .select('product_id')
+        .or(`name.ilike.%${escapedSearch}%,sku.ilike.%${escapedSearch}%`)
+
+      const matchedProductIds = Array.from(new Set(matchedVariants?.map((v) => v.product_id) || []))
+
+      if (matchedProductIds.length > 0) {
+        query = query.or(`name.ilike.%${escapedSearch}%,id.in.(${matchedProductIds.join(',')})`)
+      } else {
+        query = query.ilike('name', `%${escapedSearch}%`)
+      }
     }
 
     const { data, count, error } = await query

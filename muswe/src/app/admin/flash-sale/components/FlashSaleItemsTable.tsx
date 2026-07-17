@@ -36,9 +36,8 @@ export function FlashSaleItemsTable({
                 <tr key={it.variant_id}>
                   <td className="py-2 px-3">
                     <span className="block font-bold text-neutral-800 line-clamp-1">
-                      {it.prodName}
+                      {it.prodName} - {it.name}
                     </span>
-                    <span className="text-sm text-neutral-500 uppercase">{it.name}</span>
                   </td>
                   <td className="py-2 px-3 text-neutral-500">
                     Rp {it.original_price.toLocaleString()}

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { cacheLife, cacheTag } from 'next/cache'
 import { createStaticClient } from '@/lib/supabase/static'
 import { productService } from '@/modules/products/product.service'
+import { flashSaleService } from '@/modules/flash-sales/flash-sale.service'
 import { ProductDetailClient } from './ProductDetailClient'
 import { RelatedProducts } from './RelatedProducts'
 import { ProductGridSkeleton } from '@/shared/components'
@@ -112,6 +113,31 @@ export default async function ProductDetailPage({
     product = await getCachedProduct(slug)
   } catch {
     notFound()
+  }
+
+  // Fetch active flash sale to override prices
+  const flashSaleRes = await flashSaleService.getActiveFlashSale()
+  const activeFlashSale = flashSaleRes.success ? flashSaleRes.data : null
+
+  if (activeFlashSale) {
+    const now = new Date()
+    const starts = new Date(activeFlashSale.starts_at)
+    const ends = new Date(activeFlashSale.ends_at)
+    
+    if (now >= starts && now <= ends) {
+      // Modify product variant prices in memory
+      product.product_variants = product.product_variants.map(variant => {
+        const saleItem = activeFlashSale.flash_sale_items.find(item => item.variant_id === variant.id)
+        if (saleItem) {
+          return {
+            ...variant,
+            compare_price: variant.price, // Save original price
+            price: saleItem.sale_price,
+          }
+        }
+        return variant
+      })
+    }
   }
 
   const hasRelated = product.categories && product.category_id

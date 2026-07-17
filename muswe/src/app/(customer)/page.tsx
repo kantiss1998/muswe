@@ -1,6 +1,7 @@
 import React from 'react'
 import { homeService } from '@/modules/home/home.service'
 import { HeroSection } from '@/modules/banners/components/HeroSection'
+import { MidBannerSection } from '@/modules/banners/components/MidBannerSection'
 import { CategorySection } from '@/modules/categories/components/CategorySection'
 import { FlashSaleSection } from '@/modules/flash-sales/components/FlashSaleSection'
 import { CollectionSpotlight } from '@/modules/collections/components/CollectionSpotlight'
@@ -73,10 +74,13 @@ export default async function Homepage(): Promise<React.JSX.Element> {
       />
       <div className="flex-1 flex flex-col min-h-screen bg-white">
         {/* 1. Banner */}
-        <HeroSection banners={banners} />
+        <HeroSection banners={banners.filter(b => b.position !== 'mid_banner')} />
 
         {/* 3. Collection 1 */}
         {col1 && <CollectionSpotlight collection={col1} products={collection1Products} index={0} />}
+
+        {/* Middle Banner */}
+        <MidBannerSection banners={banners.filter(b => b.position === 'mid_banner')} />
 
         {/* 4. Collection 2 */}
         {col2 && <CollectionSpotlight collection={col2} products={collection2Products} variant="dark" index={1} />}

@@ -41,7 +41,7 @@ export function FlashSaleVariantSearch({
                   {v.sku}
                 </p>
                 <p className="text-xs text-neutral-600 line-clamp-1">
-                  {v.products?.name} - {v.name}
+                  {Array.isArray(v.products) ? v.products[0]?.name : v.products?.name} - {v.name}
                 </p>
               </div>
               <div className="text-right pl-2 shrink-0">

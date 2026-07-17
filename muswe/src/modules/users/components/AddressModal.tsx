@@ -84,6 +84,19 @@ const PROVINCES = [
   'Maluku Utara',
 ]
 
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+  return debouncedValue
+}
+
 export function AddressModal({
   isOpen,
   onClose,
@@ -96,7 +109,6 @@ export function AddressModal({
     control,
     handleSubmit,
     setValue,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     watch,
     reset,
     formState: { errors },
@@ -122,10 +134,12 @@ export function AddressModal({
   })
 
   const [searchQuery, setSearchQuery] = useState('')
+  const debouncedSearchQuery = useDebounce(searchQuery, 400)
+  
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [focusedIndex, setFocusedIndex] = useState(-1)
 
-  const { data: searchResultsRes } = useDistrictSearch(searchQuery)
+  const { data: searchResultsRes } = useDistrictSearch(debouncedSearchQuery)
   const searchResults = searchResultsRes?.data || []
 
   const skipProvinceFetchRef = useRef(false)
