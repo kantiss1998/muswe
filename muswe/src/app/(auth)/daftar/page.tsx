@@ -192,12 +192,10 @@ export default function RegisterPage(): React.JSX.Element {
               onError={() => {
                 toast.error('Pendaftaran dengan Google dibatalkan atau gagal.')
               }}
-              useOneTap
               theme="outline"
               size="large"
               shape="rectangular"
               text="signup_with"
-              width="100%"
             />
           </motion.div>
 

@@ -168,12 +168,10 @@ function LoginContent() {
               onError={() => {
                 toast.error('Login dengan Google dibatalkan atau gagal.')
               }}
-              useOneTap
               theme="outline"
               size="large"
               shape="rectangular"
               text="signin_with"
-              width="100%"
             />
           </motion.div>
 
