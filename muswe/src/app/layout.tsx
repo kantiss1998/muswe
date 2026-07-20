@@ -40,10 +40,39 @@ const edensor = localFont({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://www.muswe.com'),
-  title: 'Muswe — Kerudung Motif Premium Indonesia',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://muswedaily.com'),
+  title: {
+    default: 'Muswe — Kerudung Motif Premium Indonesia',
+    template: '%s | Muswe',
+  },
   description:
     'Temukan koleksi busana muslim wanita premium, modern, dan elegan hanya di Muswe.',
+  keywords: ['muswe', 'kerudung motif', 'hijab premium', 'busana muslim wanita', 'fashion muslim', 'hijab elegan', 'scarf motif'],
+  authors: [{ name: 'Muswe' }],
+  creator: 'Muswe',
+  publisher: 'Muswe',
+  openGraph: {
+    type: 'website',
+    locale: 'id_ID',
+    url: 'https://muswedaily.com',
+    title: 'Muswe — Kerudung Motif Premium Indonesia',
+    description: 'Temukan koleksi busana muslim wanita premium, modern, dan elegan hanya di Muswe.',
+    siteName: 'Muswe',
+    images: [
+      {
+        url: 'https://cdn.muswedaily.com/og-image.jpg', // Nanti Anda bisa mengganti URL gambar ini dengan gambar banner asli Muswe
+        width: 1200,
+        height: 630,
+        alt: 'Muswe Premium Scarf',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Muswe — Kerudung Motif Premium Indonesia',
+    description: 'Temukan koleksi busana muslim wanita premium, modern, dan elegan hanya di Muswe.',
+    images: ['https://cdn.muswedaily.com/og-image.jpg'],
+  },
   icons: {
     icon: '/logo/Regular.png',
   },

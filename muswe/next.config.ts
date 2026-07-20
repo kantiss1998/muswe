@@ -5,8 +5,18 @@ const remotePatterns: import('next/dist/shared/lib/image-config').RemotePattern[
     protocol: 'https',
     hostname: process.env.NEXT_PUBLIC_SUPABASE_URL
       ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
-      : 'jwvbzuoatffoxaahdwdx.supabase.co',
+      : 'xsuujkceybfgdvlfhhmh.supabase.co',
     pathname: '/storage/v1/object/public/**',
+  },
+  {
+    protocol: 'https',
+    hostname: 'cdn.muswedaily.com',
+    pathname: '/**',
+  },
+  {
+    protocol: 'https',
+    hostname: 'soft-darkness-6083.itkantiss.workers.dev',
+    pathname: '/**',
   },
   {
     protocol: 'https',
@@ -68,7 +78,7 @@ const nextConfig: NextConfig = {
           {
             key: 'Content-Security-Policy',
             value:
-              `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://app.sandbox.midtrans.com https://app.midtrans.com https://vercel.live https://vercel.com https://accounts.google.com https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: ${process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin : 'https://jwvbzuoatffoxaahdwdx.supabase.co'} https://lh3.googleusercontent.com https://images.unsplash.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://app.sandbox.midtrans.com https://app.midtrans.com https://vercel.live https://vercel.com https://accounts.google.com; frame-src 'self' https://app.sandbox.midtrans.com https://app.midtrans.com https://vercel.live https://vercel.com https://accounts.google.com;`
+              `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://app.sandbox.midtrans.com https://app.midtrans.com https://vercel.live https://vercel.com https://accounts.google.com https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: ${process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin : 'https://xsuujkceybfgdvlfhhmh.supabase.co'} https://cdn.muswedaily.com https://soft-darkness-6083.itkantiss.workers.dev https://lh3.googleusercontent.com https://images.unsplash.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://app.sandbox.midtrans.com https://app.midtrans.com https://vercel.live https://vercel.com https://accounts.google.com; frame-src 'self' https://app.sandbox.midtrans.com https://app.midtrans.com https://vercel.live https://vercel.com https://accounts.google.com;`
                 .replace(/\s+/g, ' ')
                 .trim(),
           },

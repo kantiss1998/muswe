@@ -33,7 +33,13 @@ export async function uploadImage(file: File, bucket: string = 'products'): Prom
     throw new Error('Gagal mendapatkan URL publik dari file.')
   }
 
-  return urlData.publicUrl
+  // Gunakan CDN custom
+  const cdnUrl = urlData.publicUrl.replace(
+    /https:\/\/[a-zA-Z0-9]+\.supabase\.co\/storage\/v1\/object\/public/,
+    'https://cdn.muswedaily.com'
+  )
+
+  return cdnUrl
 }
 
 /**
@@ -50,7 +56,8 @@ export async function deleteImageByUrl(
   try {
     if (!url) return
 
-    // Extract file name from URL: https://<project>.supabase.co/storage/v1/object/public/<bucket>/<filename>
+    // Extract file name from URL: https://cdn.muswedaily.com/<bucket>/<filename> 
+    // atau URL supabase bawaan
     const urlParts = url.split('/')
     const fileName = urlParts[urlParts.length - 1]
 

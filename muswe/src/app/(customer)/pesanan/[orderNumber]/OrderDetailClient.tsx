@@ -275,7 +275,11 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
         .getPublicUrl(`invoices/${order.order_number}.html`)
 
       if (urlData?.publicUrl) {
-        window.open(urlData.publicUrl, '_blank')
+        const cdnUrl = urlData.publicUrl.replace(
+          /https:\/\/[a-zA-Z0-9]+\.supabase\.co\/storage\/v1\/object\/public/,
+          'https://cdn.muswedaily.com'
+        )
+        window.open(cdnUrl, '_blank')
       } else {
         toast.error('Gagal menemukan tautan unduh invoice')
       }
