@@ -178,6 +178,8 @@ export default function CheckoutPage(): React.JSX.Element {
   )
 
   const shippingOptions = shippingDataRes?.data || []
+  const shippingError =
+    shippingDataRes?.success === false ? shippingDataRes.error?.message : null
 
   // Reset courier selection if address changes
   useEffect(() => {
@@ -346,6 +348,7 @@ export default function CheckoutPage(): React.JSX.Element {
               selectedCourier={selectedCourier}
               onSelectCourier={setSelectedCourier}
               shippingLoading={shippingLoading}
+              shippingError={shippingError}
               notes={notes}
               onNotesChange={setNotes}
             />

@@ -58,9 +58,16 @@ export class BiteshipClient {
       throw new Error('Konfigurasi Biteship API Key belum tersedia')
     }
 
+    const cleanOrigin = String(this.originPostalCode).replace(/\D/g, '')
+    const cleanDestination = String(params.destinationPostalCode).replace(/\D/g, '')
+
+    if (!cleanDestination) {
+      throw new Error('Kode pos alamat tujuan tidak valid (harus berupa 5 digit angka).')
+    }
+
     const payload = {
-      origin_postal_code: Number(this.originPostalCode),
-      destination_postal_code: Number(params.destinationPostalCode),
+      origin_postal_code: Number(cleanOrigin),
+      destination_postal_code: Number(cleanDestination),
       couriers: params.couriers || undefined,
       items: params.items.map((item) => ({
         name: item.name.substring(0, 50),

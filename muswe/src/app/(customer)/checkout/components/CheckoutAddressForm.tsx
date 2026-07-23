@@ -17,6 +17,7 @@ interface CheckoutAddressFormProps {
   selectedCourier: ShippingOption | null
   onSelectCourier: (courier: ShippingOption) => void
   shippingLoading: boolean
+  shippingError?: string | null
   notes: string
   onNotesChange: (notes: string) => void
 }
@@ -31,6 +32,7 @@ export function CheckoutAddressForm({
   selectedCourier,
   onSelectCourier,
   shippingLoading,
+  shippingError,
   notes,
   onNotesChange,
 }: CheckoutAddressFormProps): React.JSX.Element {
@@ -146,10 +148,21 @@ export function CheckoutAddressForm({
           <p className="text-xs text-neutral-400 italic">
             Harap pilih alamat terlebih dahulu untuk menampilkan opsi pengiriman.
           </p>
+        ) : !selectedAddress.postal_code || selectedAddress.postal_code.trim().length === 0 ? (
+          <div className="p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium rounded-none">
+            Alamat yang Anda pilih belum memiliki **Kode Pos**. Harap perbarui alamat atau pilih alamat yang menyertakan kode pos 5 digit agar tarif Biteship dapat dihitung.
+          </div>
         ) : shippingLoading ? (
           <div className="space-y-2">
             <div className="h-12 bg-neutral-100 animate-pulse rounded-none" />
             <div className="h-12 bg-neutral-100 animate-pulse rounded-none" />
+          </div>
+        ) : shippingError ? (
+          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-medium space-y-1 rounded-none">
+            <p className="font-semibold uppercase tracking-wider text-[11px] text-red-800">
+              Gagal Memuat Tarif Pengiriman Biteship
+            </p>
+            <p className="text-red-600">{shippingError}</p>
           </div>
         ) : shippingOptions.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -197,9 +210,9 @@ export function CheckoutAddressForm({
             ))}
           </div>
         ) : (
-          <p className="text-xs text-red-500 font-semibold">
-            Pengiriman tidak tersedia untuk zona alamat Anda. Harap hubungi Admin.
-          </p>
+          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-medium rounded-none">
+            Tidak ada opsi pengiriman Biteship yang tersedia untuk kode pos (<strong>{selectedAddress.postal_code}</strong>). Harap periksa kembali alamat Anda atau hubungi Admin.
+          </div>
         )}
       </div>
 
