@@ -1,9 +1,9 @@
-import { isObject } from '@/lib/utils/validation'
 import { safeLogError } from '@/lib/logger'
-import { UserAddress, District, ShippingOption } from './types'
+import { UserAddress, District, ShippingOption, ShippingCalculationItem } from './types'
 import { ApiResponse, ok, fail } from '@/lib/api-response'
 import { ApiErrorCode } from '@/lib/api-errors'
 import { shippingRepository } from './shipping.repository'
+import { biteshipClient } from '@/lib/biteship.client'
 
 export class ShippingService {
   async getUserAddresses(userId: string): Promise<ApiResponse<UserAddress[]>> {
@@ -132,45 +132,72 @@ export class ShippingService {
   }
 
   async calculateShippingRates(
-    zoneId: string,
-    weightGram: number
+    destinationPostalCode: string,
+    weightGram: number,
+    items?: ShippingCalculationItem[]
   ): Promise<ApiResponse<ShippingOption[]>> {
+    if (!destinationPostalCode) {
+      return ok([])
+    }
+
     try {
-      const data = await shippingRepository.calculateShippingRates(zoneId, weightGram)
+      const calcItems = items && items.length > 0
+        ? items.map(i => ({
+            name: i.name,
+            value: i.value,
+            quantity: i.quantity,
+            weight: i.weight,
+          }))
+        : [
+            {
+              name: 'Paket Produk Muswe',
+              value: 100000,
+              quantity: 1,
+              weight: Math.max(weightGram, 100),
+            },
+          ]
 
-      if (data && isObject(data)) {
-        const success = typeof data['success'] === 'boolean' ? data['success'] : false
-        const message = typeof data['message'] === 'string' ? data['message'] : undefined
-        const rawOptions = data['data']
+      const pricing = await biteshipClient.getRates({
+        destinationPostalCode,
+        items: calcItems,
+      })
 
-        if (!success) {
-          return fail(ApiErrorCode.VALIDATION_ERROR, message || 'Gagal menghitung ongkos kirim')
-        }
-
-        const optionsList = Array.isArray(rawOptions) ? rawOptions : []
-        const options: ShippingOption[] = []
-
-        for (const opt of optionsList) {
-          if (opt && isObject(opt)) {
-            options.push({
-              id: typeof opt['id'] === 'string' ? opt['id'] : '',
-              courier_name: typeof opt['courier_name'] === 'string' ? opt['courier_name'] : '',
-              price: typeof opt['price'] === 'number' ? opt['price'] : 0,
-              etd_min: typeof opt['etd_min'] === 'number' ? opt['etd_min'] : 0,
-              etd_max: typeof opt['etd_max'] === 'number' ? opt['etd_max'] : 0,
-              weight_used_gram:
-                typeof opt['weight_used_gram'] === 'number' ? opt['weight_used_gram'] : 0,
-            })
+      const options: ShippingOption[] = pricing.map((p) => {
+        // Parse duration like "2 - 3" or "1"
+        let etd_min = 1
+        let etd_max = 3
+        if (p.shipment_duration_range) {
+          const parts = p.shipment_duration_range.split('-').map((s) => parseInt(s.trim()))
+          if (parts.length >= 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+            etd_min = parts[0]
+            etd_max = parts[1]
+          } else if (parts.length === 1 && !isNaN(parts[0])) {
+            etd_min = parts[0]
+            etd_max = parts[0]
           }
         }
 
-        return ok(options)
-      }
+        return {
+          id: `${p.courier_code}_${p.courier_service_code}`,
+          courier_code: p.courier_code,
+          courier_name: `${p.courier_name} (${p.courier_service_name})`,
+          courier_service_code: p.courier_service_code,
+          courier_service_name: p.courier_service_name,
+          price: p.price,
+          etd_min,
+          etd_max,
+          weight_used_gram: weightGram,
+          description: p.description,
+        }
+      })
 
-      return fail(ApiErrorCode.INTERNAL_ERROR, 'Respon dari sistem pengiriman tidak valid.')
-    } catch (error) {
-      safeLogError('Error calculating shipping:', error)
-      return fail(ApiErrorCode.INTERNAL_ERROR, 'Gagal menghitung ongkos kirim. Silakan coba lagi.')
+      return ok(options)
+    } catch (error: any) {
+      safeLogError('Error calculating shipping rates via Biteship:', error)
+      return fail(
+        ApiErrorCode.INTERNAL_ERROR,
+        error.message || 'Gagal menghitung ongkos kirim. Silakan coba lagi.'
+      )
     }
   }
 }

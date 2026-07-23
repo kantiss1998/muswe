@@ -1,11 +1,47 @@
 // @ts-nocheck
 // =============================================================
 // Edge Function: generate-payment
-// Generates Midtrans Snap token for an order
+// Generates DOKU Checkout payment link for an order
 // =============================================================
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
+
+async function generateDigest(bodyString: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(bodyString);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const base64 = btoa(String.fromCharCode(...hashArray));
+  return base64;
+}
+
+async function generateSignature(
+  clientId: string,
+  secretKey: string,
+  requestId: string,
+  timestamp: string,
+  targetPath: string,
+  digest: string
+): Promise<string> {
+  const rawString = `Client-Id:${clientId}\nRequest-Id:${requestId}\nRequest-Timestamp:${timestamp}\nRequest-Target:${targetPath}\nDigest:${digest}`;
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(secretKey);
+  const messageData = encoder.encode(rawString);
+
+  const cryptoKey = await crypto.subtle.importKey(
+    "raw",
+    keyData,
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+
+  const signatureBuffer = await crypto.subtle.sign("HMAC", cryptoKey, messageData);
+  const signatureArray = Array.from(new Uint8Array(signatureBuffer));
+  const base64Signature = btoa(String.fromCharCode(...signatureArray));
+  return `HMACSHA256=${base64Signature}`;
+}
 
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
@@ -36,7 +72,7 @@ Deno.serve(async (req: Request) => {
         *,
         profiles!inner(name, phone),
         order_items(*),
-        payments(id, status, midtrans_response, updated_at, created_at)
+        payments(id, status, payment_url, updated_at, created_at)
       `)
       .eq("order_number", order_number)
       .single();
@@ -82,21 +118,20 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Check if there is an existing pending snap token to reuse
+    // Check payment record
     let payment = Array.isArray(order.payments) ? order.payments[0] : order.payments;
-    
-    // If no payment record exists, dynamically create one (self-healing)
+
     if (!payment) {
       console.log(`Creating missing payment record for order ${order.order_number}`);
       const { data: newPayment, error: insertPayError } = await supabase
         .from("payments")
         .insert({
           order_id: order.id,
-          midtrans_order_id: order.order_number,
+          gateway_order_id: order.order_number,
           status: "pending",
           amount: order.total_amount,
         })
-        .select("id, status, snap_token, midtrans_response")
+        .select("id, status, payment_url")
         .single();
 
       if (insertPayError || !newPayment) {
@@ -109,146 +144,100 @@ Deno.serve(async (req: Request) => {
       payment = newPayment;
     }
 
-    const midtransMode = Deno.env.get("MIDTRANS_MODE") || "sandbox";
-
-    if (payment.status === "pending" && payment.midtrans_response) {
-      let snapToken = null;
-      let redirectUrl = "";
-      try {
-        const responseObj = typeof payment.midtrans_response === "string"
-          ? JSON.parse(payment.midtrans_response)
-          : payment.midtrans_response;
-        if (responseObj && responseObj.token) {
-          // Check if the token is still fresh (less than 20 minutes old)
-          // Midtrans Snap tokens can expire, so we use a conservative TTL
-          const paymentUpdatedAt = payment.updated_at || payment.created_at;
-          const tokenAge = paymentUpdatedAt 
-            ? Date.now() - new Date(paymentUpdatedAt).getTime()
-            : Infinity;
-          const TOKEN_TTL_MS = 20 * 60 * 1000; // 20 minutes
-
-          if (tokenAge < TOKEN_TTL_MS) {
-            snapToken = responseObj.token;
-            
-            const midtransSnapBaseUrl = midtransMode === "production"
-              ? "https://app.midtrans.com/snap/v2/vtweb"
-              : "https://app.sandbox.midtrans.com/snap/v2/vtweb";
-              
-            redirectUrl = responseObj.redirect_url || `${midtransSnapBaseUrl}/${snapToken}`;
-          } else {
-            console.log(`Snap token for order ${order.order_number} is stale (${Math.round(tokenAge / 60000)}min old), generating new one`);
-          }
-        }
-      } catch (e) {
-        console.error("Error parsing midtrans_response:", e);
-      }
-
-      if (snapToken) {
-        console.log(`Reusing existing Snap token for order ${order.order_number}`);
-        return new Response(
-          JSON.stringify({
-            success: true,
-            data: {
-              token: snapToken,
-              redirect_url: redirectUrl,
-            },
-          }),
-          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
+    if (payment.status === "pending" && payment.payment_url) {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          data: {
+            redirect_url: payment.payment_url,
+          },
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    // Build Midtrans Snap parameters
-    const serverKey = Deno.env.get("MIDTRANS_SERVER_KEY")!;
-    const snapApiUrl = Deno.env.get("MIDTRANS_SNAP_API_URL")!;
+    // DOKU API Credentials
+    const clientId = Deno.env.get("DOKU_CLIENT_ID")!;
+    const secretKey = Deno.env.get("DOKU_SECRET_KEY")!;
+    const dokuMode = Deno.env.get("DOKU_MODE") || "sandbox";
+    const baseUrl = dokuMode === "production" ? "https://api.doku.com" : "https://api-sandbox.doku.com";
+    const targetPath = "/checkout/v1/payment";
 
-    // Calculate rounded item details to avoid any mismatch with Midtrans
-    const itemDetails = order.order_items.map((item: Record<string, unknown>) => ({
-      id: item.sku,
+    const appUrl = Deno.env.get("NEXT_PUBLIC_APP_URL") || Deno.env.get("APP_URL") || "http://localhost:3000";
+
+    const lineItems = order.order_items.map((item: any) => ({
+      name: `${item.product_name} - ${item.variant_name}`.substring(0, 50),
       price: Math.round(Number(item.price)),
       quantity: Number(item.quantity),
-      name: `${item.product_name} - ${item.variant_name}`.substring(0, 50),
     }));
 
-    // Add shipping as item if > 0
     if (Number(order.shipping_cost) > 0) {
-      itemDetails.push({
-        id: "SHIPPING",
+      lineItems.push({
+        name: "Ongkos Kirim",
         price: Math.round(Number(order.shipping_cost)),
         quantity: 1,
-        name: "Ongkos Kirim",
       });
     }
 
-    // Add discount as negative item if > 0
-    if (Number(order.discount_amount) > 0) {
-      itemDetails.push({
-        id: "DISCOUNT",
-        price: -Math.round(Number(order.discount_amount)),
-        quantity: 1,
-        name: "Diskon Voucher",
-      });
-    }
-
-    // Calculate total gross amount as the sum of all items in item_details to prevent rounding errors
-    const calculatedGrossAmount = itemDetails.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
-
-    const transactionDetails = {
-      transaction_details: {
-        order_id: order.order_number,
-        gross_amount: calculatedGrossAmount,
+    const payload = {
+      order: {
+        amount: Math.round(Number(order.total_amount)),
+        invoice_number: order.order_number,
+        currency: "IDR",
+        callback_url: `${appUrl}/pesanan/${order.order_number}`,
+        callback_url_cancel: `${appUrl}/pesanan/${order.order_number}`,
+        callback_url_result: `${appUrl}/pesanan/${order.order_number}`,
+        line_items: lineItems,
       },
-      customer_details: {
-        first_name: order.profiles.name,
-        phone: order.profiles.phone || "",
-      },
-      item_details: itemDetails,
-      callbacks: {
-        finish: `${Deno.env.get("APP_URL") || "http://localhost:3000"}/pesanan/${order.order_number}`,
+      payment: {
+        payment_due_date: 60, // 60 minutes as requested by user
       },
     };
 
-    console.log("Sending transactionDetails to Midtrans Snap:", JSON.stringify(transactionDetails));
+    const bodyString = JSON.stringify(payload);
+    const digest = await generateDigest(bodyString);
+    const requestId = crypto.randomUUID();
+    const timestamp = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
+    const signature = await generateSignature(clientId, secretKey, requestId, timestamp, targetPath, digest);
 
-    // Call Midtrans Snap API
-    const auth = btoa(`${serverKey}:`);
-    const midtransResponse = await fetch(snapApiUrl, {
+    const dokuResponse = await fetch(`${baseUrl}${targetPath}`, {
       method: "POST",
       headers: {
+        "Client-Id": clientId,
+        "Request-Id": requestId,
+        "Request-Timestamp": timestamp,
+        Signature: signature,
         "Content-Type": "application/json",
-        Authorization: `Basic ${auth}`,
       },
-      body: JSON.stringify(transactionDetails),
+      body: bodyString,
     });
 
-    const midtransData = await midtransResponse.json();
+    const dokuData = await dokuResponse.json();
 
-    if (!midtransResponse.ok) {
-      console.error("Midtrans error:", JSON.stringify(midtransData));
+    if (!dokuResponse.ok || !dokuData.response?.payment?.url) {
+      console.error("DOKU error:", JSON.stringify(dokuData));
       return new Response(
-        JSON.stringify({ success: false, message: "Gagal membuat transaksi pembayaran", code: "PAYMENT_ERROR" }),
+        JSON.stringify({ success: false, message: "Gagal membuat link pembayaran DOKU", code: "PAYMENT_ERROR" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Save token response to payments table (in midtrans_response)
-    const { error: updatePaymentError } = await supabase
+    const paymentUrl = dokuData.response.payment.url;
+
+    // Save payment_url to payments table
+    await supabase
       .from("payments")
       .update({
-        midtrans_response: midtransData,
+        payment_url: paymentUrl,
+        gateway_response: dokuData,
       })
       .eq("id", payment.id);
-
-    if (updatePaymentError) {
-      console.error("Error saving midtrans_response to database:", updatePaymentError);
-    }
 
     return new Response(
       JSON.stringify({
         success: true,
         data: {
-          token: midtransData.token,
-          redirect_url: midtransData.redirect_url,
+          redirect_url: paymentUrl,
         },
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }

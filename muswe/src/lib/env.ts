@@ -3,13 +3,17 @@ import { safeLogError } from './logger'
 const requiredEnvVars = [
   'NEXT_PUBLIC_SUPABASE_URL',
   'NEXT_PUBLIC_SUPABASE_ANON_KEY',
-  'NEXT_PUBLIC_MIDTRANS_CLIENT_KEY',
-  'NEXT_PUBLIC_MIDTRANS_SNAP_URL',
   'NEXT_PUBLIC_APP_URL',
   'NEXT_PUBLIC_BASE_URL',
 ] as const
 
-const serverEnvVars = ['MIDTRANS_SERVER_KEY', 'SUPABASE_SERVICE_ROLE_KEY', 'ERP_API_KEY'] as const
+const serverEnvVars = [
+  'DOKU_CLIENT_ID',
+  'DOKU_SECRET_KEY',
+  'BITESHIP_API_KEY',
+  'SUPABASE_SERVICE_ROLE_KEY',
+  'ERP_API_KEY',
+] as const
 
 export function validateEnv(): void {
   const missing: string[] = requiredEnvVars.filter((key) => {
@@ -33,14 +37,9 @@ export function validateEnv(): void {
       `\n\nPlease check your .env.local file.`
 
     safeLogError('[Env Validation]', errorMessage)
-    const hasMissingServer = serverEnvVars.some((key) => missing.includes(key))
-    if (hasMissingServer) {
-      // Throw error if server secrets are missing even during build
+    const isBuildPhase = process.env.npm_lifecycle_event === 'build' || process.env.NEXT_PHASE === 'phase-production-build'
+    if (!isBuildPhase && process.env.NODE_ENV === 'production') {
       throw new Error(errorMessage)
-    } else {
-      if (process.env.npm_lifecycle_event !== 'build') {
-        throw new Error(errorMessage)
-      }
     }
   }
 }

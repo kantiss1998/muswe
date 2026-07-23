@@ -24,12 +24,23 @@ export interface District {
 }
 
 export interface ShippingOption {
-  id: string
-  courier_name: string
+  id: string // courier_service_code or unique id
+  courier_code: string // e.g., 'jne', 'sicepat'
+  courier_name: string // e.g., 'JNE', 'SiCepat'
+  courier_service_code: string // e.g., 'reg', 'gokil'
+  courier_service_name: string // e.g., 'REG', 'GOKIL'
   price: number
   etd_min: number
   etd_max: number
   weight_used_gram: number
+  description?: string
+}
+
+export interface ShippingCalculationItem {
+  name: string
+  value: number
+  quantity: number
+  weight: number
 }
 
 export interface ShippingCalculationResult {

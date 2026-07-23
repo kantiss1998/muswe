@@ -66,15 +66,16 @@ export function mapOrder(
     return {
       id: p.id,
       order_id: p.order_id,
-      midtrans_order_id: p.midtrans_order_id || '',
+      gateway_order_id: p.gateway_order_id || p.midtrans_order_id || '',
       status: paymentStatusMap[p.status] || 'pending',
       amount: p.amount,
       payment_type: p.payment_type,
+      payment_url: p.payment_url || null,
+      doku_session_id: p.doku_session_id || null,
       va_number: p.va_number,
       biller_code: p.biller_code,
       payment_code: p.payment_code,
       qr_url: p.qr_url,
-      snap_token: p.snap_token,
       created_at: p.created_at,
       updated_at: p.updated_at,
     }

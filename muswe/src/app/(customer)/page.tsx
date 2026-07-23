@@ -5,6 +5,7 @@ import { MidBannerSection } from '@/modules/banners/components/MidBannerSection'
 import { CategorySection } from '@/modules/categories/components/CategorySection'
 import { FlashSaleSection } from '@/modules/flash-sales/components/FlashSaleSection'
 import { CollectionSpotlight } from '@/modules/collections/components/CollectionSpotlight'
+import { FeaturedProductsSection } from '@/modules/products/components/FeaturedProductsSection'
 import { RecentlyViewedSection } from '@/modules/products/components/RecentlyViewedSection'
 
 export async function generateMetadata() {
@@ -76,6 +77,9 @@ export default async function Homepage(): Promise<React.JSX.Element> {
         {/* 1. Banner */}
         <HeroSection banners={banners.filter(b => b.position !== 'mid_banner')} />
 
+        {/* 2. Featured Products (Produk Pilihan) */}
+        <FeaturedProductsSection products={featuredProducts} />
+
         {/* 3. Collection 1 */}
         {col1 && <CollectionSpotlight collection={col1} products={collection1Products} index={0} />}
 
@@ -86,7 +90,7 @@ export default async function Homepage(): Promise<React.JSX.Element> {
         {col2 && <CollectionSpotlight collection={col2} products={collection2Products} variant="dark" index={1} />}
 
         {/* 2. Kategori Utama (Grid Banner) */}
-        <CategorySection categories={categories} />
+        {/* <CategorySection categories={categories} /> */}
         
         {/* Additional sections */}
         <FlashSaleSection flashSale={flashSale} />

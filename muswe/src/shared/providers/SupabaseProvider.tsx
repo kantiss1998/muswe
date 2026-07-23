@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { createBrowserClient } from '@/lib/supabase/client'
 import { useAuthStore } from '@/modules/users/stores/authStore'
 import { useCartStore } from '@/modules/cart/stores/cartStore'
@@ -11,23 +12,39 @@ import { safeLogError } from '@/lib/logger'
 
 export function SupabaseProvider({ children }: { children: React.ReactNode }): React.JSX.Element {
   const supabase = createBrowserClient()
+  const router = useRouter()
   const { setUser, setProfile, setLoading, clearAuth } = useAuthStore()
+  const lastProcessedUserIdRef = useRef<string | null | undefined>(undefined)
 
   useEffect(() => {
+    setLoading(true)
+
     const handleUserSession = async (user: User | null) => {
+      const userId = user?.id ?? null
+      if (lastProcessedUserIdRef.current === userId) {
+        setLoading(false)
+        return
+      }
+      lastProcessedUserIdRef.current = userId
+
       if (user) {
         setUser(user)
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('id, name, phone, avatar_url, role, is_active, created_at, updated_at')
-          .eq('id', user.id)
-          .single()
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('id, name, phone, avatar_url, role, is_active, created_at, updated_at')
+            .eq('id', user.id)
+            .single()
 
-        if (profile) {
-          const role = profile.role === 'admin' ? 'admin' : 'customer'
-          setProfile({ ...profile, role })
+          if (profile) {
+            const role = profile.role === 'admin' ? 'admin' : 'customer'
+            setProfile({ ...profile, role })
+          }
+        } catch (error) {
+          safeLogError('Error fetching user profile:', error)
         }
 
+        // Non-blocking background sync for cart & wishlist so loading finishes instantly
         useCartStore.getState().syncCart(user.id, true)
         useWishlistStore.getState().syncWishlist(user.id)
       } else {
@@ -35,39 +52,23 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }): R
         useWishlistStore.getState().clearWishlist()
         useCartStore.getState().resetCart()
       }
+      setLoading(false)
     }
 
-    // 1. Check current session immediately on load
-    const syncSession = async () => {
-      setLoading(true)
-      try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser()
-
-        await handleUserSession(user)
-      } catch (error) {
-        safeLogError('Error syncing Supabase session:', error)
-        clearAuth()
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    syncSession()
-
-    // 2. Set up auth state change listener
+    // Single source of truth auth state listener
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        router.push('/reset-password')
+      }
       await handleUserSession(session?.user ?? null)
-      setLoading(false)
     })
 
     return () => {
       subscription.unsubscribe()
     }
-  }, [supabase, setUser, setProfile, setLoading, clearAuth])
+  }, [supabase, router, setUser, setProfile, setLoading, clearAuth])
 
   return <>{children}</>
 }

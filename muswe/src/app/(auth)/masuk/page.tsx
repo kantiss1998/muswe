@@ -56,7 +56,6 @@ function LoginContent() {
       if (data.user) {
         toast.success('Berhasil masuk!')
         router.push(redirectPath)
-        router.refresh()
       }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Email atau kata sandi salah.'
@@ -157,7 +156,6 @@ function LoginContent() {
                     if (data.user) {
                       toast.success('Berhasil masuk dengan Google!')
                       router.push(redirectPath)
-                      router.refresh()
                     }
                   } catch (error: unknown) {
                     const message = error instanceof Error ? error.message : 'Gagal masuk dengan Google.'

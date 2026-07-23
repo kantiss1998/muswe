@@ -22,7 +22,6 @@ import { ArrowLeft, ClipboardList } from 'lucide-react'
 import { SmartLink as Link } from '@/shared/components'
 import toast from 'react-hot-toast'
 import { OrderCard } from './components/OrderCard'
-import { useMidtransScript } from '@/shared/hooks/useMidtransScript'
 
 const STATUS_TABS = [
   { id: 'all', label: 'Semua' },
@@ -75,9 +74,6 @@ export default function PesananPage(): React.JSX.Element {
   const confirmMutation = useConfirmDelivery()
   const generatePaymentTokenMutation = useGeneratePaymentToken()
 
-  // Load Midtrans Snap.js Script dynamically
-  useMidtransScript()
-
   // Reset page when tab changes
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId)
@@ -128,45 +124,19 @@ export default function PesananPage(): React.JSX.Element {
   // Handle Pay Action (Retry Payment)
   const handlePayOrder = async (orderNumber: string) => {
     try {
-      toast.loading('Membuka gerbang pembayaran...', { id: 'payment-loading' })
-      const { token, redirect_url } = await generatePaymentTokenMutation.mutateAsync(orderNumber)
+      toast.loading('Membuka gerbang pembayaran DOKU...', { id: 'payment-loading' })
+      const { redirect_url } = await generatePaymentTokenMutation.mutateAsync(orderNumber)
       toast.dismiss('payment-loading')
 
-      // Delayed refetch to give webhook time to process
-      const scheduleRefetches = () => {
-        setTimeout(() => refetch(), 2000)
-        setTimeout(() => refetch(), 5000)
-        setTimeout(() => refetch(), 10000)
-      }
-
-      if (token) {
-        if (window.snap) {
-          window.snap.pay(token, {
-            onSuccess: () => {
-              toast.success('Pembayaran berhasil! Memverifikasi...')
-              scheduleRefetches()
-            },
-            onPending: () => {
-              toast('Menunggu pembayaran diselesaikan.', { icon: 'ℹ️' })
-              scheduleRefetches()
-            },
-            onError: () => {
-              toast.error('Pembayaran gagal! Coba lagi.')
-            },
-            onClose: () => {
-              // User closed Snap popup — refetch in case payment was made
-              scheduleRefetches()
-            },
-          })
-        } else if (redirect_url) {
-          window.location.href = redirect_url
-        }
+      if (redirect_url) {
+        window.location.href = redirect_url
       } else {
-        toast.error('Gagal memuat pembayaran. Coba lagi.')
+        toast.error('Gagal memuat link pembayaran. Coba lagi.')
       }
-    } catch {
+    } catch (err) {
       toast.dismiss('payment-loading')
-      toast.error('Gagal memproses pembayaran')
+      const errorMessage = err instanceof Error ? err.message : 'Gagal memproses pembayaran'
+      toast.error(errorMessage)
     }
   }
 

@@ -22,8 +22,6 @@ import { OrderReviewModal } from './components/OrderReviewModal'
 import { OrderShippingSection } from './components/OrderShippingSection'
 import { SmartLink as Link } from '@/shared/components'
 import toast from 'react-hot-toast'
-import { useMidtransScript } from '@/shared/hooks/useMidtransScript'
-
 const supabase = createBrowserClient()
 
 interface OrderDetailPageProps {
@@ -154,10 +152,6 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
   const handleCloseReviewModal = () => {
     setSelectedReviewItem(null)
   }
-
-  // Load Midtrans Snap.js Script dynamically
-  useMidtransScript()
-
   // Trigger verification if page is loaded with verifying query param
   useEffect(() => {
     if (searchParams.get('verifying') === '1' && !hasTriggeredVerification.current) {
@@ -217,36 +211,16 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
   const handlePayOrder = async () => {
     if (!order) return
     try {
-      toast.loading('Membuka gerbang pembayaran...', { id: 'payment-loading' })
-      const { token, redirect_url } = await generatePaymentTokenMutation.mutateAsync(
+      toast.loading('Membuka gerbang pembayaran DOKU...', { id: 'payment-loading' })
+      const { redirect_url } = await generatePaymentTokenMutation.mutateAsync(
         order.order_number
       )
       toast.dismiss('payment-loading')
 
-      if (token) {
-        if (window.snap) {
-          window.snap.pay(token, {
-            onSuccess: () => {
-              toast.success('Pembayaran berhasil! Memverifikasi...')
-              startPaymentVerification()
-            },
-            onPending: () => {
-              toast('Menunggu pembayaran diselesaikan.', { icon: 'ℹ️' })
-              startPaymentVerification()
-            },
-            onError: () => {
-              toast.error('Pembayaran gagal! Coba lagi.')
-            },
-            onClose: () => {
-              // User closed Snap popup — start verifying in case payment was made
-              startPaymentVerification()
-            },
-          })
-        } else if (redirect_url) {
-          window.location.href = redirect_url
-        }
+      if (redirect_url) {
+        window.location.href = redirect_url
       } else {
-        toast.error('Gagal memuat pembayaran. Coba lagi.')
+        toast.error('Gagal memuat link pembayaran. Coba lagi.')
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
