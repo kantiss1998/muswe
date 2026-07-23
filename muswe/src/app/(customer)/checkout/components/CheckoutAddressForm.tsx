@@ -18,6 +18,8 @@ interface CheckoutAddressFormProps {
   onSelectCourier: (courier: ShippingOption) => void
   shippingLoading: boolean
   shippingError?: string | null
+  isRatesCalculated: boolean
+  onCalculateShipping: () => void
   notes: string
   onNotesChange: (notes: string) => void
 }
@@ -33,6 +35,8 @@ export function CheckoutAddressForm({
   onSelectCourier,
   shippingLoading,
   shippingError,
+  isRatesCalculated,
+  onCalculateShipping,
   notes,
   onNotesChange,
 }: CheckoutAddressFormProps): React.JSX.Element {
@@ -152,62 +156,103 @@ export function CheckoutAddressForm({
           <div className="p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium rounded-none">
             Alamat yang Anda pilih belum memiliki **Kode Pos**. Harap perbarui alamat atau pilih alamat yang menyertakan kode pos 5 digit agar tarif Biteship dapat dihitung.
           </div>
+        ) : !isRatesCalculated ? (
+          <div className="border border-neutral-200 bg-neutral-50/70 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-none">
+            <div>
+              <p className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black">
+                Cek Opsi & Tarif Pengiriman
+              </p>
+              <p className="text-xs text-neutral-500 font-sans mt-0.5">
+                Klik tombol di sebelah untuk menghitung tarif kurir Biteship ke Kode Pos (<strong>{selectedAddress.postal_code}</strong>).
+              </p>
+            </div>
+            <Button
+              type="button"
+              onClick={onCalculateShipping}
+              variant="primary"
+              className="text-xs uppercase tracking-wider font-semibold whitespace-nowrap shrink-0"
+            >
+              <Truck size={14} className="mr-1.5" /> Cek Ongkos Kirim
+            </Button>
+          </div>
         ) : shippingLoading ? (
           <div className="space-y-2">
             <div className="h-12 bg-neutral-100 animate-pulse rounded-none" />
             <div className="h-12 bg-neutral-100 animate-pulse rounded-none" />
           </div>
         ) : shippingError ? (
-          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-medium space-y-1 rounded-none">
+          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-medium space-y-2 rounded-none">
             <p className="font-semibold uppercase tracking-wider text-[11px] text-red-800">
               Gagal Memuat Tarif Pengiriman Biteship
             </p>
             <p className="text-red-600">{shippingError}</p>
+            <Button
+              type="button"
+              onClick={onCalculateShipping}
+              variant="outline"
+              className="text-[11px] uppercase tracking-wider font-semibold mt-2"
+            >
+              Coba Hitung Ulang
+            </Button>
           </div>
         ) : shippingOptions.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {shippingOptions.map((option) => (
-              <motion.div
-                whileHover={{
-                  y: -2,
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-                  borderColor: '#171717',
-                }}
-                whileTap={{ scale: 0.99 }}
-                key={option.id}
-                role="button"
-                tabIndex={0}
-                onClick={() => onSelectCourier(option)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault()
-                    onSelectCourier(option)
-                  }
-                }}
-                className={`p-4 border cursor-pointer transition-all duration-300 relative rounded-none ${
-                  selectedCourier?.id === option.id
-                    ? 'border-brand-gold bg-brand-gold-muted/10 ring-1 ring-brand-gold'
-                    : 'border-neutral-200 bg-white'
-                }`}
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-[11px] text-neutral-500 font-sans">
+                Opsi kurir untuk kode pos <strong>{selectedAddress.postal_code}</strong>:
+              </span>
+              <button
+                type="button"
+                onClick={onCalculateShipping}
+                className="text-[11px] text-brand-black hover:text-brand-gold underline font-heading font-medium uppercase tracking-wider transition-colors"
               >
-                <div className="flex justify-between items-center mb-1">
-                  <span className="font-heading font-medium text-xs text-brand-black uppercase tracking-wider">
-                    {option.courier_name}
-                  </span>
-                  <span className="font-sans font-bold text-xs text-brand-black">
-                    {formatIDR(option.price)}
-                  </span>
-                </div>
-                <p className="text-sm text-neutral-400">
-                  Estimasi tiba: {option.etd_min} - {option.etd_max} Hari
-                </p>
-                {selectedCourier?.id === option.id && (
-                  <div className="absolute top-2 right-2 bg-brand-gold text-white rounded-full p-0.5">
-                    <Check size={8} />
+                Hitung Ulang
+              </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {shippingOptions.map((option) => (
+                <motion.div
+                  whileHover={{
+                    y: -2,
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                    borderColor: '#171717',
+                  }}
+                  whileTap={{ scale: 0.99 }}
+                  key={option.id}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => onSelectCourier(option)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      onSelectCourier(option)
+                    }
+                  }}
+                  className={`p-4 border cursor-pointer transition-all duration-300 relative rounded-none ${
+                    selectedCourier?.id === option.id
+                      ? 'border-brand-gold bg-brand-gold-muted/10 ring-1 ring-brand-gold'
+                      : 'border-neutral-200 bg-white'
+                  }`}
+                >
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-heading font-medium text-xs text-brand-black uppercase tracking-wider">
+                      {option.courier_name}
+                    </span>
+                    <span className="font-sans font-bold text-xs text-brand-black">
+                      {formatIDR(option.price)}
+                    </span>
                   </div>
-                )}
-              </motion.div>
-            ))}
+                  <p className="text-sm text-neutral-400">
+                    Estimasi tiba: {option.etd_min} - {option.etd_max} Hari
+                  </p>
+                  {selectedCourier?.id === option.id && (
+                    <div className="absolute top-2 right-2 bg-brand-gold text-white rounded-full p-0.5">
+                      <Check size={8} />
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </div>
           </div>
         ) : (
           <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-medium rounded-none">

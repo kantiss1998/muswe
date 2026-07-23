@@ -171,21 +171,35 @@ export default function CheckoutPage(): React.JSX.Element {
     }, 0)
   }, [displayItems, variantDetails])
 
-  // 6. Fetch Shipping Rates for selected postal code via Biteship
-  const { data: shippingDataRes, isLoading: shippingLoading } = useShippingRates(
-    selectedAddress?.postal_code || null,
-    totalWeight
-  )
+  const [isRatesCalculated, setIsRatesCalculated] = useState(false)
+
+  // 6. Fetch Shipping Rates for selected postal code via Biteship (only triggered on button click)
+  const {
+    data: shippingDataRes,
+    isLoading: shippingLoading,
+    refetch: refetchShippingRates,
+  } = useShippingRates(selectedAddress?.postal_code || null, totalWeight, isRatesCalculated)
 
   const shippingOptions = shippingDataRes?.data || []
   const shippingError =
     shippingDataRes?.success === false ? shippingDataRes.error?.message : null
 
-  // Reset courier selection if address changes
+  // Reset courier selection and rates calculation when address changes
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedCourier(null)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsRatesCalculated(false)
   }, [selectedAddress])
+
+  const handleCalculateShipping = () => {
+    if (!selectedAddress?.postal_code) {
+      toast.error('Harap pilih alamat dengan Kode Pos 5 digit terlebih dahulu.')
+      return
+    }
+    setIsRatesCalculated(true)
+    refetchShippingRates()
+  }
 
   // Calculate Prices
   const subtotal = displayItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
@@ -349,6 +363,8 @@ export default function CheckoutPage(): React.JSX.Element {
               onSelectCourier={setSelectedCourier}
               shippingLoading={shippingLoading}
               shippingError={shippingError}
+              isRatesCalculated={isRatesCalculated}
+              onCalculateShipping={handleCalculateShipping}
               notes={notes}
               onNotesChange={setNotes}
             />

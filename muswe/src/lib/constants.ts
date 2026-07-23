@@ -49,10 +49,10 @@ export const VOUCHER_DISCOUNT_TYPE = {
 export type VoucherDiscountType = (typeof VOUCHER_DISCOUNT_TYPE)[keyof typeof VOUCHER_DISCOUNT_TYPE]
 
 export const SOCIAL_LINKS = {
-  instagram: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM || 'https://instagram.com/muswe',
-  tiktok: process.env.NEXT_PUBLIC_SOCIAL_TIKTOK || 'https://tiktok.com/@muswe',
+  instagram: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM || 'https://instagram.com/muswe.official',
+  tiktok: process.env.NEXT_PUBLIC_SOCIAL_TIKTOK || 'https://tiktok.com/@officialmuswe',
   whatsapp: process.env.NEXT_PUBLIC_SOCIAL_WHATSAPP || 'https://wa.me/6281234567890',
-  shopee: process.env.NEXT_PUBLIC_SOCIAL_SHOPEE || 'https://shopee.co.id/muswe',
+  shopee: process.env.NEXT_PUBLIC_SOCIAL_SHOPEE || 'https://shopee.co.id/muswe_',
 } as const
 
 export const DEFAULT_WEIGHT_GRAM = 1000

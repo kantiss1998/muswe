@@ -68,7 +68,7 @@ export class BiteshipClient {
     const payload = {
       origin_postal_code: Number(cleanOrigin),
       destination_postal_code: Number(cleanDestination),
-      couriers: params.couriers || undefined,
+      couriers: params.couriers || 'jne,sicepat,jnt,pos,tiki,anteraja',
       items: params.items.map((item) => ({
         name: item.name.substring(0, 50),
         description: item.description ? item.description.substring(0, 100) : item.name.substring(0, 50),
@@ -91,11 +91,74 @@ export class BiteshipClient {
         body: JSON.stringify(payload),
       })
 
-      const data: BiteshipRateResponse = await response.json()
+      const data: any = await response.json()
 
       if (!response.ok || !data.success) {
-        safeLogError('[BiteshipClient] Rates error:', data)
-        throw new Error(data.message || 'Gagal mengambil tarif pengiriman dari Biteship')
+        const errorMsg =
+          (typeof data.error === 'string' ? data.error : null) ||
+          data.message ||
+          'Gagal mengambil tarif pengiriman dari Biteship'
+
+        // If using test key (biteship_test...) and sandbox balance is 0, fallback to mock rates for testing
+        if (this.apiKey.startsWith('biteship_test') && errorMsg.toLowerCase().includes('balance')) {
+          safeLogError('[BiteshipClient]', 'Biteship test balance is empty. Falling back to Sandbox Mock Rates.')
+          return [
+            {
+              available_for_cash_on_delivery: false,
+              available_for_proof_of_delivery: true,
+              available_for_instant_waybill_id: true,
+              company: 'jne',
+              courier_code: 'jne',
+              courier_name: 'JNE',
+              courier_service_code: 'reg',
+              courier_service_name: 'Regular',
+              description: 'Layanan Reguler JNE (Sandbox Mock)',
+              duration: '1-2 hari',
+              price: 12000,
+              shipment_duration_range: '1 - 2',
+              shipment_duration_unit: 'days',
+              service_type: 'standard',
+              type: 'courier',
+            },
+            {
+              available_for_cash_on_delivery: false,
+              available_for_proof_of_delivery: true,
+              available_for_instant_waybill_id: true,
+              company: 'sicepat',
+              courier_code: 'sicepat',
+              courier_name: 'SiCepat',
+              courier_service_code: 'reg',
+              courier_service_name: 'Regular Package',
+              description: 'Layanan Reguler SiCepat (Sandbox Mock)',
+              duration: '1-3 hari',
+              price: 10000,
+              shipment_duration_range: '1 - 3',
+              shipment_duration_unit: 'days',
+              service_type: 'standard',
+              type: 'courier',
+            },
+            {
+              available_for_cash_on_delivery: false,
+              available_for_proof_of_delivery: true,
+              available_for_instant_waybill_id: true,
+              company: 'jnt',
+              courier_code: 'jnt',
+              courier_name: 'J&T Express',
+              courier_service_code: 'ez',
+              courier_service_name: 'EZ',
+              description: 'Layanan EZ J&T (Sandbox Mock)',
+              duration: '2-3 hari',
+              price: 11000,
+              shipment_duration_range: '2 - 3',
+              shipment_duration_unit: 'days',
+              service_type: 'standard',
+              type: 'courier',
+            },
+          ]
+        }
+
+        safeLogError('[BiteshipClient] Rates error:', errorMsg)
+        throw new Error(errorMsg)
       }
 
       return data.pricing || []

@@ -122,12 +122,13 @@ export function useDistrictSearch(
 
 export function useShippingRates(
   postalCode: string | null,
-  weightGram: number
+  weightGram: number,
+  enabledTrigger = true
 ): import('@tanstack/react-query').UseQueryResult<ApiResponse<ShippingOption[]>, Error> {
   return useQuery({
     queryKey: ['shipping-rates', postalCode, weightGram],
     queryFn: () => calculateShippingRatesAction(postalCode!, weightGram),
-    enabled: !!postalCode && weightGram > 0,
+    enabled: enabledTrigger && !!postalCode && weightGram > 0,
     staleTime: 1000 * 60 * 15, // Cache for 15 minutes
   })
 }
