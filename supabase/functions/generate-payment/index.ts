@@ -157,9 +157,9 @@ Deno.serve(async (req: Request) => {
     }
 
     // DOKU API Credentials
-    const clientId = Deno.env.get("DOKU_CLIENT_ID");
-    const secretKey = Deno.env.get("DOKU_SECRET_KEY");
-    const dokuMode = Deno.env.get("DOKU_MODE") || "sandbox";
+    const clientId = Deno.env.get("DOKU_CLIENT_ID")?.trim();
+    const secretKey = Deno.env.get("DOKU_SECRET_KEY")?.trim();
+    const dokuMode = (Deno.env.get("DOKU_MODE") || "sandbox").trim();
 
     if (!clientId || !secretKey) {
       console.error("Missing DOKU_CLIENT_ID or DOKU_SECRET_KEY in Edge Function Environment Variables!");
