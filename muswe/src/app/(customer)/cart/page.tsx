@@ -249,8 +249,8 @@ export default function CartPage(): React.JSX.Element {
                 </Link>
 
                 <div className="bg-neutral-50/50 border border-neutral-200 border-l-2 border-l-brand-gold p-4 rounded-none text-xs text-neutral-400 leading-relaxed font-sans">
-                  Selesaikan pemesanan Anda dengan aman. Kami mendukung pembayaran Transfer Bank
-                  otomatis, QRIS, GoPay, dan ShopeePay via Midtrans.
+                  Selesaikan pemesanan Anda dengan aman. Kami mendukung pembayaran Virtual Account,
+                  QRIS, E-Wallet, dan Kartu Kredit via DOKU Payment Gateway.
                 </div>
               </Card>
             </motion.div>

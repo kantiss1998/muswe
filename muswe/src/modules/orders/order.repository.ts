@@ -133,7 +133,22 @@ export class OrderRepository {
           'Idempotency-Key': `payment_${orderNumber}`,
         },
       })
-      if (error) throw error
+      if (error) {
+        if ('context' in error && error.context) {
+          try {
+            const res = error.context as Response
+            const body = await res.json()
+            if (body?.message) {
+              throw new Error(body.message)
+            }
+          } catch (parseErr) {
+            if (parseErr instanceof Error && parseErr.message !== error.message) {
+              throw parseErr
+            }
+          }
+        }
+        throw error
+      }
       return data
     })
   }

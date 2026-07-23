@@ -157,13 +157,26 @@ Deno.serve(async (req: Request) => {
     }
 
     // DOKU API Credentials
-    const clientId = Deno.env.get("DOKU_CLIENT_ID")!;
-    const secretKey = Deno.env.get("DOKU_SECRET_KEY")!;
+    const clientId = Deno.env.get("DOKU_CLIENT_ID");
+    const secretKey = Deno.env.get("DOKU_SECRET_KEY");
     const dokuMode = Deno.env.get("DOKU_MODE") || "sandbox";
+
+    if (!clientId || !secretKey) {
+      console.error("Missing DOKU_CLIENT_ID or DOKU_SECRET_KEY in Edge Function Environment Variables!");
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Kredensial DOKU (DOKU_CLIENT_ID / DOKU_SECRET_KEY) belum diset di Supabase Secrets.",
+          code: "DOKU_CREDS_MISSING",
+        }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const baseUrl = dokuMode === "production" ? "https://api.doku.com" : "https://api-sandbox.doku.com";
     const targetPath = "/checkout/v1/payment";
 
-    const appUrl = Deno.env.get("NEXT_PUBLIC_APP_URL") || Deno.env.get("APP_URL") || "http://localhost:3000";
+    const appUrl = Deno.env.get("NEXT_PUBLIC_APP_URL") || Deno.env.get("APP_URL") || "https://www.muswedaily.com";
 
     const lineItems = order.order_items.map((item: any) => ({
       name: `${item.product_name} - ${item.variant_name}`.substring(0, 50),
@@ -190,7 +203,7 @@ Deno.serve(async (req: Request) => {
         line_items: lineItems,
       },
       payment: {
-        payment_due_date: 60, // 60 minutes as requested by user
+        payment_due_date: 60, // 60 minutes
       },
     };
 
@@ -199,6 +212,8 @@ Deno.serve(async (req: Request) => {
     const requestId = crypto.randomUUID();
     const timestamp = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
     const signature = await generateSignature(clientId, secretKey, requestId, timestamp, targetPath, digest);
+
+    console.log(`Sending request to DOKU (${baseUrl}${targetPath}) for order ${order.order_number}`);
 
     const dokuResponse = await fetch(`${baseUrl}${targetPath}`, {
       method: "POST",
@@ -215,10 +230,15 @@ Deno.serve(async (req: Request) => {
     const dokuData = await dokuResponse.json();
 
     if (!dokuResponse.ok || !dokuData.response?.payment?.url) {
-      console.error("DOKU error:", JSON.stringify(dokuData));
+      console.error("DOKU API Error response:", JSON.stringify(dokuData));
+      const errorMsg =
+        dokuData.error?.message ||
+        dokuData.message ||
+        (Array.isArray(dokuData.error) ? dokuData.error.join(', ') : null) ||
+        "Gagal membuat link pembayaran DOKU. Silakan periksa kredensial DOKU.";
       return new Response(
-        JSON.stringify({ success: false, message: "Gagal membuat link pembayaran DOKU", code: "PAYMENT_ERROR" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ success: false, message: errorMsg, code: "PAYMENT_ERROR", doku_response: dokuData }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
