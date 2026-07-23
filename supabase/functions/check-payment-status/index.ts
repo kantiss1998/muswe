@@ -118,37 +118,21 @@ Deno.serve(async (req: Request) => {
         const targetPath = `/orders/v1/status/${order.order_number}`;
         const requestId = crypto.randomUUID();
         const timestamp = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
-        const digestEmpty = await generateDigest("");
 
-        // Try signature with digest first, fallback to without digest if needed
-        const signatureWithDigest = await generateSignature(clientId, secretKey, requestId, timestamp, targetPath, digestEmpty);
-        const signatureNoDigest = await generateSignature(clientId, secretKey, requestId, timestamp, targetPath);
+        // DOKU GET status API expects No Digest signature
+        const signature = await generateSignature(clientId, secretKey, requestId, timestamp, targetPath);
 
         try {
           console.log(`Checking payment status with DOKU (${baseUrl}${targetPath}) for order ${order.order_number}`);
-          let dokuRes = await fetch(`${baseUrl}${targetPath}`, {
+          const dokuRes = await fetch(`${baseUrl}${targetPath}`, {
             method: "GET",
             headers: {
               "Client-Id": clientId,
               "Request-Id": requestId,
               "Request-Timestamp": timestamp,
-              "Signature": signatureWithDigest,
-              "Digest": digestEmpty,
+              "Signature": signature,
             },
           });
-
-          if (!dokuRes.ok && (dokuRes.status === 401 || dokuRes.status === 400)) {
-            // Try without Digest header
-            dokuRes = await fetch(`${baseUrl}${targetPath}`, {
-              method: "GET",
-              headers: {
-                "Client-Id": clientId,
-                "Request-Id": requestId,
-                "Request-Timestamp": timestamp,
-                "Signature": signatureNoDigest,
-              },
-            });
-          }
 
           if (dokuRes.ok) {
             const dokuData = await dokuRes.json();
@@ -161,8 +145,8 @@ Deno.serve(async (req: Request) => {
               ""
             ).toUpperCase();
 
-            const paymentChannel = dokuData.payment?.channel || dokuData.channel?.id || "DOKU";
-            const transactionId = dokuData.transaction?.id || order.order_number;
+            const paymentChannel = dokuData.channel?.id || dokuData.service?.id || "DOKU";
+            const transactionId = dokuData.transaction?.original_request_id || dokuData.virtual_account_payment?.reference_number || order.order_number;
 
             let newOrderStatus: string | null = null;
             let newPaymentStatus: string | null = null;

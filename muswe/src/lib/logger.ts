@@ -12,7 +12,9 @@ export function safeLogError(context: string, error: unknown, ...args: unknown[]
     const errObj =
       error instanceof Error
         ? { name: error.name, message: error.message }
-        : { message: 'Unknown error type' }
+        : typeof error === 'object' && error !== null
+        ? error
+        : { message: String(error) }
 
     console.error(
       JSON.stringify({
