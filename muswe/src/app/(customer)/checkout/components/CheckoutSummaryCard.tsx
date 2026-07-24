@@ -7,6 +7,7 @@ import { Tag, ShoppingBag } from 'lucide-react'
 import { Button } from '@/shared/components'
 import { formatIDR } from '@/lib/utils'
 import type { CartItem } from '@/modules/cart/stores/cartStore'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 interface AppliedVoucher {
   code: string
@@ -56,11 +57,13 @@ export function CheckoutSummaryCard({
   isPaymentTokenLoading,
   canSubmit,
 }: CheckoutSummaryCardProps): React.JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <div className="border border-neutral-200 p-6 bg-white rounded-none shadow-sm hover:shadow-md transition-shadow duration-300 card-hover-lift gold-border-hover relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold to-brand-gold-light" />
       <h2 className="text-xs uppercase tracking-wider font-heading font-bold text-brand-black mb-6 flex items-center border-b border-neutral-100 pb-3">
-        <ShoppingBag size={14} className="mr-2 text-neutral-500" /> Ringkasan Pesanan
+        <ShoppingBag size={14} className="mr-2 text-neutral-500" /> {t.checkout.orderSummary}
       </h2>
 
       {/* Items List */}

@@ -2,11 +2,12 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Heart, Plus, Minus, Shield, RefreshCw, Truck } from 'lucide-react'
+import { Heart, Plus, Minus, ShieldCheck, Truck, RefreshCw, Ruler } from 'lucide-react'
 import { Button } from '@/shared/components'
 import { VariantPicker } from '@/modules/products/components'
 import { formatIDR, cn } from '@/lib/utils'
 import type { ProductDetailItem, ProductVariant } from '@/modules/products/types'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 interface ProductInfoSectionProps {
   product: ProductDetailItem
@@ -52,8 +53,15 @@ export function ProductInfoSection({
   onAddToCart,
   onBuyNow,
 }: ProductInfoSectionProps): React.JSX.Element {
+  const { t } = useTranslation()
+
+  const activePrice = selectedVariant ? Number(selectedVariant.price) : minPrice
+  const comparePrice = selectedVariant?.compare_price
+    ? Number(selectedVariant.compare_price)
+    : null
+
   return (
-    <>
+    <div className="space-y-6">
       {/* Title, Category & Price */}
       <motion.div variants={itemVariants} className="space-y-2">
         {product.categories && (
@@ -68,24 +76,20 @@ export function ProductInfoSection({
         {/* Price display */}
         <div className="flex items-baseline space-x-3 pt-2">
           <span className="text-lg lg:text-xl font-sans font-semibold text-brand-black">
-            {selectedVariant
-              ? formatIDR(selectedVariant.price)
-              : minPrice === maxPrice
-                ? formatIDR(minPrice)
-                : `${formatIDR(minPrice)} - ${formatIDR(maxPrice)}`}
+            {formatIDR(activePrice)}
           </span>
 
           {/* Compare Price */}
-          {selectedVariant?.compare_price && (
+          {comparePrice && comparePrice > activePrice && (
             <span className="text-xs text-neutral-400 line-through font-sans">
-              {formatIDR(selectedVariant.compare_price)}
+              {formatIDR(comparePrice)}
             </span>
           )}
 
-          {!selectedVariant && product.product_variants[0]?.compare_price && (
-            <span className="text-xs text-neutral-400 line-through font-sans">
-              {formatIDR(product.product_variants[0].compare_price)}
-            </span>
+          {!selectedVariant && minPrice !== maxPrice && (
+             <span className="text-xs text-neutral-400 italic font-sans">
+               (Bervariasi)
+             </span>
           )}
         </div>
       </motion.div>
@@ -103,13 +107,14 @@ export function ProductInfoSection({
       {/* Varian Picker */}
       <motion.div variants={itemVariants} className="relative">
         {product.size_guide && product.size_guide.trim().length > 0 && (
-          <div className="flex justify-end absolute top-1 right-0 z-10">
+          <div className="flex justify-start mb-4">
             <button
               type="button"
               onClick={onSizeGuideOpen}
-              className="text-sm uppercase tracking-wider font-heading font-semibold text-brand-gold hover:text-brand-gold-light transition-colors underline underline-offset-2 cursor-pointer"
+              className="inline-flex items-center space-x-1.5 text-xs font-medium uppercase tracking-wider text-brand-gold hover:text-brand-black transition-colors"
             >
-              Detail Ukuran & Bahan
+              <Ruler className="h-4 w-4" />
+              <span>{t.product.sizeGuide}</span>
             </button>
           </div>
         )}
@@ -125,11 +130,11 @@ export function ProductInfoSection({
         <motion.div variants={itemVariants} className="text-sm text-neutral-500 font-sans">
           {selectedVariant.stock > 0 ? (
             <span>
-              Stok Tersedia:{' '}
+              {t.product.inStock}:{' '}
               <strong className="text-brand-black">{selectedVariant.stock} pcs</strong>
             </span>
           ) : (
-            <span className="text-red-500 font-semibold">Stok Habis</span>
+            <span className="text-red-500 font-semibold">{t.product.outOfStock}</span>
           )}
         </motion.div>
       )}
@@ -187,10 +192,10 @@ export function ProductInfoSection({
             disabled={!selectedVariant || selectedVariant.stock === 0}
           >
             {!selectedVariant
-              ? 'Pilih Varian'
+              ? t.product.selectVariant
               : selectedVariant.stock === 0
-                ? 'Stok Habis'
-                : 'Tambah Ke Keranjang'}
+                ? t.product.outOfStock
+                : t.product.addToCart}
           </Button>
 
           {/* Buy Now Button */}
@@ -202,10 +207,10 @@ export function ProductInfoSection({
             disabled={!selectedVariant || selectedVariant.stock === 0}
           >
             {!selectedVariant
-              ? 'Pilih Varian'
+              ? t.product.selectVariant
               : selectedVariant.stock === 0
-                ? 'Stok Habis'
-                : 'Beli Sekarang'}
+                ? t.product.outOfStock
+                : t.product.buyNow}
           </Button>
         </div>
       </motion.div>
@@ -242,13 +247,13 @@ export function ProductInfoSection({
           transition={{ duration: 0.2 }}
           className="flex flex-col items-center text-center space-y-1.5 cursor-default group bg-neutral-50/80 hover:bg-neutral-100 rounded-xl p-3 transition-colors"
         >
-          <Shield className="h-4 w-4 text-brand-black/70 group-hover:text-brand-black transition-colors" />
+          <ShieldCheck className="h-4 w-4 text-brand-black/70 group-hover:text-brand-black transition-colors" />
           <span className="text-[10px] uppercase tracking-wider font-heading font-semibold text-brand-black">
             Kualitas Premium
           </span>
           <span className="text-[9px] text-neutral-500 font-sans">Bahan terkurasi</span>
         </motion.div>
       </motion.div>
-    </>
+    </div>
   )
 }

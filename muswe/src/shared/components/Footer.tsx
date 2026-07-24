@@ -2,11 +2,12 @@ import React from 'react'
 import { SmartLink as Link } from '@/shared/components'
 import Image from 'next/image'
 import { Button, Input, CurrentYear } from '@/shared/components'
-
+import { useTranslation } from '@/shared/i18n/useTranslation'
 import toast from 'react-hot-toast'
 import { useSiteSettings } from '@/shared/hooks/useSiteSettings'
 
 export function Footer(): React.JSX.Element {
+  const { t } = useTranslation()
   const { logoUrl, instagramUrl, tiktokUrl, whatsappUrl, shopeeUrl } = useSiteSettings()
 
   return (
@@ -15,21 +16,21 @@ export function Footer(): React.JSX.Element {
       <div className="border-b border-neutral-200 bg-brand-cream py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <h3 className="text-2xl md:text-3xl font-heading font-normal tracking-wide text-brand-black">
-            Subscribe to our emails
+            {t.footer.followUs}
           </h3>
           <p className="text-sm text-neutral-600 font-sans max-w-md mx-auto">
-            Berlangganan newsletter untuk promo eksklusif dan akses early ke koleksi baru.
+            {t.footer.aboutText}
           </p>
           <form
             onSubmit={(e) => {
               e.preventDefault()
-              toast.success('Terima kasih! Fitur newsletter segera hadir.')
+              toast.success('Terima kasih! Newsletter subscription saved.')
             }}
             className="flex flex-col sm:flex-row gap-0 max-w-md mx-auto mt-6"
           >
             <input
               type="email"
-              placeholder="Email Anda"
+              placeholder="Email"
               required
               className="flex-1 bg-transparent border-b border-brand-black text-brand-black placeholder:text-neutral-400 py-3 px-2 text-sm focus:outline-none focus:border-brand-gold transition-colors"
             />
@@ -61,15 +62,14 @@ export function Footer(): React.JSX.Element {
                 />
               </div>
               <p className="text-sm text-neutral-500 leading-relaxed max-w-xs font-sans">
-                Muswe menghadirkan kerudung motif premium modern untuk wanita Indonesia dengan
-                desain minimalis, bahan berkualitas, dan kenyamanan terbaik.
+                {t.footer.aboutText}
               </p>
             </div>
 
             {/* Col 2: Pelayanan Pelanggan */}
             <div className="flex flex-col space-y-3">
               <h4 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black">
-                Pelayanan
+                {t.footer.customerService}
               </h4>
               <ul className="space-y-2">
                 <li>

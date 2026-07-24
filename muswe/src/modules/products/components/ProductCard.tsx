@@ -12,6 +12,8 @@ import { cn, formatIDR } from '@/lib/utils'
 import { Badge } from '@/shared/components/Badge'
 import toast from 'react-hot-toast'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 interface ProductCardProps {
   product: ProductListItem
   className?: string
@@ -21,6 +23,7 @@ export const ProductCard = React.memo(function ProductCard({
   product,
   className,
 }: ProductCardProps): React.JSX.Element {
+  const { t } = useTranslation()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const router = useRouter()
   const isLiked = useWishlistStore((state) => state.productIds.includes(product.id))
@@ -248,7 +251,7 @@ export const ProductCard = React.memo(function ProductCard({
         {product.product_variants?.every((v) => v.stock === 0) && (
           <div className="absolute inset-0 bg-white/60 flex items-center justify-center pointer-events-none">
             <Badge variant="brand" size="md">
-              Habis Terjual
+              {t.product.outOfStock}
             </Badge>
           </div>
         )}
@@ -258,7 +261,7 @@ export const ProductCard = React.memo(function ProductCard({
           {!hasMultipleColors && sizeVariants && sizeVariants.length > 0 ? (
             <div className="w-full space-y-2 text-center">
               <span className="text-xs font-heading font-medium uppercase tracking-wider text-brand-black">
-                + Keranjang Instan
+                + {t.cart.title}
               </span>
               <div className="flex flex-wrap gap-1 justify-center">
                 {sizeVariants.map((v) => {
@@ -292,7 +295,7 @@ export const ProductCard = React.memo(function ProductCard({
             </div>
           ) : (
             <span className="text-sm font-heading font-medium uppercase tracking-wider text-brand-black py-1 text-center w-full block">
-              Lihat Detail
+              {t.common.filter === 'Filter' ? 'Lihat Detail' : 'View Detail'}
             </span>
           )}
         </div>

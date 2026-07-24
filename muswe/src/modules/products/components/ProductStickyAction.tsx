@@ -7,6 +7,8 @@ import { Button } from '@/shared/components'
 import { formatIDR } from '@/lib/utils'
 import type { ProductDetailItem, ProductVariant } from '@/modules/products/types'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 interface ProductStickyActionProps {
   showStickyBar: boolean
   product: ProductDetailItem
@@ -28,6 +30,8 @@ export function ProductStickyAction({
   onAddToCart,
   onBuyNow,
 }: ProductStickyActionProps): React.JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <AnimatePresence>
       {showStickyBar && (
@@ -74,7 +78,7 @@ export function ProductStickyAction({
                       Varian: <strong className="text-brand-black">{selectedVariant.name}</strong>
                     </span>
                   ) : (
-                    <span className="italic text-neutral-400">Pilih varian di atas</span>
+                    <span className="italic text-neutral-400">{t.product.selectVariant}</span>
                   )}
                 </div>
               )}
@@ -88,7 +92,7 @@ export function ProductStickyAction({
                   isLoading={isAdding}
                   disabled={!selectedVariant || selectedVariant.stock === 0}
                 >
-                  Keranjang
+                  {t.nav.cart}
                 </Button>
                 <Button
                   onClick={onBuyNow}
@@ -98,7 +102,7 @@ export function ProductStickyAction({
                   isLoading={isBuying}
                   disabled={!selectedVariant || selectedVariant.stock === 0}
                 >
-                  Beli
+                  {t.product.buyNow}
                 </Button>
               </div>
             </div>

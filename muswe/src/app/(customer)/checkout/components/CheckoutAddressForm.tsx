@@ -7,6 +7,8 @@ import { Button, Textarea } from '@/shared/components'
 import { formatIDR } from '@/lib/utils'
 import type { UserAddress, ShippingOption } from '@/modules/shipping/types'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 interface CheckoutAddressFormProps {
   addresses: UserAddress[]
   selectedAddress: UserAddress | null
@@ -40,13 +42,15 @@ export function CheckoutAddressForm({
   notes,
   onNotesChange,
 }: CheckoutAddressFormProps): React.JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <div className="space-y-8">
       {/* Address Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xs uppercase tracking-wider font-heading font-bold text-brand-black flex items-center">
-            <MapPin size={14} className="mr-2 text-neutral-500" /> Alamat Pengiriman
+            <MapPin size={14} className="mr-2 text-neutral-500" /> {t.checkout.shippingAddress}
           </h2>
           <motion.button
             whileHover={{ scale: 1.02 }}
@@ -54,7 +58,7 @@ export function CheckoutAddressForm({
             onClick={onAddNewAddress}
             className="inline-flex items-center text-sm text-neutral-600 hover:text-brand-black font-heading font-medium uppercase tracking-wider transition-colors duration-200"
           >
-            <Plus size={12} className="mr-1" /> Tambah Alamat
+            <Plus size={12} className="mr-1" /> {t.checkout.addAddress}
           </motion.button>
         </div>
 

@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { formatProductDescription, cn } from '@/lib/utils'
 import type { ProductDetailItem, ProductVariant } from '@/modules/products/types'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 interface ProductAccordionTabsProps {
   product: ProductDetailItem
@@ -23,6 +24,7 @@ export function ProductAccordionTabs({
   product,
   selectedVariant,
 }: ProductAccordionTabsProps): React.JSX.Element {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<'details' | 'shipping' | 'care'>('details')
 
   return (
@@ -35,7 +37,7 @@ export function ProductAccordionTabs({
             activeTab === 'details' ? 'text-brand-black' : 'text-neutral-400'
           )}
         >
-          Detail
+          {t.product.description}
           {activeTab === 'details' && (
             <motion.div
               layoutId="activeTabUnderline"
@@ -51,7 +53,7 @@ export function ProductAccordionTabs({
             activeTab === 'shipping' ? 'text-brand-black' : 'text-neutral-400'
           )}
         >
-          Ukuran & Bahan
+          {t.product.sizeGuide}
           {activeTab === 'shipping' && (
             <motion.div
               layoutId="activeTabUnderline"
@@ -67,7 +69,7 @@ export function ProductAccordionTabs({
             activeTab === 'care' ? 'text-brand-black' : 'text-neutral-400'
           )}
         >
-          Perawatan
+          {t.product.materialCare}
           {activeTab === 'care' && (
             <motion.div
               layoutId="activeTabUnderline"

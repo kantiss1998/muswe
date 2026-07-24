@@ -15,12 +15,15 @@ import { type ProductListItem } from '@/modules/products/types'
 import { createBrowserClient } from '@/lib/supabase/client'
 import { useFocusTrap } from '@/shared/hooks/useFocusTrap'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 interface SearchOverlayProps {
   isOpen: boolean
   onClose: () => void
 }
 
 export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
+  const { t } = useTranslation()
   const router = useRouter()
   const [supabase] = useState(() => createBrowserClient())
 
@@ -107,7 +110,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                   label="Kata kunci"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Masukkan kata kunci produk (cth: linen, kemeja, hijab)..."
+                  placeholder={t.common.search}
                   rightIcon={
                     <button type="submit" aria-label="Cari produk">
                       <Search className="h-4 w-4" />
