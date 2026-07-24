@@ -5,19 +5,28 @@ import { motion } from 'framer-motion'
 import { MapPin, Clock, Mail, MessageSquare } from 'lucide-react'
 import { PageContainer, PageHero } from '@/shared/components'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 export default function KontakPage(): React.JSX.Element {
+  const { isEnglish } = useTranslation()
   const whatsappNumber = '6281234567890'
   const whatsappMessage = encodeURIComponent(
-    'Halo Muswe, saya ingin bertanya tentang produk / pesanan saya.'
+    isEnglish
+      ? 'Hello Muswe, I would like to inquire about products / my order.'
+      : 'Halo Muswe, saya ingin bertanya tentang produk / pesanan saya.'
   )
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
 
   return (
     <div className="min-h-screen bg-white font-sans">
       <PageHero
-        eyebrow="Layanan Pelanggan"
-        title="Hubungi Kami"
-        subtitle="Tim customer service kami siap membantu informasi produk, ukuran, pengiriman, dan retur."
+        eyebrow={isEnglish ? 'Customer Support' : 'Layanan Pelanggan'}
+        title={isEnglish ? 'Contact Us' : 'Hubungi Kami'}
+        subtitle={
+          isEnglish
+            ? 'Our customer service team is ready to assist with sizing, shipping, orders, and returns.'
+            : 'Tim customer service kami siap membantu informasi produk, ukuran, pengiriman, dan retur.'
+        }
       />
       <PageContainer size="md" className="py-12 space-y-12 page-content">
         {/* Contact Grid */}
@@ -31,24 +40,28 @@ export default function KontakPage(): React.JSX.Element {
             className="border border-neutral-200 p-8 space-y-6 card-hover-lift gold-border-hover transition-all duration-300"
           >
             <h3 className="font-serif text-neutral-950 font-bold uppercase tracking-wider text-xs border-b border-neutral-100 pb-3">
-              Layanan Pelanggan
+              {isEnglish ? 'Customer Support' : 'Layanan Pelanggan'}
             </h3>
 
             <div className="space-y-4 text-xs font-medium text-neutral-600">
               <div className="flex items-start space-x-3">
                 <Clock className="h-4 w-4 text-neutral-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-neutral-900 mb-0.5">Jam Operasional</p>
-                  <p>Senin – Jumat: 09:00 – 17:00 WIB</p>
-                  <p>Sabtu: 09:00 – 14:00 WIB</p>
-                  <p className="text-neutral-400 mt-1">Minggu &amp; Hari Libur Nasional: Tutup</p>
+                  <p className="font-semibold text-neutral-900 mb-0.5">
+                    {isEnglish ? 'Operating Hours' : 'Jam Operasional'}
+                  </p>
+                  <p>{isEnglish ? 'Monday – Friday: 09:00 – 17:00 (GMT+7)' : 'Senin – Jumat: 09:00 – 17:00 WIB'}</p>
+                  <p>{isEnglish ? 'Saturday: 09:00 – 14:00 (GMT+7)' : 'Sabtu: 09:00 – 14:00 WIB'}</p>
+                  <p className="text-neutral-400 mt-1">
+                    {isEnglish ? 'Sundays & National Holidays: Closed' : 'Minggu & Hari Libur Nasional: Tutup'}
+                  </p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3">
                 <Mail className="h-4 w-4 text-neutral-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-neutral-900 mb-0.5">Surel (Email)</p>
+                  <p className="font-semibold text-neutral-900 mb-0.5">Email Support</p>
                   <a
                     href="mailto:support@muswe.com"
                     className="hover:text-neutral-900 underline transition-colors"
@@ -61,10 +74,12 @@ export default function KontakPage(): React.JSX.Element {
               <div className="flex items-start space-x-3">
                 <MapPin className="h-4 w-4 text-neutral-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-neutral-900 mb-0.5">Butik &amp; Kantor Pusat</p>
+                  <p className="font-semibold text-neutral-900 mb-0.5">
+                    {isEnglish ? 'Boutique & Headquarters' : 'Butik & Kantor Pusat'}
+                  </p>
                   <p>Muswe Studio</p>
                   <p>Jl. Kemang Raya No. 45, Bangka, Mampang Prapatan</p>
-                  <p>Jakarta Selatan, DKI Jakarta 12730</p>
+                  <p>Jakarta Selatan, DKI Jakarta 12730, Indonesia</p>
                 </div>
               </div>
             </div>
@@ -80,12 +95,12 @@ export default function KontakPage(): React.JSX.Element {
           >
             <div className="space-y-4">
               <h3 className="font-serif text-neutral-950 font-bold uppercase tracking-wider text-xs border-b border-neutral-200/60 pb-3">
-                Respon Cepat via WhatsApp
+                {isEnglish ? 'Instant Support via WhatsApp' : 'Respon Cepat via WhatsApp'}
               </h3>
               <p className="text-xs text-neutral-500 leading-relaxed font-medium">
-                Dapatkan bantuan langsung dari tim customer support kami terkait kendala transaksi,
-                konfirmasi pembayaran, atau bantuan retur melalui WhatsApp chat. Kami akan membalas
-                pesan Anda sesegera mungkin selama jam kerja.
+                {isEnglish
+                  ? 'Get direct assistance from our customer support team regarding order inquiries, shipping rates, or return assistance via WhatsApp chat.'
+                  : 'Dapatkan bantuan langsung dari tim customer support kami terkait kendala transaksi, konfirmasi pembayaran, atau bantuan retur melalui WhatsApp chat.'}
               </p>
             </div>
 
@@ -97,7 +112,7 @@ export default function KontakPage(): React.JSX.Element {
                 className="w-full inline-flex items-center justify-center space-x-2 bg-[#171717] text-white hover:bg-neutral-800 px-6 py-3.5 text-xs font-heading font-bold uppercase tracking-wider transition-all duration-300 rounded-none shadow-xs hover:shadow-md hover:-translate-y-[1px] active:translate-y-0 btn-shine"
               >
                 <MessageSquare className="h-4 w-4" />
-                <span>Hubungi via WhatsApp</span>
+                <span>{isEnglish ? 'Contact via WhatsApp' : 'Hubungi via WhatsApp'}</span>
               </a>
             </div>
           </motion.div>
