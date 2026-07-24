@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 import { createBrowserClient } from '@/lib/supabase/client'
 import { Button, Input, Card, AuthLoading } from '@/shared/components'
 import { staggerContainer, fadeUpItem } from '@/lib/motion'
-import { GoogleLogin } from '@react-oauth/google'
+import { useGoogleLogin } from '@react-oauth/google'
 import toast from 'react-hot-toast'
 
 function LoginContent() {
@@ -18,6 +18,7 @@ function LoginContent() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
   // Redirect parameter
   let redirectPath = searchParams.get('redirect') || '/'
@@ -30,7 +31,6 @@ function LoginContent() {
     const errorParam = searchParams.get('error')
     if (errorParam === 'oauth_failed') {
       toast.error('Login dengan Google gagal. Coba lagi atau gunakan email.')
-      // Clear error parameter from URL without page reload
       const url = new URL(window.location.href)
       url.searchParams.delete('error')
       window.history.replaceState({}, '', url.pathname + url.search)
@@ -65,6 +65,52 @@ function LoginContent() {
     }
   }
 
+  const triggerGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setIsGoogleLoading(true)
+      try {
+        const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        })
+        const googleUser = await userInfoRes.json()
+
+        if (!googleUser.email) {
+          throw new Error('Email tidak ditemukan dari profil Google.')
+        }
+
+        // Attempt Supabase sign in with IdToken or session
+        const { data, error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: tokenResponse.access_token,
+        })
+
+        if (error) {
+          // If signInWithIdToken requires id_token, fallback to OAuth or user session
+          const { error: oauthErr } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+              redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectPath)}`,
+            },
+          })
+          if (oauthErr) throw oauthErr
+        } else if (data.user) {
+          toast.success('Berhasil masuk dengan Google!')
+          router.push(redirectPath)
+        }
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Gagal masuk dengan Google.'
+        toast.error(msg)
+      } finally {
+        setIsGoogleLoading(false)
+      }
+    },
+    onError: (error) => {
+      console.error('Google Login Error:', error)
+      toast.error('Login dengan Google dibatalkan atau gagal.')
+      setIsGoogleLoading(false)
+    },
+  })
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 25 }}
@@ -74,7 +120,6 @@ function LoginContent() {
       <Card bordered={true} className="w-full max-w-md shadow-lg p-8 md:p-10 border-neutral-200">
         <motion.div variants={staggerContainer} initial="hidden" animate="visible">
           <motion.div variants={fadeUpItem} className="flex flex-col space-y-2 text-center mb-8">
-            {/* Brand identity */}
             <span className="text-xs font-heading font-medium uppercase tracking-[0.3em] text-neutral-400 mb-2">
               MUSWE
             </span>
@@ -141,35 +186,32 @@ function LoginContent() {
 
           {/* Google Sign In */}
           <motion.div variants={fadeUpItem} className="flex justify-center">
-            <GoogleLogin
-              onSuccess={async (credentialResponse) => {
-                if (credentialResponse.credential) {
-                  try {
-                    const { data, error } = await supabase.auth.signInWithIdToken({
-                      provider: 'google',
-                      token: credentialResponse.credential,
-                    })
-                    if (error) throw error
-
-                    if (data.user) {
-                      toast.success('Berhasil masuk dengan Google!')
-                      router.push(redirectPath)
-                    }
-                  } catch (error: unknown) {
-                    const message = error instanceof Error ? error.message : 'Gagal masuk dengan Google.'
-                    toast.error(message)
-                  }
-                }
-              }}
-              onError={() => {
-                toast.error('Login dengan Google dibatalkan atau gagal.')
-              }}
-              theme="outline"
-              size="large"
-              shape="rectangular"
-              text="signin_with"
-              useOneTap={false}
-            />
+            <button
+              type="button"
+              onClick={() => triggerGoogleLogin()}
+              disabled={isGoogleLoading}
+              className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-white border border-neutral-300 rounded-lg text-xs font-heading font-bold uppercase tracking-wider text-brand-black hover:bg-neutral-50 hover:border-neutral-400 transition-all duration-200 shadow-sm cursor-pointer disabled:opacity-50"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                />
+              </svg>
+              <span>{isGoogleLoading ? 'Menghubungkan...' : 'Masuk dengan Google'}</span>
+            </button>
           </motion.div>
 
           {/* Footer Link */}
