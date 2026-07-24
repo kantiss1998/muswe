@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { SmartLink as Link } from '@/shared/components'
+import { SmartLink as Link, LanguageSwitcher } from '@/shared/components'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -48,9 +48,12 @@ export function MobileMenuDrawer({
             tabIndex={-1}
           >
             <div className="flex items-center justify-between px-6 pb-4 border-b border-neutral-100">
-              <span className="font-heading text-sm font-bold tracking-[0.1em] text-brand-black uppercase">
-                MENU
-              </span>
+              <div className="flex items-center space-x-3">
+                <span className="font-heading text-sm font-bold tracking-[0.1em] text-brand-black uppercase">
+                  MENU
+                </span>
+                <LanguageSwitcher />
+              </div>
               <button
                 type="button"
                 onClick={onClose}

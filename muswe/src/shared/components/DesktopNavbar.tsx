@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { SmartLink as Link } from '@/shared/components'
+import { SmartLink as Link, LanguageSwitcher } from '@/shared/components'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, Search, Heart, ShoppingBag, User as UserIcon, LogOut, ChevronDown } from 'lucide-react'
@@ -223,6 +223,8 @@ export function DesktopNavbar({
                 </motion.span>
               )}
             </button>
+
+            <LanguageSwitcher />
 
             <div className="relative">
               {isMounted && isAuthenticated ? (

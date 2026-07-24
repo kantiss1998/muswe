@@ -11,6 +11,8 @@ interface AdminOrderShippingPanelProps {
     city_name: string
     province_name: string
     postal_code: string
+    country_code?: string | null
+    country_name?: string | null
     courier_name: string
     tracking_number?: string | null
   } | null
@@ -42,6 +44,7 @@ export function AdminOrderShippingPanel({
           <p className="text-xs text-neutral-500">
             Kecamatan {orderShipping.district_name}, {orderShipping.city_name},{' '}
             {orderShipping.province_name} {orderShipping.postal_code}
+            {orderShipping.country_name && orderShipping.country_code !== 'ID' ? `, ${orderShipping.country_name}` : ''}
           </p>
           <div className="pt-2 border-t border-neutral-100 mt-2 space-y-1 text-neutral-500 text-xs">
             <p>

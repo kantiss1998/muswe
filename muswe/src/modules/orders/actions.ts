@@ -141,9 +141,13 @@ export async function createSecureOrderAction(params: CreateOrderParams) {
 
   try {
     // Verify shipping cost server-side
-    // 1 & 2. Get address zone and cart concurrently
+    // 1 & 2. Get address details and cart concurrently
     const [addressRes, cartRes] = await Promise.all([
-      supabase.from('user_addresses').select('zone_id').eq('id', params.addressId).single(),
+      supabase
+        .from('user_addresses')
+        .select('id, postal_code, country_code, country_name')
+        .eq('id', params.addressId)
+        .single(),
       supabase
         .from('carts')
         .select(
@@ -156,8 +160,8 @@ export async function createSecureOrderAction(params: CreateOrderParams) {
     const address = addressRes.data
     const userCart = cartRes.data
 
-    if (!address || !address.zone_id) {
-      return fail(ERROR_CODES.INVALID_ADDRESS, 'Invalid address or missing shipping zone')
+    if (!address) {
+      return fail(ERROR_CODES.INVALID_ADDRESS, 'Alamat pengiriman tidak ditemukan')
     }
 
     const cartItems = Array.isArray(userCart?.cart_items) ? userCart.cart_items : []
@@ -169,10 +173,15 @@ export async function createSecureOrderAction(params: CreateOrderParams) {
     const totalWeight = calculateCartWeight(cartItems as CartItemWithWeight[])
 
     // 3 & 4. Validate and get shipping rate
-    const selectedRate = await validateAndGetShippingRate(address.zone_id, totalWeight, params)
+    const selectedRate = await validateAndGetShippingRate(
+      address.postal_code || '',
+      totalWeight,
+      params,
+      address.country_code || 'ID'
+    )
 
     if (!selectedRate) {
-      return fail(ERROR_CODES.INVALID_SHIPPING, 'Invalid shipping method selected')
+      return fail(ERROR_CODES.INVALID_SHIPPING, 'Metode pengiriman tidak valid')
     }
 
     // TOCTOU Mitigation: Re-verify cart state right before ordering

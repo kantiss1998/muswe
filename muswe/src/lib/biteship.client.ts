@@ -76,7 +76,9 @@ export class BiteshipClient {
 
     const payload: Record<string, any> = {
       origin_postal_code: Number(cleanOrigin),
-      destination_postal_code: cleanDestination,
+      destination_postal_code: isInternational
+        ? cleanDestination
+        : (Number(cleanDestination) || cleanDestination),
       couriers: params.couriers || defaultCouriers,
       items: params.items.map((item) => ({
         name: item.name.substring(0, 50),

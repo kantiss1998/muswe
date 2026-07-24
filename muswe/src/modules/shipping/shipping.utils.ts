@@ -12,11 +12,17 @@ export type CartItemWithWeight = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function validateAndGetShippingRate(
-  zoneId: any,
+  postalCode: string,
   totalWeight: number,
-  params: CreateOrderParams
+  params: CreateOrderParams,
+  countryCode?: string
 ) {
-  const shippingRes = await shippingService.calculateShippingRates(zoneId, totalWeight)
+  const shippingRes = await shippingService.calculateShippingRates(
+    postalCode,
+    totalWeight,
+    undefined,
+    countryCode
+  )
   if (!shippingRes.success || !shippingRes.data) return undefined
   const validRates = shippingRes.data
 

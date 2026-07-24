@@ -53,16 +53,8 @@ export function ProductGallery({
   productName,
   selectedVariantId,
 }: ProductGalleryProps): React.JSX.Element {
-  const [isMobile, setIsMobile] = useState(false)
   const prevVariantIdRef = useRef<string | null>(null)
-
-  useEffect(() => {
-    const mql = window.matchMedia('(max-width: 768px)')
-    setIsMobile(mql.matches)
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
-    mql.addEventListener('change', handler)
-    return () => mql.removeEventListener('change', handler)
-  }, [])
+  const mobileGalleryRef = useRef<HTMLDivElement>(null)
 
   if (images.length === 0) {
     return (
@@ -72,40 +64,51 @@ export function ProductGallery({
     )
   }
 
-  // Cari gambar yang sesuai dengan varian yang dipilih
-  const selectedVariantImage = selectedVariantId 
-    ? images.find(img => img.variant_id === selectedVariantId)
-    : null
+  // Determine which images to display (always up to 4 images)
+  // If variant is selected, place matching variant image(s) first, then fill up to 4 with other images.
+  // If variant is unselected (null), revert back to the main 4 product images.
+  let displayImages: ProductImage[] = []
 
-  // Tentukan gambar apa saja yang akan ditampilkan
-  // Desktop: jika ada varian terpilih, tampilkan 1 gambar. Jika tidak, tampilkan maksimal 4 gambar di grid.
-  // Mobile: sama (jika ada varian terpilih, tampilkan 1 gambar. Jika tidak, tampilkan slider).
-  const displayImages = selectedVariantImage ? [selectedVariantImage] : images.slice(0, 4)
+  if (selectedVariantId) {
+    const variantImages = images.filter((img) => img.variant_id === selectedVariantId)
+    if (variantImages.length > 0) {
+      const otherImages = images.filter((img) => img.variant_id !== selectedVariantId)
+      displayImages = [...variantImages, ...otherImages].slice(0, 4)
+    } else {
+      displayImages = images.slice(0, 4)
+    }
+  } else {
+    displayImages = images.slice(0, 4)
+  }
 
-  // Mobile active image state untuk titik-titik indikator (dots)
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [activeMobileImage, setActiveMobileImage] = useState<string>(displayImages[0]?.url)
+  // Mobile active image state for dots indicator
+  const [activeMobileImage, setActiveMobileImage] = useState<string>(displayImages[0]?.url || '')
 
   useEffect(() => {
     if (selectedVariantId !== prevVariantIdRef.current) {
       prevVariantIdRef.current = selectedVariantId || null
-      if (selectedVariantImage) {
-        setActiveMobileImage(selectedVariantImage.url)
-      } else if (displayImages.length > 0) {
+
+      if (displayImages.length > 0) {
         setActiveMobileImage(displayImages[0].url)
       }
+
+      // Reset mobile scroll position to beginning when variant selection changes
+      if (mobileGalleryRef.current) {
+        mobileGalleryRef.current.scrollLeft = 0
+      }
     }
-  }, [selectedVariantId, selectedVariantImage, displayImages])
+  }, [selectedVariantId, displayImages])
 
   return (
     <div className="flex flex-col w-full group">
-      {/* Mobile Swipe Gallery */}
+      {/* Mobile Swipe Gallery Slider (4 Images) */}
       <div className="md:hidden relative w-full aspect-[3/4] overflow-hidden bg-neutral-50 border border-neutral-100 rounded-xl">
         <div
+          ref={mobileGalleryRef}
           id="mobile-product-gallery"
           className={cn(
-            "flex w-full h-full overflow-x-auto snap-x snap-mandatory scrollbar-none scroll-smooth",
-            displayImages.length === 1 && "overflow-hidden pointer-events-none"
+            'flex w-full h-full overflow-x-auto snap-x snap-mandatory scrollbar-none scroll-smooth',
+            displayImages.length <= 1 && 'overflow-hidden pointer-events-none'
           )}
           onScroll={(e) => {
             if (displayImages.length <= 1) return
@@ -118,8 +121,8 @@ export function ProductGallery({
         >
           {displayImages.map((img, i) => (
             <div
-              key={`mob-${img.id}`}
-              id={`gallery-img-${img.id}`}
+              key={`mob-${img.id || i}-${img.url}`}
+              id={`gallery-img-${img.id || i}`}
               className="w-full h-full flex-shrink-0 snap-center relative"
             >
               <Image
@@ -135,12 +138,12 @@ export function ProductGallery({
           ))}
         </div>
 
-        {/* Mobile Swipe Indicators (Dots) */}
+        {/* Mobile Swipe Indicators (Dots for 4 images) */}
         {displayImages.length > 1 && (
           <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-1.5 z-10 pointer-events-none">
-            {displayImages.map((img) => (
+            {displayImages.map((img, i) => (
               <div
-                key={`dot-${img.id}`}
+                key={`dot-${img.id || i}`}
                 className={cn(
                   'h-1 transition-all duration-300 rounded-full',
                   activeMobileImage === img.url ? 'w-4 bg-brand-dark' : 'w-1.5 bg-neutral-300/80'
@@ -151,24 +154,23 @@ export function ProductGallery({
         )}
       </div>
 
-      {/* Desktop Gallery (Grid or Single) */}
+      {/* Desktop Gallery (2x2 Grid for 4 Images) */}
       <div className="hidden md:block w-full">
-        <div className={cn(
-          "grid gap-4 transition-all duration-500",
-          displayImages.length === 1 ? "grid-cols-1" : "grid-cols-2"
-        )}>
+        <div
+          className={cn(
+            'grid gap-4 transition-all duration-500',
+            displayImages.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
+          )}
+        >
           {displayImages.map((img, i) => (
-            <div 
-              key={`desktop-${img.id}`} 
-              className={cn(
-                "relative bg-brand-cream overflow-hidden rounded-xl border border-neutral-100 transition-all duration-500",
-                displayImages.length === 1 ? "aspect-[3/4]" : "aspect-[3/4]" // Ensure consistent aspect ratio
-              )}
+            <div
+              key={`desktop-${img.id || i}-${img.url}`}
+              className="relative bg-brand-cream overflow-hidden rounded-xl border border-neutral-100 aspect-[3/4] transition-all duration-500"
             >
-              <ZoomableImage 
-                src={img.url} 
-                alt={img.alt_text || productName} 
-                priority={i === 0} 
+              <ZoomableImage
+                src={img.url}
+                alt={img.alt_text || productName}
+                priority={i === 0}
               />
             </div>
           ))}

@@ -6,7 +6,7 @@ const mockSupabase = vi.hoisted(() => ({
   select: vi.fn().mockReturnThis(),
   eq: vi.fn().mockReturnThis(),
   maybeSingle: vi.fn().mockResolvedValue({ data: { cart_items: [] }, error: null }),
-  single: vi.fn().mockResolvedValue({ data: { zone_id: '1' }, error: null }),
+  single: vi.fn().mockResolvedValue({ data: { id: '1', postal_code: '40295', country_code: 'ID' }, error: null }),
   rpc: vi.fn().mockResolvedValue({ data: true, error: null }),
   insert: vi.fn().mockResolvedValue({ error: null }),
   delete: vi.fn().mockReturnThis(),
