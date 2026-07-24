@@ -237,10 +237,10 @@ export default function PesananPage(): React.JSX.Element {
                   onClick={() => setPage(page - 1)}
                   className="text-xs uppercase font-semibold py-2 px-4"
                 >
-                  Sebelumnya
+                  {isEnglish ? 'Previous' : 'Sebelumnya'}
                 </Button>
                 <span className="px-4 py-2 text-xs text-neutral-500 font-semibold flex items-center">
-                  Halaman {page} dari {totalPages}
+                  {isEnglish ? `Page ${page} of ${totalPages}` : `Halaman ${page} dari ${totalPages}`}
                 </span>
                 <Button
                   variant="outline"
@@ -248,7 +248,7 @@ export default function PesananPage(): React.JSX.Element {
                   onClick={() => setPage(page + 1)}
                   className="text-xs uppercase font-semibold py-2 px-4"
                 >
-                  Berikutnya
+                  {isEnglish ? 'Next' : 'Berikutnya'}
                 </Button>
               </div>
             )}
@@ -256,9 +256,9 @@ export default function PesananPage(): React.JSX.Element {
         ) : (
           <EmptyState
             icon={ClipboardList}
-            title="Belum Ada Pesanan"
-            description="Belum ada pesanan dengan status ini."
-            action={{ label: 'Belanja Sekarang', href: '/produk' }}
+            title={isEnglish ? 'No Orders Yet' : 'Belum Ada Pesanan'}
+            description={isEnglish ? 'No orders found with this status.' : 'Belum ada pesanan dengan status ini.'}
+            action={{ label: isEnglish ? 'Shop Now' : 'Belanja Sekarang', href: '/produk' }}
           />
         )}
 
@@ -267,7 +267,7 @@ export default function PesananPage(): React.JSX.Element {
             href="/akun"
             className="inline-flex items-center text-xs uppercase tracking-wider font-semibold text-neutral-600 hover:text-neutral-950 transition duration-100"
           >
-            <ArrowLeft size={14} className="mr-2" /> Kembali ke Akun
+            <ArrowLeft size={14} className="mr-2" /> {isEnglish ? 'Back to Account' : 'Kembali ke Akun'}
           </Link>
         </div>
       </PageContainer>
@@ -276,13 +276,14 @@ export default function PesananPage(): React.JSX.Element {
       <Modal
         isOpen={cancelOrderInfo !== null}
         onClose={() => setCancelOrderInfo(null)}
-        title="Batalkan Pesanan"
+        title={isEnglish ? 'Cancel Order' : 'Batalkan Pesanan'}
         size="sm"
       >
         <div className="space-y-6">
           <p className="text-sm text-neutral-600">
-            Apakah Anda yakin ingin membatalkan pesanan {cancelOrderInfo?.number}? Tindakan ini
-            tidak dapat dibatalkan.
+            {isEnglish
+              ? `Are you sure you want to cancel order ${cancelOrderInfo?.number}? This action cannot be undone.`
+              : `Apakah Anda yakin ingin membatalkan pesanan ${cancelOrderInfo?.number}? Tindakan ini tidak dapat dibatalkan.`}
           </p>
           <div className="flex gap-3">
             <Button
@@ -290,7 +291,7 @@ export default function PesananPage(): React.JSX.Element {
               variant="outline"
               className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
             >
-              Kembali
+              {isEnglish ? 'Back' : 'Kembali'}
             </Button>
             <Button
               onClick={executeCancelOrder}
@@ -298,7 +299,7 @@ export default function PesananPage(): React.JSX.Element {
               disabled={cancelMutation.isPending}
               className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold bg-red-600 border-red-600 text-white hover:bg-red-700 hover:border-red-700"
             >
-              Batalkan
+              {isEnglish ? 'Cancel Order' : 'Batalkan'}
             </Button>
           </div>
         </div>
@@ -308,13 +309,14 @@ export default function PesananPage(): React.JSX.Element {
       <Modal
         isOpen={receiptOrderInfo !== null}
         onClose={() => setReceiptOrderInfo(null)}
-        title="Selesaikan Pesanan"
+        title={isEnglish ? 'Complete Order' : 'Selesaikan Pesanan'}
         size="sm"
       >
         <div className="space-y-6">
           <p className="text-sm text-neutral-600">
-            Apakah Anda sudah menerima barang untuk pesanan {receiptOrderInfo?.number} dan yakin
-            ingin menyelesaikannya?
+            {isEnglish
+              ? `Have you received the items for order ${receiptOrderInfo?.number} and wish to complete it?`
+              : `Apakah Anda sudah menerima barang untuk pesanan ${receiptOrderInfo?.number} dan yakin ingin menyelesaikannya?`}
           </p>
           <div className="flex gap-3">
             <Button
@@ -322,7 +324,7 @@ export default function PesananPage(): React.JSX.Element {
               variant="outline"
               className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
             >
-              Kembali
+              {isEnglish ? 'Back' : 'Kembali'}
             </Button>
             <Button
               onClick={executeConfirmDelivery}
@@ -330,7 +332,7 @@ export default function PesananPage(): React.JSX.Element {
               disabled={confirmMutation.isPending}
               className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold"
             >
-              Konfirmasi
+              {isEnglish ? 'Confirm' : 'Konfirmasi'}
             </Button>
           </div>
         </div>

@@ -15,7 +15,7 @@ import { useTranslation } from '@/shared/i18n/useTranslation'
 export default function RegisterPage(): React.JSX.Element {
   const router = useRouter()
   const supabase = createBrowserClient()
-  const { t } = useTranslation()
+  const { t, isEnglish } = useTranslation()
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -29,17 +29,17 @@ export default function RegisterPage(): React.JSX.Element {
     e.preventDefault()
 
     if (!name || !email || !password || !confirmPassword) {
-      toast.error('Semua kolom wajib diisi.')
+      toast.error(isEnglish ? 'All fields are required.' : 'Semua kolom wajib diisi.')
       return
     }
 
     if (password !== confirmPassword) {
-      toast.error('Konfirmasi kata sandi tidak cocok.')
+      toast.error(isEnglish ? 'Password confirmation does not match.' : 'Konfirmasi kata sandi tidak cocok.')
       return
     }
 
     if (password.length < 8) {
-      toast.error('Kata sandi harus minimal 8 karakter.')
+      toast.error(isEnglish ? 'Password must be at least 8 characters.' : 'Kata sandi harus minimal 8 karakter.')
       return
     }
 
@@ -60,11 +60,11 @@ export default function RegisterPage(): React.JSX.Element {
       if (error) throw error
 
       if (data.user) {
-        toast.success('Registrasi berhasil! Selamat datang di Muswe')
+        toast.success(isEnglish ? 'Registration successful! Welcome to Muswe' : 'Registrasi berhasil! Selamat datang di Muswe')
         router.push('/')
       }
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Gagal mendaftar. Silakan coba lagi.'
+      const message = error instanceof Error ? error.message : (isEnglish ? 'Failed to register. Please try again.' : 'Gagal mendaftar. Silakan coba lagi.')
       toast.error(message)
     } finally {
       setIsLoading(false)
@@ -87,7 +87,7 @@ export default function RegisterPage(): React.JSX.Element {
       })
       if (error) throw error
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal mendaftar dengan Google.'
+      const msg = err instanceof Error ? err.message : (isEnglish ? 'Failed to sign up with Google.' : 'Gagal mendaftar dengan Google.')
       toast.error(msg)
       setIsGoogleLoading(false)
     }
@@ -154,7 +154,7 @@ export default function RegisterPage(): React.JSX.Element {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Minimal 8 karakter"
+                placeholder={isEnglish ? 'Minimum 8 characters' : 'Minimal 8 karakter'}
                 required
                 autoComplete="new-password"
               />

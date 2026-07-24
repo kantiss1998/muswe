@@ -94,14 +94,14 @@ export const enDictionary: Dictionary = {
     cancel: 'Cancel',
   },
   footer: {
-    aboutText: 'Muswe offers handcrafted heritage batik apparel with modern elegance and timeless luxury craftsmanship.',
+    aboutText: 'MUSWE is a modest fashion brand focused on thoughtfully designed pieces inspired by culture and modern expression. Rooted in elegance with a contemporary touch, MUSWE creates collections that allow women to express themselves.',
     quickLinks: 'Quick Links',
     customerService: 'Customer Care',
     followUs: 'Follow Us',
     rightsReserved: 'All Rights Reserved.',
   },
   common: {
-    search: 'Search batik collections...',
+    search: 'Search modest fashion collections...',
     price: 'Price',
     inStock: 'In Stock',
     outOfStock: 'Out of Stock',

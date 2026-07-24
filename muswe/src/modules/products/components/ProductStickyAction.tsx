@@ -75,7 +75,7 @@ export function ProductStickyAction({
                 <div className="text-xs font-sans text-neutral-500">
                   {selectedVariant ? (
                     <span>
-                      Varian: <strong className="text-brand-black">{selectedVariant.name}</strong>
+                      {t.product.variantLabel}: <strong className="text-brand-black">{selectedVariant.name}</strong>
                     </span>
                   ) : (
                     <span className="italic text-neutral-400">{t.product.selectVariant}</span>

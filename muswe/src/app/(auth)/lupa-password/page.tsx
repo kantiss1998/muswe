@@ -11,7 +11,7 @@ import { useTranslation } from '@/shared/i18n/useTranslation'
 
 export default function ForgotPasswordPage(): React.JSX.Element {
   const supabase = createBrowserClient()
-  const { t } = useTranslation()
+  const { t, isEnglish } = useTranslation()
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isSent, setIsSent] = useState(false)
@@ -19,7 +19,7 @@ export default function ForgotPasswordPage(): React.JSX.Element {
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) {
-      toast.error('Email wajib diisi.')
+      toast.error(isEnglish ? 'Email is required.' : 'Email wajib diisi.')
       return
     }
 
@@ -31,11 +31,11 @@ export default function ForgotPasswordPage(): React.JSX.Element {
 
       if (error) throw error
 
-      toast.success('Tautan reset kata sandi telah dikirim ke email Anda.')
+      toast.success(isEnglish ? 'Password reset link has been sent to your email.' : 'Tautan reset kata sandi telah dikirim ke email Anda.')
       setIsSent(true)
     } catch (error: unknown) {
       const message =
-        error instanceof Error ? error.message : 'Gagal mengirim email reset. Silakan coba lagi.'
+        error instanceof Error ? error.message : (isEnglish ? 'Failed to send reset email. Please try again.' : 'Gagal mengirim email reset. Silakan coba lagi.')
       toast.error(message)
     } finally {
       setIsLoading(false)

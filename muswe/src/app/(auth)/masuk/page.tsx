@@ -16,7 +16,7 @@ function LoginContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createBrowserClient()
-  const { t } = useTranslation()
+  const { t, isEnglish } = useTranslation()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -33,17 +33,17 @@ function LoginContent() {
   useEffect(() => {
     const errorParam = searchParams.get('error')
     if (errorParam === 'oauth_failed') {
-      toast.error('Login dengan Google gagal. Coba lagi atau gunakan email.')
+      toast.error(isEnglish ? 'Google sign-in failed. Please try again or use email.' : 'Login dengan Google gagal. Coba lagi atau gunakan email.')
       const url = new URL(window.location.href)
       url.searchParams.delete('error')
       window.history.replaceState({}, '', url.pathname + url.search)
     }
-  }, [searchParams])
+  }, [searchParams, isEnglish])
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email || !password) {
-      toast.error('Email dan kata sandi wajib diisi.')
+      toast.error(isEnglish ? 'Email and password are required.' : 'Email dan kata sandi wajib diisi.')
       return
     }
 
@@ -57,11 +57,11 @@ function LoginContent() {
       if (error) throw error
 
       if (data.user) {
-        toast.success('Berhasil masuk!')
+        toast.success(isEnglish ? 'Successfully signed in!' : 'Berhasil masuk!')
         router.push(redirectPath)
       }
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Email atau kata sandi salah.'
+      const message = error instanceof Error ? error.message : (isEnglish ? 'Invalid email or password.' : 'Email atau kata sandi salah.')
       toast.error(message)
     } finally {
       setIsLoading(false)
@@ -84,7 +84,7 @@ function LoginContent() {
       })
       if (error) throw error
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal masuk dengan Google.'
+      const msg = err instanceof Error ? err.message : (isEnglish ? 'Failed to sign in with Google.' : 'Gagal masuk dengan Google.')
       toast.error(msg)
       setIsGoogleLoading(false)
     }

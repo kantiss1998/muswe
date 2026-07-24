@@ -5,6 +5,7 @@ import type { UserAddress } from '@/modules/shipping/types'
 import { Badge } from '@/shared/components/Badge'
 import { Button } from '@/shared/components/Button'
 import { Edit2, Trash2, Check } from 'lucide-react'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 interface AddressCardProps {
   address: UserAddress
@@ -27,6 +28,8 @@ export function AddressCard({
   showActions = true,
   showSelectButton = false,
 }: AddressCardProps): React.JSX.Element {
+  const { isEnglish } = useTranslation()
+
   return (
     <div
       onClick={() => onSelect?.(address)}
@@ -49,7 +52,7 @@ export function AddressCard({
           <span className="font-semibold text-neutral-800">{address.label}</span>
           {address.is_default && (
             <Badge variant="gold" className="text-xs py-0 px-2 rounded-none">
-              Utama
+              {isEnglish ? 'Primary' : 'Utama'}
             </Badge>
           )}
           {address.country_code && address.country_code !== 'ID' && (
@@ -88,7 +91,7 @@ export function AddressCard({
                 }}
                 className="flex items-center text-xs text-neutral-600 hover:text-brand-gold transition duration-100"
               >
-                <Edit2 size={13} className="mr-1" /> Ubah
+                <Edit2 size={13} className="mr-1" /> {isEnglish ? 'Edit' : 'Ubah'}
               </button>
             )}
             {onDelete && !address.is_default && (
@@ -96,13 +99,13 @@ export function AddressCard({
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation()
-                  if (confirm('Apakah Anda yakin ingin menghapus alamat ini?')) {
+                  if (confirm(isEnglish ? 'Are you sure you want to delete this address?' : 'Apakah Anda yakin ingin menghapus alamat ini?')) {
                     onDelete(address.id)
                   }
                 }}
                 className="flex items-center text-xs text-red-500 hover:text-red-700 transition duration-100"
               >
-                <Trash2 size={13} className="mr-1" /> Hapus
+                <Trash2 size={13} className="mr-1" /> {isEnglish ? 'Delete' : 'Hapus'}
               </button>
             )}
           </div>
@@ -116,7 +119,7 @@ export function AddressCard({
               }}
               className="text-xs text-neutral-600 hover:text-brand-gold hover:underline font-semibold transition duration-100"
             >
-              Jadikan Utama
+              {isEnglish ? 'Set as Primary' : 'Jadikan Utama'}
             </button>
           )}
         </div>
@@ -133,7 +136,7 @@ export function AddressCard({
               onSelect(address)
             }}
           >
-            Pilih Alamat Ini
+            {isEnglish ? 'Select This Address' : 'Pilih Alamat Ini'}
           </Button>
         </div>
       )}

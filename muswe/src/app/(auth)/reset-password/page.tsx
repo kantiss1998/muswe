@@ -12,7 +12,7 @@ import { useTranslation } from '@/shared/i18n/useTranslation'
 export default function ResetPasswordPage(): React.JSX.Element {
   const router = useRouter()
   const supabase = createBrowserClient()
-  const { t } = useTranslation()
+  const { t, isEnglish } = useTranslation()
 
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -32,7 +32,7 @@ export default function ResetPasswordPage(): React.JSX.Element {
         toast.error(
           errorDescription
             ? decodeURIComponent(errorDescription.replace(/\+/g, ' '))
-            : 'Tautan reset password sudah tidak berlaku atau kadaluarsa.'
+            : (isEnglish ? 'Password reset link is invalid or has expired.' : 'Tautan reset password sudah tidak berlaku atau kadaluarsa.')
         )
         router.push('/lupa-password')
         return
@@ -44,28 +44,28 @@ export default function ResetPasswordPage(): React.JSX.Element {
         data: { session },
       } = await supabase.auth.getSession()
       if (!session) {
-        toast.error('Sesi tidak valid atau telah kadaluarsa. Silakan minta tautan baru.')
+        toast.error(isEnglish ? 'Invalid or expired session. Please request a new link.' : 'Sesi tidak valid atau telah kadaluarsa. Silakan minta tautan baru.')
         router.push('/lupa-password')
       }
     }
     checkSession()
-  }, [supabase, router])
+  }, [supabase, router, isEnglish])
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!password || !confirmPassword) {
-      toast.error('Semua kolom wajib diisi.')
+      toast.error(isEnglish ? 'All fields are required.' : 'Semua kolom wajib diisi.')
       return
     }
 
     if (password !== confirmPassword) {
-      toast.error('Konfirmasi kata sandi tidak cocok.')
+      toast.error(isEnglish ? 'Password confirmation does not match.' : 'Konfirmasi kata sandi tidak cocok.')
       return
     }
 
     if (password.length < 6) {
-      toast.error('Kata sandi harus minimal 6 karakter.')
+      toast.error(isEnglish ? 'Password must be at least 6 characters.' : 'Kata sandi harus minimal 6 karakter.')
       return
     }
 
@@ -77,7 +77,7 @@ export default function ResetPasswordPage(): React.JSX.Element {
 
       if (error) throw error
 
-      toast.success('Kata sandi Anda berhasil diperbarui! Silakan masuk kembali.')
+      toast.success(isEnglish ? 'Password updated successfully! Please sign in again.' : 'Kata sandi Anda berhasil diperbarui! Silakan masuk kembali.')
 
       // Log out to clear recovery session and force login
       await supabase.auth.signOut()
@@ -85,7 +85,7 @@ export default function ResetPasswordPage(): React.JSX.Element {
       router.push('/masuk')
     } catch (error: unknown) {
       const message =
-        error instanceof Error ? error.message : 'Gagal memperbarui kata sandi. Silakan coba lagi.'
+        error instanceof Error ? error.message : (isEnglish ? 'Failed to update password. Please try again.' : 'Gagal memperbarui kata sandi. Silakan coba lagi.')
       toast.error(message)
     } finally {
       setIsLoading(false)
@@ -118,7 +118,7 @@ export default function ResetPasswordPage(): React.JSX.Element {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Minimal 6 karakter"
+              placeholder={isEnglish ? 'Minimum 6 characters' : 'Minimal 6 karakter'}
               required
             />
 

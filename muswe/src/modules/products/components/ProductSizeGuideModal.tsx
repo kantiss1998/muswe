@@ -4,6 +4,7 @@ import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import { formatProductDescription } from '@/lib/utils'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 interface ProductSizeGuideModalProps {
   isOpen: boolean
@@ -16,6 +17,8 @@ export function ProductSizeGuideModal({
   onClose,
   productSizeGuide,
 }: ProductSizeGuideModalProps): React.JSX.Element {
+  const { t, isEnglish } = useTranslation()
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -47,10 +50,10 @@ export function ProductSizeGuideModal({
             <div className="space-y-4">
               <div className="space-y-1">
                 <span className="text-sm uppercase tracking-wider font-heading font-medium text-brand-gold">
-                  Detail Produk
+                  {isEnglish ? 'Product Details' : 'Detail Produk'}
                 </span>
                 <h3 className="text-sm font-heading font-bold uppercase tracking-wider text-brand-black">
-                  Detail Ukuran & Bahan
+                  {isEnglish ? 'Size & Material Details' : 'Detail Ukuran & Bahan'}
                 </h3>
               </div>
 
@@ -60,7 +63,7 @@ export function ProductSizeGuideModal({
                 </div>
               ) : (
                 <div className="whitespace-pre-line text-xs text-neutral-600 font-sans leading-relaxed border border-neutral-100 p-4 bg-neutral-50/30 text-center italic">
-                  Belum ada detail ukuran & bahan untuk produk ini.
+                  {t.product.emptySizeGuide}
                 </div>
               )}
             </div>

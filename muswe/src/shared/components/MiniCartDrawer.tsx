@@ -219,7 +219,7 @@ export function MiniCartDrawer(): React.JSX.Element {
                 </div>
 
                 <p className="text-xs text-center text-neutral-400 leading-normal font-sans">
-                  * Biaya pengiriman dan kode diskon akan dihitung di halaman checkout.
+                  {t.cart.notice}
                 </p>
               </div>
             )}

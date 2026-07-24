@@ -57,7 +57,7 @@ export function CheckoutSummaryCard({
   isPaymentTokenLoading,
   canSubmit,
 }: CheckoutSummaryCardProps): React.JSX.Element {
-  const { t } = useTranslation()
+  const { t, isEnglish } = useTranslation()
 
   return (
     <div className="border border-neutral-200 p-6 bg-white rounded-none shadow-sm hover:shadow-md transition-shadow duration-300 card-hover-lift gold-border-hover relative overflow-hidden">
@@ -104,7 +104,7 @@ export function CheckoutSummaryCard({
       {/* Voucher Code Form */}
       <div className="pb-6 border-b border-neutral-100 mb-6">
         <label className="block text-xs uppercase tracking-wider font-heading font-bold text-neutral-400 mb-2">
-          Punya Kode Voucher?
+          {isEnglish ? 'Have a Voucher Code?' : 'Punya Kode Voucher?'}
         </label>
         <AnimatePresence mode="wait">
           {appliedVoucher ? (
@@ -118,7 +118,7 @@ export function CheckoutSummaryCard({
             >
               <div className="flex items-center space-x-2 text-brand-gold font-heading font-medium uppercase tracking-wider text-xs">
                 <Tag size={12} className="text-neutral-500" />
-                <span>{appliedVoucher.code} diterapkan</span>
+                <span>{isEnglish ? `${appliedVoucher.code} applied` : `${appliedVoucher.code} diterapkan`}</span>
               </div>
               <motion.button
                 whileTap={{ scale: 0.95 }}
@@ -126,7 +126,7 @@ export function CheckoutSummaryCard({
                 onClick={onRemoveVoucher}
                 className="text-red-500 font-bold hover:text-red-700 transition ml-2"
               >
-                Hapus
+                {isEnglish ? 'Remove' : 'Hapus'}
               </motion.button>
             </motion.div>
           ) : (
@@ -134,7 +134,7 @@ export function CheckoutSummaryCard({
               <div className="flex space-x-2">
                 <input
                   type="text"
-                  placeholder="Masukkan kode voucher"
+                  placeholder={isEnglish ? 'Enter voucher code' : 'Masukkan kode voucher'}
                   className="flex-1 px-3 py-2 border border-neutral-200 focus:border-brand-black outline-none text-xs uppercase rounded-none transition-colors duration-200 focus-ring-premium"
                   value={voucherCodeInput}
                   onChange={(e) => onVoucherInputChange(e.target.value)}
@@ -146,7 +146,7 @@ export function CheckoutSummaryCard({
                   onClick={onApplyVoucher}
                   isLoading={voucherLoading}
                 >
-                  Pakai
+                  {isEnglish ? 'Apply' : 'Pakai'}
                 </Button>
               </div>
 
@@ -154,7 +154,7 @@ export function CheckoutSummaryCard({
               {availableVouchers && availableVouchers.length > 0 && (
                 <div className="pt-1 space-y-1.5">
                   <span className="text-sm uppercase tracking-wider font-heading font-medium text-neutral-400 block">
-                    Voucher Tersedia (Klik untuk Memakai)
+                    {isEnglish ? 'Available Vouchers (Click to Apply)' : 'Voucher Tersedia (Klik untuk Memakai)'}
                   </span>
                   <div className="flex space-x-2 overflow-x-auto pb-1 scrollbar-none">
                     {availableVouchers.map((voucher) => {
@@ -185,7 +185,7 @@ export function CheckoutSummaryCard({
                               : `${formatIDR(voucher.value)} OFF`}
                           </div>
                           <div className="text-xs text-neutral-400 font-sans">
-                            Min. Belanja: {formatIDR(voucher.min_purchase)}
+                            {isEnglish ? 'Min. Spend' : 'Min. Belanja'}: {formatIDR(voucher.min_purchase)}
                           </div>
                         </button>
                       )
@@ -201,26 +201,26 @@ export function CheckoutSummaryCard({
       {/* Cost Calculation Details */}
       <div className="space-y-3 text-xs text-neutral-500 border-b border-neutral-100 pb-5 mb-5 font-sans">
         <div className="flex justify-between">
-          <span>Subtotal Produk</span>
+          <span>{t.checkout.subtotal}</span>
           <span className="font-semibold text-brand-black">{formatIDR(subtotal)}</span>
         </div>
         {appliedVoucher && (
           <div className="flex justify-between font-semibold">
-            <span>Diskon Voucher</span>
+            <span>{t.checkout.discount}</span>
             <span className="text-red-600">- {formatIDR(discountAmount)}</span>
           </div>
         )}
         <div className="flex justify-between">
-          <span>Ongkos Kirim</span>
+          <span>{t.checkout.shippingFee}</span>
           <span className="font-semibold text-brand-black">
-            {shippingCost > 0 ? formatIDR(shippingCost) : 'Pilih kurir...'}
+            {shippingCost > 0 ? formatIDR(shippingCost) : isEnglish ? 'Select courier...' : 'Pilih kurir...'}
           </span>
         </div>
       </div>
 
       {/* Grand Total */}
       <div className="flex justify-between items-center text-brand-black font-heading mb-8">
-        <span className="text-xs uppercase tracking-wider font-medium">Total Pembayaran</span>
+        <span className="text-xs uppercase tracking-wider font-medium">{t.checkout.total}</span>
         <span className="text-lg font-bold">{formatIDR(totalAmount)}</span>
       </div>
 
@@ -230,11 +230,11 @@ export function CheckoutSummaryCard({
         variant="primary"
         onClick={onPaymentSubmit}
         isLoading={isCheckoutProcessing}
-        loadingText={isPaymentTokenLoading ? 'Menghubungi DOKU...' : 'Memproses Pesanan...'}
+        loadingText={isPaymentTokenLoading ? (isEnglish ? 'Connecting Payment Gateway...' : 'Menhubungkan DOKU...') : t.checkout.processing}
         className="w-full py-4 text-xs uppercase tracking-wider font-semibold"
         disabled={!canSubmit}
       >
-        Bayar Sekarang
+        {t.checkout.placeOrder}
       </Button>
     </div>
   )

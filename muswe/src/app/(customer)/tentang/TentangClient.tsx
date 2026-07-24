@@ -24,8 +24,8 @@ export function TentangClient(): React.JSX.Element {
         title={isEnglish ? 'About Us' : 'Tentang Kami'}
         subtitle={
           isEnglish
-            ? "Discover Muswe's journey in crafting modern premium batik and luxury apparel."
-            : 'Kenali perjalanan Muswe dalam menghadirkan kerudung & batik motif premium modern.'
+            ? "Discover MUSWE's journey in crafting thoughtfully designed modest fashion inspired by culture."
+            : 'Kenali perjalanan MUSWE dalam menghadirkan busana modest bermakna yang terinspirasi oleh budaya.'
         }
       />
 
@@ -38,9 +38,7 @@ export function TentangClient(): React.JSX.Element {
             {isEnglish ? (
               <>
                 <p>
-                  Founded with a vision to offer understated yet sophisticated apparel,{' '}
-                  <span className="font-semibold text-brand-black">Muswe</span> was born from a passion
-                  for heritage textile artistry and modern minimalist aesthetic for international customers.
+                  <span className="font-semibold text-brand-black">MUSWE</span> is a modest fashion brand focused on thoughtfully designed pieces inspired by culture and modern expression. Rooted in elegance with a contemporary touch, MUSWE creates collections that allow women to express themselves.
                 </p>
                 <p>
                   We believe that simplicity is the ultimate sophistication. Every piece in our collection is
@@ -50,11 +48,7 @@ export function TentangClient(): React.JSX.Element {
             ) : (
               <>
                 <p>
-                  Didirikan dengan visi untuk menghadirkan alternatif busana & kerudung motif yang bersahaja
-                  namun tetap berkarakter,{' '}
-                  <span className="font-semibold text-brand-black">Muswe</span> lahir dari
-                  perpaduan kecintaan terhadap tekstil berkualitas dan kebutuhan akan busana yang
-                  praktis serta elegan untuk wanita modern.
+                  <span className="font-semibold text-brand-black">MUSWE</span> adalah brand modest fashion yang berfokus pada rancangan busana bermakna yang terinspirasi oleh budaya dan ekspresi modern. Berakar pada keanggunan dengan sentuhan kontemporer, MUSWE menghadirkan koleksi yang membebaskan wanita untuk mengekspresikan diri.
                 </p>
                 <p>
                   Kami percaya bahwa kesederhanaan adalah bentuk kemewahan yang abadi. Oleh karena itu,

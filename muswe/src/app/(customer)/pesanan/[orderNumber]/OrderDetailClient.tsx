@@ -61,7 +61,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
     if (order?.created_at) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormattedDate(
-        new Date(order.created_at).toLocaleDateString('id-ID', {
+        new Date(order.created_at).toLocaleDateString(isEnglish ? 'en-US' : 'id-ID', {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
@@ -70,7 +70,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
         })
       )
     }
-  }, [order?.created_at])
+  }, [order?.created_at, isEnglish])
 
   const cancelMutation = useCancelOrder()
   const confirmMutation = useConfirmDelivery()
@@ -92,7 +92,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
         if (result.order_status && result.order_status !== 'pending_payment') {
           setIsVerifyingPayment(false)
           refetch()
-          toast.success('Pembayaran terverifikasi! Status pesanan diperbarui.')
+          toast.success(isEnglish ? 'Payment verified! Order status updated.' : 'Pembayaran terverifikasi! Status pesanan diperbarui.')
           return true // Status updated
         }
       } catch (err) {
@@ -114,34 +114,36 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
         } else if (index === delays.length - 1) {
           setIsVerifyingPayment(false)
           toast(
-            'Verifikasi otomatis selesai. Jika pembayaran belum terupdate, silakan gunakan tombol cek manual.',
+            isEnglish
+              ? 'Automatic verification completed. If payment is not updated, please click manual check.'
+              : 'Verifikasi otomatis selesai. Jika pembayaran belum terupdate, silakan gunakan tombol cek manual.',
             { icon: 'ℹ️' }
           )
         }
       }, delay)
       verifyTimeoutsRef.current.push(timeoutId)
     })
-  }, [orderNumber, checkPaymentMutation, refetch])
+  }, [orderNumber, checkPaymentMutation, refetch, isEnglish])
 
   // Handle Manual Status Check
   const handleManualCheckStatus = async () => {
     try {
-      toast.loading('Mengecek status pembayaran...', { id: 'manual-check' })
+      toast.loading(isEnglish ? 'Checking payment status...' : 'Mengecek status pembayaran...', { id: 'manual-check' })
       const result = await checkPaymentMutation.mutateAsync(orderNumber)
       toast.dismiss('manual-check')
 
       if (result.order_status) {
         if (result.order_status !== 'pending_payment') {
-          toast.success('Pembayaran terverifikasi! Status pesanan diperbarui.')
+          toast.success(isEnglish ? 'Payment verified! Order status updated.' : 'Pembayaran terverifikasi! Status pesanan diperbarui.')
         } else {
-          toast('Pembayaran belum diterima/diproses. Silakan coba sesaat lagi.', { icon: 'ℹ️' })
+          toast(isEnglish ? 'Payment not received/processed yet. Please try again in a moment.' : 'Pembayaran belum diterima/diproses. Silakan coba sesaat lagi.', { icon: 'ℹ️' })
         }
       }
       refetch()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast.dismiss('manual-check')
-      toast.error(err.message || 'Gagal memverifikasi status pembayaran')
+      toast.error(err.message || (isEnglish ? 'Failed to verify payment status' : 'Gagal memverifikasi status pembayaran'))
     }
   }
 
@@ -183,11 +185,11 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
     if (!order) return
     try {
       await cancelMutation.mutateAsync({ orderId: order.id, reason: 'Dibatalkan oleh customer' })
-      toast.success('Pesanan berhasil dibatalkan')
+      toast.success(isEnglish ? 'Order cancelled successfully' : 'Pesanan berhasil dibatalkan')
       refetch()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast.error(err.message || 'Gagal membatalkan pesanan')
+      toast.error(err.message || (isEnglish ? 'Failed to cancel order' : 'Gagal membatalkan pesanan'))
     } finally {
       setCancelConfirmOpen(false)
     }
@@ -199,11 +201,11 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
     if (!order) return
     try {
       await confirmMutation.mutateAsync(order.id)
-      toast.success('Pesanan berhasil diselesaikan!')
+      toast.success(isEnglish ? 'Order completed successfully!' : 'Pesanan berhasil diselesaikan!')
       refetch()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast.error(err.message || 'Gagal menyelesaikan pesanan')
+      toast.error(err.message || (isEnglish ? 'Failed to complete order' : 'Gagal menyelesaikan pesanan'))
     } finally {
       setReceiptConfirmOpen(false)
     }
@@ -213,7 +215,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
   const handlePayOrder = async () => {
     if (!order) return
     try {
-      toast.loading('Membuka gerbang pembayaran DOKU...', { id: 'payment-loading' })
+      toast.loading(isEnglish ? 'Opening DOKU payment portal...' : 'Membuka gerbang pembayaran DOKU...', { id: 'payment-loading' })
       const { redirect_url } = await generatePaymentTokenMutation.mutateAsync(
         order.order_number
       )
@@ -222,12 +224,12 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
       if (redirect_url) {
         window.location.href = redirect_url
       } else {
-        toast.error('Gagal memuat link pembayaran. Coba lagi.')
+        toast.error(isEnglish ? 'Failed to load payment link. Please try again.' : 'Gagal memuat link pembayaran. Coba lagi.')
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast.dismiss('payment-loading')
-      toast.error(err.message || 'Gagal memproses pembayaran')
+      toast.error(err.message || (isEnglish ? 'Failed to process payment' : 'Gagal memproses pembayaran'))
     }
   }
 
@@ -241,7 +243,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
       })
 
       if (error || !invoiceRes.success) {
-        toast.error('Gagal menghasilkan invoice')
+        toast.error(isEnglish ? 'Failed to generate invoice' : 'Gagal menghasilkan invoice')
         return
       }
 
@@ -257,18 +259,18 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
         )
         window.open(cdnUrl, '_blank')
       } else {
-        toast.error('Gagal menemukan tautan unduh invoice')
+        toast.error(isEnglish ? 'Failed to find invoice download link' : 'Gagal menemukan tautan unduh invoice')
       }
     } catch (err) {
       console.error(err)
-      toast.error('Terjadi kesalahan saat mengunduh invoice')
+      toast.error(isEnglish ? 'An error occurred while downloading invoice' : 'Terjadi kesalahan saat mengunduh invoice')
     } finally {
       setIsInvoiceLoading(false)
     }
   }
 
   if (authLoading || orderLoading) {
-    return <AuthLoading message="Memuat pesanan..." />
+    return <AuthLoading message={isEnglish ? 'Loading order...' : 'Memuat pesanan...'} />
   }
 
   if (!isAuthenticated) {
@@ -278,13 +280,13 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
   if (!order) {
     return (
       <div className="bg-white min-h-screen">
-        <PageHero eyebrow="Pesanan" title="Detail Pesanan" variant="cream" />
+        <PageHero eyebrow={t.nav.orders} title={isEnglish ? 'Order Details' : 'Detail Pesanan'} variant="cream" />
         <PageContainer size="md" className="py-12 page-content">
           <EmptyState
             icon={AlertCircle}
-            title="Pesanan Tidak Ditemukan"
-            description="Tautan tidak valid atau data telah dihapus."
-            action={{ label: 'Kembali ke Daftar Pesanan', href: '/pesanan' }}
+            title={isEnglish ? 'Order Not Found' : 'Pesanan Tidak Ditemukan'}
+            description={isEnglish ? 'The link is invalid or the data was deleted.' : 'Tautan tidak valid atau data telah dihapus.'}
+            action={{ label: isEnglish ? 'Back to Orders List' : 'Kembali ke Daftar Pesanan', href: '/pesanan' }}
           />
         </PageContainer>
       </div>
@@ -342,12 +344,12 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
       <Modal
         isOpen={cancelConfirmOpen}
         onClose={() => setCancelConfirmOpen(false)}
-        title="Batalkan Pesanan"
+        title={isEnglish ? 'Cancel Order' : 'Batalkan Pesanan'}
         size="sm"
       >
         <div className="space-y-6">
           <p className="text-sm text-neutral-600">
-            Apakah Anda yakin ingin membatalkan pesanan ini? Tindakan ini tidak dapat dibatalkan.
+            {isEnglish ? 'Are you sure you want to cancel this order? This action cannot be undone.' : 'Apakah Anda yakin ingin membatalkan pesanan ini? Tindakan ini tidak dapat dibatalkan.'}
           </p>
           <div className="flex gap-3">
             <Button
@@ -355,7 +357,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
               variant="outline"
               className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
             >
-              Kembali
+              {isEnglish ? 'Back' : 'Kembali'}
             </Button>
             <Button
               onClick={executeCancelOrder}
@@ -363,7 +365,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
               disabled={cancelMutation.isPending}
               className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold bg-red-600 border-red-600 text-white hover:bg-red-700 hover:border-red-700"
             >
-              Batalkan
+              {isEnglish ? 'Cancel Order' : 'Batalkan'}
             </Button>
           </div>
         </div>
@@ -372,12 +374,12 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
       <Modal
         isOpen={receiptConfirmOpen}
         onClose={() => setReceiptConfirmOpen(false)}
-        title="Selesaikan Pesanan"
+        title={isEnglish ? 'Complete Order' : 'Selesaikan Pesanan'}
         size="sm"
       >
         <div className="space-y-6">
           <p className="text-sm text-neutral-600">
-            Apakah Anda sudah menerima barang untuk pesanan ini dan yakin ingin menyelesaikannya?
+            {isEnglish ? 'Have you received all items for this order and are sure you want to mark it as completed?' : 'Apakah Anda sudah menerima barang untuk pesanan ini dan yakin ingin menyelesaikannya?'}
           </p>
           <div className="flex gap-3">
             <Button
@@ -385,7 +387,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
               variant="outline"
               className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
             >
-              Kembali
+              {isEnglish ? 'Back' : 'Kembali'}
             </Button>
             <Button
               onClick={executeConfirmDelivery}
@@ -393,7 +395,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
               disabled={confirmMutation.isPending}
               className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold"
             >
-              Konfirmasi
+              {isEnglish ? 'Confirm' : 'Konfirmasi'}
             </Button>
           </div>
         </div>
@@ -411,8 +413,9 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
 }
 
 export default function OrderDetailPage({ params }: OrderDetailPageProps): React.JSX.Element {
+  const { isEnglish } = useTranslation()
   return (
-    <Suspense fallback={<AuthLoading message="Memuat pesanan..." />}>
+    <Suspense fallback={<AuthLoading message={isEnglish ? 'Loading order...' : 'Memuat pesanan...'} />}>
       <OrderDetailContent params={params} />
     </Suspense>
   )

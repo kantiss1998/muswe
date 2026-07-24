@@ -23,7 +23,7 @@ interface SearchOverlayProps {
 }
 
 export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
-  const { t } = useTranslation()
+  const { t, isEnglish } = useTranslation()
   const router = useRouter()
   const [supabase] = useState(() => createBrowserClient())
 
@@ -98,16 +98,16 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
             <div className="space-y-6">
               <div className="space-y-1">
                 <span className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-400">
-                  Cari Koleksi
+                  {isEnglish ? 'Search Collection' : 'Cari Koleksi'}
                 </span>
                 <h3 className="text-sm font-heading font-semibold uppercase tracking-wider text-brand-black">
-                  Pencarian Produk
+                  {isEnglish ? 'Product Search' : 'Pencarian Produk'}
                 </h3>
               </div>
 
               <form onSubmit={handleSearchSubmit} className="relative">
                 <Input
-                  label="Kata kunci"
+                  label={isEnglish ? 'Keyword' : 'Kata kunci'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t.common.search}
@@ -124,13 +124,13 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                 <div className="border border-neutral-100 bg-neutral-50/50 p-4 -mt-2 space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm uppercase tracking-wider font-heading font-medium text-neutral-400">
-                      Hasil Pencarian Instan
+                      {isEnglish ? 'Instant Search Results' : 'Hasil Pencarian Instan'}
                     </span>
                     {isSearchingInstant && (
                       <div className="flex items-center space-x-1.5 text-brand-gold">
                         <Loader2 className="h-3 w-3 animate-spin" />
                         <span className="text-xs font-heading font-semibold uppercase tracking-wider">
-                          Mencari...
+                          {isEnglish ? 'Searching...' : 'Mencari...'}
                         </span>
                       </div>
                     )}
@@ -188,13 +188,13 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                         onClick={handleSearchSubmit}
                         className="w-full pt-2 pb-1 text-xs uppercase tracking-wider font-heading font-semibold text-brand-gold hover:text-brand-black transition-colors"
                       >
-                        Lihat semua hasil untuk "{searchQuery}"
+                        {isEnglish ? `View all results for "${searchQuery}"` : `Lihat semua hasil untuk "${searchQuery}"`}
                       </button>
                     </div>
                   ) : !isSearchingInstant ? (
                     <div className="py-4 text-center">
                       <p className="text-xs text-neutral-500 font-sans">
-                        Tidak ada produk yang cocok dengan "{searchQuery}"
+                        {isEnglish ? `No products matched "${searchQuery}"` : `Tidak ada produk yang cocok dengan "${searchQuery}"`}
                       </p>
                     </div>
                   ) : null}

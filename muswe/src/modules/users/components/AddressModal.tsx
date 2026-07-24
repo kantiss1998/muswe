@@ -291,15 +291,15 @@ export function AddressModal({
           userId,
           address: addressData,
         })
-        toast.success('Alamat berhasil diperbarui')
+        toast.success(isEnglish ? 'Address updated successfully' : 'Alamat berhasil diperbarui')
       } else {
         await addAddressMutation.mutateAsync(addressData)
-        toast.success('Alamat berhasil ditambahkan')
+        toast.success(isEnglish ? 'Address added successfully' : 'Alamat berhasil ditambahkan')
       }
       onClose()
     } catch (err) {
       console.error(err)
-      toast.error('Gagal menyimpan alamat')
+      toast.error(isEnglish ? 'Failed to save address' : 'Gagal menyimpan alamat')
     }
   }
 
@@ -554,8 +554,8 @@ export function AddressModal({
                 render={({ field }) => (
                   <Input
                     {...field}
-                    label="Provinsi / State / Region*"
-                    placeholder="cth: California / Central Region"
+                    label={isEnglish ? 'State / Province / Region*' : 'Provinsi / State / Region*'}
+                    placeholder={isEnglish ? 'e.g. California / Central Region' : 'cth: California / Central Region'}
                     error={errors.province_name?.message}
                   />
                 )}
@@ -566,8 +566,8 @@ export function AddressModal({
                 render={({ field }) => (
                   <Input
                     {...field}
-                    label="Kota / City*"
-                    placeholder="cth: Singapore / Los Angeles"
+                    label={isEnglish ? 'City / Town*' : 'Kota / City*'}
+                    placeholder={isEnglish ? 'e.g. Singapore / Los Angeles' : 'cth: Singapore / Los Angeles'}
                     error={errors.city_name?.message}
                   />
                 )}
@@ -580,8 +580,8 @@ export function AddressModal({
               render={({ field }) => (
                 <Input
                   {...field}
-                  label="Distrik / Suburb / Area*"
-                  placeholder="cth: Orchard / Downtown"
+                  label={isEnglish ? 'District / Suburb / Area*' : 'Distrik / Suburb / Area*'}
+                  placeholder={isEnglish ? 'e.g. Orchard / Downtown' : 'cth: Orchard / Downtown'}
                   error={errors.district_name?.message}
                 />
               )}
@@ -596,8 +596,8 @@ export function AddressModal({
           render={({ field }) => (
             <Input
               {...field}
-              label="Kode Pos / Zip Code"
-              placeholder="cth: 238801 atau 90210"
+              label={isEnglish ? 'Zip / Postal Code' : 'Kode Pos / Zip Code'}
+              placeholder={isEnglish ? 'e.g. 90210 or 238801' : 'cth: 238801 atau 90210'}
               error={errors.postal_code?.message}
             />
           )}
@@ -609,8 +609,8 @@ export function AddressModal({
           render={({ field }) => (
             <Textarea
               {...field}
-              label="Alamat Lengkap (Jalan, No. Bangunan, Unit, Floor)*"
-              placeholder="Tulis alamat detail..."
+              label={isEnglish ? 'Full Address (Street, Building No., Unit, Floor)*' : 'Alamat Lengkap (Jalan, No. Bangunan, Unit, Floor)*'}
+              placeholder={isEnglish ? 'Enter detailed address...' : 'Tulis alamat detail...'}
               error={errors.full_address?.message}
             />
           )}

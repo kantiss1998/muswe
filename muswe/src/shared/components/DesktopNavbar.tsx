@@ -54,7 +54,7 @@ export function DesktopNavbar({
   user,
   onLogout,
 }: DesktopNavbarProps): React.JSX.Element {
-  const { t } = useTranslation()
+  const { t, isEnglish } = useTranslation()
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [hoveredNav, setHoveredNav] = useState<string | null>(null)
   const isTransparentHome = pathname === '/' && !isScrolled
@@ -68,7 +68,21 @@ export function DesktopNavbar({
       <div className="bg-gradient-to-r from-brand-cream via-brand-beige to-brand-cream text-brand-black px-4 py-2 text-xs text-center md:flex md:justify-between md:items-center relative z-50 bg-[length:200%_auto] animate-pulse-glow">
         <div className="flex-1 hidden md:block"></div>
         <div className="font-sans font-medium flex-1 text-center">
-          Dapatkan diskon 10% untuk pesanan pertama Anda. <Link href="/masuk" className="underline font-bold text-brand-black hover:text-brand-gold transition-colors">Daftar sekarang</Link>
+          {isEnglish ? (
+            <>
+              Get 10% off your first order.{' '}
+              <Link href="/masuk" className="underline font-bold text-brand-black hover:text-brand-gold transition-colors">
+                Sign up now
+              </Link>
+            </>
+          ) : (
+            <>
+              Dapatkan diskon 10% untuk pesanan pertama Anda.{' '}
+              <Link href="/masuk" className="underline font-bold text-brand-black hover:text-brand-gold transition-colors">
+                Daftar sekarang
+              </Link>
+            </>
+          )}
         </div>
         <div className="flex-1 hidden md:block"></div>
       </div>
@@ -126,18 +140,18 @@ export function DesktopNavbar({
           <div className="hidden md:flex justify-center flex-shrink-0 px-4 h-full">
             <nav className="flex space-x-8 h-full">
               {navLinks.map((link) => {
-                const hasMegaMenu = (link.name === 'Kategori' && categories.length > 0) || (link.name === 'Koleksi' && collections.length > 0)
+                const hasMegaMenu = (link.href === '/kategori' && categories.length > 0) || (link.href === '/koleksi' && collections.length > 0)
                 return (
                   <div 
                     key={link.name} 
                     className="flex h-full items-center"
-                    onMouseEnter={() => hasMegaMenu && setHoveredNav(link.name)}
+                    onMouseEnter={() => hasMegaMenu && setHoveredNav(link.href)}
                   >
                     <Link
                       href={link.href}
                       className={cn(
                         'text-xs flex items-center gap-1 font-sans font-medium uppercase tracking-wider transition-colors duration-200 nav-link-underline',
-                        pathname === link.href || hoveredNav === link.name
+                        pathname === link.href || hoveredNav === link.href
                           ? 'text-brand-gold font-bold'
                           : !isDarkText
                             ? 'text-white/90 hover:text-white'
@@ -311,7 +325,7 @@ export function DesktopNavbar({
                       : 'text-neutral-500 hover:text-brand-black'
                   )}
                 >
-                  Masuk
+                  {t.nav.login}
                 </Link>
               )}
             </div>
@@ -330,10 +344,12 @@ export function DesktopNavbar({
               onMouseEnter={() => setHoveredNav(hoveredNav)}
             >
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-                {hoveredNav === 'Kategori' && (
+                {hoveredNav === '/kategori' && (
                   <div className="grid grid-cols-4 gap-8">
                     <div className="col-span-1">
-                      <h3 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black mb-6">Belanja Berdasarkan</h3>
+                      <h3 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black mb-6">
+                        {isEnglish ? 'Shop By Category' : 'Belanja Berdasarkan'}
+                      </h3>
                       <ul className="space-y-4">
                         {mainCategories.map((cat) => (
                           <li key={cat.id}>
@@ -345,7 +361,7 @@ export function DesktopNavbar({
                       </ul>
                       <div className="mt-8 pt-6 border-t border-neutral-100">
                         <Link href="/kategori" className="text-xs font-heading font-medium uppercase tracking-wider text-brand-gold hover:text-brand-gold-light flex items-center gap-2">
-                          Lihat Semua Kategori &rarr;
+                          {isEnglish ? 'View All Categories' : 'Lihat Semua Kategori'} &rarr;
                         </Link>
                       </div>
                     </div>
@@ -371,10 +387,12 @@ export function DesktopNavbar({
                   </div>
                 )}
 
-                {hoveredNav === 'Koleksi' && (
+                {hoveredNav === '/koleksi' && (
                   <div className="grid grid-cols-4 gap-8">
                     <div className="col-span-1">
-                      <h3 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black mb-6">Koleksi Terbatas</h3>
+                      <h3 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black mb-6">
+                        {isEnglish ? 'Limited Collections' : 'Koleksi Terbatas'}
+                      </h3>
                       <ul className="space-y-4">
                         {collections.map((col) => (
                           <li key={col.id}>
@@ -386,7 +404,7 @@ export function DesktopNavbar({
                       </ul>
                       <div className="mt-8 pt-6 border-t border-neutral-100">
                         <Link href="/koleksi" className="text-xs font-heading font-medium uppercase tracking-wider text-brand-gold hover:text-brand-gold-light flex items-center gap-2">
-                          Jelajahi Semua &rarr;
+                          {isEnglish ? 'Explore All' : 'Jelajahi Semua'} &rarr;
                         </Link>
                       </div>
                     </div>

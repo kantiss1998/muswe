@@ -68,22 +68,22 @@ export function ProductDetailClient({
     try {
       await toggleWishlist(product.id)
       if (liked) {
-        toast.success('Dihapus dari wishlist.')
+        toast.success(isEnglish ? 'Removed from wishlist.' : 'Dihapus dari wishlist.')
       } else {
         toast.custom((t) => (
           <CustomToast
             t={t}
-            title="Ditambahkan ke Wishlist"
+            title={isEnglish ? 'Added to Wishlist' : 'Ditambahkan ke Wishlist'}
             subtitle={product.name}
-            description="Tersimpan di daftar impian Anda."
+            description={isEnglish ? 'Saved to your wishlist.' : 'Tersimpan di daftar impian Anda.'}
             imageUrl={product.product_images[0]?.url}
-            actionLabel="Lihat"
+            actionLabel={isEnglish ? 'View' : 'Lihat'}
             onAction={() => router.push('/wishlist')}
           />
         ))
       }
     } catch {
-      toast.error('Gagal memperbarui wishlist.')
+      toast.error(isEnglish ? 'Failed to update wishlist.' : 'Gagal memperbarui wishlist.')
     }
   }
 
@@ -118,12 +118,12 @@ export function ProductDetailClient({
   // 2. Add item to cart handler
   const handleAddToCart = async () => {
     if (!selectedVariant) {
-      toast.error('Silakan pilih varian (ukuran/warna) terlebih dahulu.')
+      toast.error(isEnglish ? 'Please select a variant (size/color) first.' : 'Silakan pilih varian (ukuran/warna) terlebih dahulu.')
       return
     }
 
     if (selectedVariant.stock <= 0) {
-      toast.error('Stok untuk varian ini habis.')
+      toast.error(isEnglish ? 'This variant is out of stock.' : 'Stok untuk varian ini habis.')
       return
     }
 
@@ -146,16 +146,16 @@ export function ProductDetailClient({
       toast.custom((t) => (
         <CustomToast
           t={t}
-          title="Berhasil Ditambahkan!"
+          title={isEnglish ? 'Successfully Added!' : 'Berhasil Ditambahkan!'}
           subtitle={product.name}
-          description={`Varian: ${selectedVariant.name} • Qty: ${quantity}`}
+          description={`${isEnglish ? 'Variant' : 'Varian'}: ${selectedVariant.name} • Qty: ${quantity}`}
           imageUrl={product.product_images[0]?.url}
-          actionLabel="Lihat"
+          actionLabel={isEnglish ? 'View' : 'Lihat'}
           onAction={() => setCartDrawerOpen(true)}
         />
       ))
     } catch {
-      toast.error('Gagal menambahkan ke keranjang.')
+      toast.error(isEnglish ? 'Failed to add to cart.' : 'Gagal menambahkan ke keranjang.')
     } finally {
       setIsAdding(false)
     }

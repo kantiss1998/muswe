@@ -92,14 +92,14 @@ export const idDictionary = {
     cancel: 'Batal',
   },
   footer: {
-    aboutText: 'Muswe menghadirkan keanggunan busana batik khas Nusantara bernilai seni tinggi dengan desain modern dan elegan.',
+    aboutText: 'MUSWE adalah brand modest fashion yang berfokus pada rancangan busana bermakna yang terinspirasi oleh budaya dan ekspresi modern. Berakar pada keanggunan dengan sentuhan kontemporer, MUSWE menghadirkan koleksi yang membebaskan wanita untuk mengekspresikan diri.',
     quickLinks: 'Tautan Cepat',
     customerService: 'Layanan Pelanggan',
     followUs: 'Ikuti Kami',
     rightsReserved: 'Hak Cipta Dilindungi.',
   },
   common: {
-    search: 'Cari produk batik...',
+    search: 'Cari koleksi modest fashion...',
     price: 'Harga',
     inStock: 'Stok Tersedia',
     outOfStock: 'Stok Habis',

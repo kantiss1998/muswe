@@ -76,7 +76,7 @@ const DEFAULT_SETTINGS: SiteSetting[] = [
     value: 'true',
     type: 'boolean',
     group: 'payment',
-    label: 'Aktifkan DOKU Sandbox',
+    label: 'Aktifkan DOKU Payment Gateway',
   },
   {
     key: 'whatsapp_number',

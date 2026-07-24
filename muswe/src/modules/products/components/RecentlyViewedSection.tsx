@@ -6,8 +6,10 @@ import { useRecentlyViewedStore } from '@/modules/products/stores/recentlyViewed
 import { ProductCard } from '@/modules/products/components/ProductCard'
 import { ProductListItem } from '@/modules/products/types'
 import { PageContainer, SectionHeader } from '@/shared/components'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 export function RecentlyViewedSection(): React.JSX.Element | null {
+  const { isEnglish } = useTranslation()
   const { products } = useRecentlyViewedStore()
   const [isMounted, setIsMounted] = useState(false)
 
@@ -71,7 +73,10 @@ export function RecentlyViewedSection(): React.JSX.Element | null {
   return (
     <section className="bg-white py-16">
       <PageContainer>
-        <SectionHeader eyebrow="Riwayat Anda" title="Terakhir Dilihat" />
+        <SectionHeader
+          eyebrow={isEnglish ? 'Your History' : 'Riwayat Anda'}
+          title={isEnglish ? 'Recently Viewed' : 'Terakhir Dilihat'}
+        />
 
         {/* Horizontal scroll on mobile, grid on desktop */}
         <div className="flex md:grid md:grid-cols-4 gap-x-4 gap-y-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-2 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0">

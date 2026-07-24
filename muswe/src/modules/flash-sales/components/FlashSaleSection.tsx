@@ -7,12 +7,14 @@ import { FlashSaleDetail } from '@/modules/flash-sales/types'
 import { ProductCard } from '@/modules/products/components/ProductCard'
 import { ProductListItem } from '@/modules/products/types'
 import { Button, PageContainer, SectionHeader } from '@/shared/components'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 interface FlashSaleSectionProps {
   flashSale: FlashSaleDetail | null
 }
 
 export function FlashSaleSection({ flashSale }: FlashSaleSectionProps): React.JSX.Element | null {
+  const { isEnglish } = useTranslation()
   const [timeLeft, setTimeLeft] = useState<{
     hours: number
     minutes: number
@@ -119,13 +121,13 @@ export function FlashSaleSection({ flashSale }: FlashSaleSectionProps): React.JS
         <SectionHeader
           align="left"
           showDivider={false}
-          eyebrow="Penawaran Terbatas"
+          eyebrow={isEnglish ? 'Limited Offer' : 'Penawaran Terbatas'}
           title={flashSale.name || 'Flash Sale'}
           className="md:flex-row md:items-end md:justify-between md:mb-8 [&>span:first-child]:text-error [&_h2]:text-white"
         >
           <div className="flex items-center space-x-2 mt-4 md:mt-0">
             <span className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-500 mr-2">
-              Berakhir Dalam:
+              {isEnglish ? 'Ends In:' : 'Berakhir Dalam:'}
             </span>
             <div className="flex items-center space-x-1.5 font-heading text-xs font-semibold">
               <span className="bg-brand-gold text-brand-black px-3 py-2 rounded-none animate-pulse-glow min-w-[2.5rem] text-center">
@@ -165,7 +167,7 @@ export function FlashSaleSection({ flashSale }: FlashSaleSectionProps): React.JS
               size="md"
               className="bg-transparent text-white border-white/30 hover:bg-white hover:text-brand-black"
             >
-              Lihat Semua Flash Sale
+              {isEnglish ? 'View All Flash Sales' : 'Lihat Semua Flash Sale'}
             </Button>
           </Link>
         </div>

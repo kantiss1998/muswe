@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, react/no-unescaped-entities */
 import React from 'react'
 import { Button } from '@/shared/components'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 interface OrderItemsListProps {
   order: any
@@ -11,11 +12,13 @@ export function OrderItemsList({
   order,
   onOpenReviewModal,
 }: OrderItemsListProps): React.JSX.Element {
+  const { isEnglish } = useTranslation()
+
   return (
     <div className="border border-neutral-200 p-5 sm:p-6 card-hover-lift gold-border-hover bg-white space-y-4 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold to-brand-gold-light" />
       <h2 className="text-xs uppercase tracking-wider font-heading font-medium text-brand-gold border-b border-neutral-100 pb-2">
-        Item Pesanan
+        {isEnglish ? 'Ordered Items' : 'Item Pesanan'}
       </h2>
       <div className="divide-y divide-neutral-100">
         {order.order_items?.map((item: any) => (
@@ -26,7 +29,7 @@ export function OrderItemsList({
             <div className="min-w-0">
               <p className="font-semibold text-neutral-800 truncate">{item.product_name}</p>
               <p className="text-xs text-neutral-500 mt-1">
-                Varian: {item.variant_name} | SKU: {item.sku}
+                {isEnglish ? 'Variant:' : 'Varian:'} {item.variant_name} | SKU: {item.sku}
               </p>
               <p className="text-xs text-neutral-400 mt-0.5">
                 {item.quantity} x Rp {item.price.toLocaleString('id-ID')}
@@ -35,7 +38,7 @@ export function OrderItemsList({
                 <div className="mt-2">
                   {item.product_reviews ? (
                     <div className="text-xs font-semibold text-green-700 bg-green-50 px-2.5 py-1 border border-green-200 inline-block">
-                      Ulasan Anda ({item.product_reviews.rating}⭐): "{item.product_reviews.body}"
+                      {isEnglish ? 'Your Review' : 'Ulasan Anda'} ({item.product_reviews.rating}⭐): "{item.product_reviews.body}"
                     </div>
                   ) : (
                     <Button
@@ -43,7 +46,7 @@ export function OrderItemsList({
                       variant="outline"
                       className="text-xs py-1 px-3 h-fit uppercase tracking-wider font-semibold border-neutral-300 hover:bg-neutral-50"
                     >
-                      Tulis Ulasan
+                      {isEnglish ? 'Write a Review' : 'Tulis Ulasan'}
                     </Button>
                   )}
                 </div>

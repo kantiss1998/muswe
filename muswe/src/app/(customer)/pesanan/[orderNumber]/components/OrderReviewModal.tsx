@@ -5,6 +5,7 @@ import { Image as ImageIcon, X } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { uploadImage } from '@/lib/supabase/storage'
 import { createBrowserClient } from '@/lib/supabase/client'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 interface OrderReviewModalProps {
   selectedReviewItem: any
@@ -21,6 +22,7 @@ export function OrderReviewModal({
   submitReviewMutation,
   refetch,
 }: OrderReviewModalProps): React.JSX.Element {
+  const { isEnglish } = useTranslation()
   const [reviewRating, setReviewRating] = useState(5)
   const [reviewBody, setReviewBody] = useState('')
   const [reviewTitle, setReviewTitle] = useState('')
@@ -33,18 +35,18 @@ export function OrderReviewModal({
     if (e.target.files) {
       const selected = Array.from(e.target.files)
       if (reviewFiles.length + selected.length > 2) {
-        toast.error('Maksimal hanya 2 foto yang diperbolehkan')
+        toast.error(isEnglish ? 'Maximum 2 photos allowed' : 'Maksimal hanya 2 foto yang diperbolehkan')
         return
       }
 
       const validFiles = selected.filter((f) => f.type.startsWith('image/'))
       if (validFiles.length !== selected.length) {
-        toast.error('Hanya file gambar yang diperbolehkan')
+        toast.error(isEnglish ? 'Only image files are allowed' : 'Hanya file gambar yang diperbolehkan')
       }
 
       const smallFiles = validFiles.filter((f) => f.size <= 2 * 1024 * 1024)
       if (smallFiles.length !== validFiles.length) {
-        toast.error('Ukuran maksimal per foto adalah 2MB')
+        toast.error(isEnglish ? 'Maximum size per photo is 2MB' : 'Ukuran maksimal per foto adalah 2MB')
       }
 
       setReviewFiles((prev) => [...prev, ...smallFiles].slice(0, 2))
@@ -59,7 +61,7 @@ export function OrderReviewModal({
     e.preventDefault()
     if (!selectedReviewItem || !user?.id) return
     if (!reviewBody.trim()) {
-      toast.error('Silakan isi ulasan Anda')
+      toast.error(isEnglish ? 'Please write your review thoughts' : 'Silakan isi ulasan Anda')
       return
     }
 
@@ -79,7 +81,7 @@ export function OrderReviewModal({
       }
 
       if (!finalProductId) {
-        toast.error('Gagal memverifikasi informasi produk')
+        toast.error(isEnglish ? 'Failed to verify product details' : 'Gagal memverifikasi informasi produk')
         return
       }
 
@@ -92,7 +94,7 @@ export function OrderReviewModal({
           mediaUrls.push(url)
         }
       } catch (uploadErr: any) {
-        toast.error(uploadErr.message || 'Gagal mengunggah foto review')
+        toast.error(uploadErr.message || (isEnglish ? 'Failed to upload review photo' : 'Gagal mengunggah foto review'))
         setIsUploading(false)
         return
       }
@@ -112,16 +114,16 @@ export function OrderReviewModal({
       setIsUploading(false)
 
       if (res && res.success) {
-        toast.success('Ulasan berhasil dikirim!')
+        toast.success(isEnglish ? 'Review submitted successfully!' : 'Ulasan berhasil dikirim!')
         refetch()
         onClose()
       } else {
-        toast.error('Gagal mengirimkan ulasan')
+        toast.error(isEnglish ? 'Failed to submit review' : 'Gagal mengirimkan ulasan')
       }
     } catch (err) {
       console.error(err)
       setIsUploading(false)
-      toast.error('Terjadi kesalahan saat mengirimkan ulasan')
+      toast.error(isEnglish ? 'An error occurred while submitting review' : 'Terjadi kesalahan saat mengirimkan ulasan')
     }
   }
 
@@ -129,28 +131,28 @@ export function OrderReviewModal({
     <Modal
       isOpen={selectedReviewItem !== null}
       onClose={onClose}
-      title="Tulis Ulasan Produk"
+      title={isEnglish ? 'Write Product Review' : 'Tulis Ulasan Produk'}
       size="md"
     >
       {selectedReviewItem && (
         <form onSubmit={handleSubmitReview} className="space-y-6">
           <div>
             <p className="text-xs uppercase tracking-wider text-brand-gold font-semibold mb-1">
-              Nama Produk
+              {isEnglish ? 'Product Name' : 'Nama Produk'}
             </p>
             <h4 className="text-sm font-semibold text-neutral-800 font-heading">
               {selectedReviewItem.product_name}
             </h4>
             {selectedReviewItem.variant_name && (
               <p className="text-xs text-neutral-500 mt-0.5">
-                Varian: {selectedReviewItem.variant_name}
+                {isEnglish ? 'Variant:' : 'Varian:'} {selectedReviewItem.variant_name}
               </p>
             )}
           </div>
 
           <div>
             <label className="block text-xs uppercase tracking-wider text-neutral-500 font-semibold mb-2">
-              Rating Produk
+              {isEnglish ? 'Product Rating' : 'Rating Produk'}
             </label>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -172,22 +174,22 @@ export function OrderReviewModal({
 
           <div className="space-y-1">
             <Input
-              label="Judul Ulasan (Opsional)"
+              label={isEnglish ? 'Review Title (Optional)' : 'Judul Ulasan (Opsional)'}
               type="text"
               value={reviewTitle}
               onChange={(e) => setReviewTitle(e.target.value)}
-              placeholder="Contoh: Kualitas sangat baik!"
+              placeholder={isEnglish ? 'e.g. Excellent quality!' : 'Contoh: Kualitas sangat baik!'}
             />
           </div>
 
           <div className="space-y-1">
             <Textarea
-              label="Isi Ulasan"
+              label={isEnglish ? 'Review Details' : 'Isi Ulasan'}
               value={reviewBody}
               onChange={(e) => setReviewBody(e.target.value)}
               rows={4}
               required
-              placeholder="Tulis pendapat Anda tentang produk ini..."
+              placeholder={isEnglish ? 'Write your thoughts about this product...' : 'Tulis pendapat Anda tentang produk ini...'}
             />
           </div>
 
@@ -201,13 +203,13 @@ export function OrderReviewModal({
               htmlFor="is-anonymous"
               className="text-xs text-neutral-600 select-none cursor-pointer"
             >
-              Kirim sebagai Anonim (Sembunyikan nama Anda)
+              {isEnglish ? 'Post as Anonymous (Hide your name)' : 'Kirim sebagai Anonim (Sembunyikan nama Anda)'}
             </label>
           </div>
 
           <div className="space-y-2">
             <label className="block text-xs uppercase tracking-wider text-neutral-500 font-semibold">
-              Lampirkan Foto (Maks 2 Foto, 2MB/Foto)
+              {isEnglish ? 'Attach Photos (Max 2 Photos, 2MB/Photo)' : 'Lampirkan Foto (Maks 2 Foto, 2MB/Foto)'}
             </label>
 
             <div className="flex flex-wrap gap-3">
@@ -231,7 +233,7 @@ export function OrderReviewModal({
               {reviewFiles.length < 2 && (
                 <label className="w-20 h-20 border-2 border-dashed border-neutral-300 flex flex-col items-center justify-center text-neutral-400 hover:text-brand-gold hover:border-brand-gold cursor-pointer transition-colors">
                   <ImageIcon size={20} className="mb-1" />
-                  <span className="text-sm uppercase tracking-wider font-semibold">Tambah</span>
+                  <span className="text-sm uppercase tracking-wider font-semibold">{isEnglish ? 'Add' : 'Tambah'}</span>
                   <input
                     type="file"
                     accept="image/*"
@@ -251,7 +253,7 @@ export function OrderReviewModal({
               variant="outline"
               className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold border-neutral-300 text-neutral-700 hover:bg-neutral-50"
             >
-              Batal
+              {isEnglish ? 'Cancel' : 'Batal'}
             </Button>
             <Button
               type="submit"
@@ -259,7 +261,7 @@ export function OrderReviewModal({
               disabled={submitReviewMutation.isPending || isUploading}
               className="flex-1 py-3 text-xs uppercase tracking-wider font-semibold"
             >
-              {isUploading ? 'Mengunggah...' : 'Kirim Ulasan'}
+              {isUploading ? (isEnglish ? 'Uploading...' : 'Mengunggah...') : (isEnglish ? 'Submit Review' : 'Kirim Ulasan')}
             </Button>
           </div>
         </form>

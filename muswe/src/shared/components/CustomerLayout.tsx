@@ -35,7 +35,7 @@ interface CustomerLayoutProps {
 export function CustomerLayout({ children, categories = [], collections = [] }: CustomerLayoutProps): React.JSX.Element {
   const pathname = usePathname()
   const router = useRouter()
-  const { t } = useTranslation()
+  const { t, isEnglish } = useTranslation()
   const [supabase] = useState(() => createBrowserClient())
   const { logoUrl, whatsappUrl } = useSiteSettings()
 
@@ -111,10 +111,10 @@ export function CustomerLayout({ children, categories = [], collections = [] }: 
       const { error } = await supabase.auth.signOut()
       if (error) throw error
       clearAuth()
-      toast.success('Berhasil keluar.')
+      toast.success(isEnglish ? 'Successfully signed out.' : 'Berhasil keluar.')
       router.push('/masuk')
     } catch (error: unknown) {
-      const errMsg = error instanceof Error ? error.message : 'Gagal keluar.'
+      const errMsg = error instanceof Error ? error.message : (isEnglish ? 'Failed to sign out.' : 'Gagal keluar.')
       toast.error(errMsg)
     }
   }
@@ -125,7 +125,7 @@ export function CustomerLayout({ children, categories = [], collections = [] }: 
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-brand-black focus:text-white focus:px-4 focus:py-2 focus:text-xs focus:font-heading focus:uppercase"
       >
-        Lewati ke konten
+        {isEnglish ? 'Skip to content' : 'Lewati ke konten'}
       </a>
 
       <ScrollProgressBar />

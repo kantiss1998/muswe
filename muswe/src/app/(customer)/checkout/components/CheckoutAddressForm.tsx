@@ -42,7 +42,7 @@ export function CheckoutAddressForm({
   notes,
   onNotesChange,
 }: CheckoutAddressFormProps): React.JSX.Element {
-  const { t } = useTranslation()
+  const { t, isEnglish } = useTranslation()
 
   return (
     <div className="space-y-8">
@@ -73,7 +73,7 @@ export function CheckoutAddressForm({
                 className="border border-brand-gold bg-brand-gold-muted/10 p-4 relative rounded-none shadow-sm"
               >
                 <p className="font-heading font-semibold text-xs text-brand-gold uppercase tracking-wider">
-                  {selectedAddress.label} (Pilihan)
+                  {selectedAddress.label} ({isEnglish ? 'Selected' : 'Pilihan'})
                 </p>
                 <p className="font-sans font-medium text-neutral-700 mt-1.5">
                   {selectedAddress.recipient_name} | {selectedAddress.phone}
@@ -91,7 +91,7 @@ export function CheckoutAddressForm({
               </motion.div>
             ) : (
               <p className="text-sm text-red-500 font-medium">
-                Harap pilih atau tambahkan alamat baru
+                {isEnglish ? 'Please select or add a shipping address' : 'Harap pilih atau tambahkan alamat baru'}
               </p>
             )}
 
@@ -99,7 +99,7 @@ export function CheckoutAddressForm({
             {addresses.length > 1 && (
               <div className="border border-neutral-200 p-4 space-y-3 bg-white">
                 <p className="text-xs text-neutral-400 font-heading font-medium uppercase tracking-wider">
-                  Pilih Alamat Lain:
+                  {isEnglish ? 'Select Other Address:' : 'Pilih Alamat Lain:'}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto pr-1">
                   {addresses
@@ -142,13 +142,13 @@ export function CheckoutAddressForm({
           </div>
         ) : (
           <div className="text-center py-8 border border-dashed border-neutral-200">
-            <p className="text-xs text-neutral-400 mb-3">Belum ada alamat pengiriman.</p>
+            <p className="text-xs text-neutral-400 mb-3">{isEnglish ? 'No shipping addresses saved yet.' : 'Belum ada alamat pengiriman.'}</p>
             <Button
               onClick={onAddNewAddress}
               variant="outline"
               className="text-xs uppercase font-semibold"
             >
-              Tambah Alamat Pertama
+              {isEnglish ? 'Add First Address' : 'Tambah Alamat Pertama'}
             </Button>
           </div>
         )}
@@ -157,25 +157,25 @@ export function CheckoutAddressForm({
       {/* Shipping Method Section */}
       <div className="space-y-4 pt-4 border-t border-neutral-100">
         <h2 className="text-xs uppercase tracking-wider font-heading font-bold text-brand-black flex items-center">
-          <Truck size={14} className="mr-2 text-neutral-500" /> Opsi Pengiriman
+          <Truck size={14} className="mr-2 text-neutral-500" /> {t.checkout.shippingMethod}
         </h2>
 
         {!selectedAddress ? (
           <p className="text-xs text-neutral-400 italic">
-            Harap pilih alamat terlebih dahulu untuk menampilkan opsi pengiriman.
+            {isEnglish ? 'Please select a shipping address first to display courier options.' : 'Harap pilih alamat terlebih dahulu untuk menampilkan opsi pengiriman.'}
           </p>
         ) : selectedAddress.country_code === 'ID' && (!selectedAddress.postal_code || selectedAddress.postal_code.trim().length === 0) ? (
           <div className="p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium rounded-none">
-            Alamat yang Anda pilih belum memiliki **Kode Pos**. Harap perbarui alamat atau pilih alamat yang menyertakan kode pos 5 digit agar tarif Biteship dapat dihitung.
+            {isEnglish ? 'The selected address is missing a Zip Code. Please update your address to include a valid 5-digit zip code.' : 'Alamat yang Anda pilih belum memiliki Kode Pos. Harap perbarui alamat atau pilih alamat yang menyertakan kode pos 5 digit.'}
           </div>
         ) : !isRatesCalculated ? (
           <div className="border border-neutral-200 bg-neutral-50/70 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-none">
             <div>
               <p className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black">
-                Cek Opsi & Tarif Pengiriman {selectedAddress.country_code !== 'ID' ? 'Internasional' : ''}
+                {isEnglish ? 'Check Shipping Rates & Courier Options' : 'Cek Opsi & Tarif Pengiriman'} {selectedAddress.country_code !== 'ID' ? (isEnglish ? '(International)' : 'Internasional') : ''}
               </p>
               <p className="text-xs text-neutral-500 font-sans mt-0.5">
-                Klik tombol di sebelah untuk menghitung tarif kurir Biteship ke tujuan (<strong>{selectedAddress.country_name || 'Indonesia'}</strong>).
+                {isEnglish ? 'Click button on the right to calculate shipping rates to' : 'Klik tombol di sebelah untuk menghitung tarif kurir ke tujuan'} (<strong>{selectedAddress.country_name || 'Indonesia'}</strong>).
               </p>
             </div>
             <Button
@@ -184,7 +184,7 @@ export function CheckoutAddressForm({
               variant="primary"
               className="text-xs uppercase tracking-wider font-semibold whitespace-nowrap shrink-0"
             >
-              <Truck size={14} className="mr-1.5" /> Cek Ongkos Kirim
+              <Truck size={14} className="mr-1.5" /> {t.checkout.checkRates}
             </Button>
           </div>
         ) : shippingLoading ? (
@@ -195,7 +195,7 @@ export function CheckoutAddressForm({
         ) : shippingError ? (
           <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-medium space-y-2 rounded-none">
             <p className="font-semibold uppercase tracking-wider text-[11px] text-red-800">
-              Gagal Memuat Tarif Pengiriman Biteship
+              {isEnglish ? 'Failed to Load Courier Shipping Rates' : 'Gagal Memuat Tarif Pengiriman'}
             </p>
             <p className="text-red-600">{shippingError}</p>
             <Button
@@ -204,21 +204,21 @@ export function CheckoutAddressForm({
               variant="outline"
               className="text-[11px] uppercase tracking-wider font-semibold mt-2"
             >
-              Coba Hitung Ulang
+              {isEnglish ? 'Try Recalculating' : 'Coba Hitung Ulang'}
             </Button>
           </div>
         ) : shippingOptions.length > 0 ? (
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-[11px] text-neutral-500 font-sans">
-                Opsi kurir pengiriman ke <strong>{selectedAddress.country_name || 'Indonesia'}</strong>:
+                {isEnglish ? 'Courier options for' : 'Opsi kurir pengiriman ke'} <strong>{selectedAddress.country_name || 'Indonesia'}</strong>:
               </span>
               <button
                 type="button"
                 onClick={onCalculateShipping}
                 className="text-[11px] text-brand-black hover:text-brand-gold underline font-heading font-medium uppercase tracking-wider transition-colors"
               >
-                Hitung Ulang
+                {isEnglish ? 'Recalculate' : 'Hitung Ulang'}
               </button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -255,7 +255,7 @@ export function CheckoutAddressForm({
                     </span>
                   </div>
                   <p className="text-sm text-neutral-400">
-                    Estimasi tiba: {option.etd_min} - {option.etd_max} Hari
+                    {isEnglish ? `Est. arrival: ${option.etd_min} - ${option.etd_max} Days` : `Estimasi tiba: ${option.etd_min} - ${option.etd_max} Hari`}
                   </p>
                   {selectedCourier?.id === option.id && (
                     <div className="absolute top-2 right-2 bg-brand-gold text-white rounded-full p-0.5">
@@ -268,7 +268,7 @@ export function CheckoutAddressForm({
           </div>
         ) : (
           <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-medium rounded-none">
-            Tidak ada opsi pengiriman Biteship yang tersedia untuk alamat ini. Harap periksa kembali alamat Anda atau hubungi Admin.
+            {isEnglish ? 'No courier shipping options available for this destination. Please check your address or contact support.' : 'Tidak ada opsi pengiriman yang tersedia untuk alamat ini. Harap periksa kembali alamat Anda atau hubungi Admin.'}
           </div>
         )}
       </div>
@@ -276,14 +276,14 @@ export function CheckoutAddressForm({
       {/* Note Section */}
       <div className="space-y-2 pt-4 border-t border-neutral-100">
         <Textarea
-          label="Catatan Pesanan"
+          label={t.checkout.notes}
           id="order-notes"
-          placeholder="Tulis instruksi khusus (cth: ukuran tambahan, warna cadangan, dll)..."
+          placeholder={isEnglish ? 'Special instructions (e.g. fallback color, extra notes)...' : 'Tulis instruksi khusus (cth: ukuran tambahan, warna cadangan, dll)...'}
           value={notes}
           onChange={(e) => onNotesChange(e.target.value)}
           maxLength={200}
           rows={3}
-          helperText={`${notes.length}/200 karakter`}
+          helperText={`${notes.length}/200 ${isEnglish ? 'characters' : 'karakter'}`}
         />
       </div>
     </div>
