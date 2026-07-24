@@ -23,7 +23,7 @@ export const ProductCard = React.memo(function ProductCard({
   product,
   className,
 }: ProductCardProps): React.JSX.Element {
-  const { t } = useTranslation()
+  const { t, isEnglish } = useTranslation()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const router = useRouter()
   const isLiked = useWishlistStore((state) => state.productIds.includes(product.id))
@@ -69,10 +69,10 @@ export const ProductCard = React.memo(function ProductCard({
         stock: variant.stock,
       }
       await addItem(cartItem, 1)
-      toast.custom((t) => (
+      toast.custom((toastItem) => (
         <div
           className={`${
-            t.visible ? 'animate-enter' : 'animate-leave'
+            toastItem.visible ? 'animate-enter' : 'animate-leave'
           } max-w-sm w-full bg-white shadow-2xl rounded-xl overflow-hidden border border-neutral-100 flex pointer-events-auto border-t-2 border-t-brand-gold`}
         >
           <div className="flex-1 w-0 p-4">
@@ -102,13 +102,13 @@ export const ProductCard = React.memo(function ProductCard({
               </div>
               <div className="ml-3 flex-1">
                 <p className="text-xs font-heading font-bold uppercase tracking-wider text-brand-gold">
-                  Berhasil Ditambahkan!
+                  {isEnglish ? 'Successfully Added!' : 'Berhasil Ditambahkan!'}
                 </p>
                 <p className="text-sm font-heading font-medium uppercase text-brand-black line-clamp-1 mt-0.5">
                   {product.name}
                 </p>
                 <p className="text-sm text-neutral-400 uppercase font-sans mt-0.5">
-                  Varian: {variant.name} &bull; Qty: 1
+                  {t.product.variantLabel}: {variant.name} &bull; Qty: 1
                 </p>
               </div>
             </div>
@@ -116,18 +116,18 @@ export const ProductCard = React.memo(function ProductCard({
           <div className="flex border-l border-neutral-100">
             <button
               onClick={() => {
-                toast.dismiss(t.id)
+                toast.dismiss(toastItem.id)
                 setCartDrawerOpen(true)
               }}
               className="w-full border border-transparent rounded-none p-4 flex items-center justify-center text-xs font-heading font-bold uppercase tracking-wider text-brand-gold hover:text-brand-gold-light focus:outline-none cursor-pointer"
             >
-              Lihat
+              {isEnglish ? 'View' : 'Lihat'}
             </button>
           </div>
         </div>
       ))
     } catch {
-      toast.error('Gagal menambahkan ke keranjang.')
+      toast.error(isEnglish ? 'Failed to add to cart.' : 'Gagal menambahkan ke keranjang.')
     } finally {
       setIsAdding(null)
     }
@@ -196,7 +196,7 @@ export const ProductCard = React.memo(function ProductCard({
             </div>
           ) : (
             <div className="flex items-center justify-center w-full h-full text-xs text-neutral-400 font-sans">
-              Tidak ada gambar
+              {isEnglish ? 'No Image' : 'Tidak ada gambar'}
             </div>
           )}
         </Link>
@@ -214,28 +214,24 @@ export const ProductCard = React.memo(function ProductCard({
         {product.is_featured && !discountPercent && (
           <div className="absolute top-3 left-3 z-10">
             <Badge variant="gold" size="sm">
-              Pilihan
+              {t.product.featuredBadge}
             </Badge>
           </div>
         )}
 
-        {/* 🎨 PALETTE ENHANCEMENT
-        Problem: Tombol Wishlist pada product card membutuhkan aria-pressed state dan visual feedback.
-        Fix: Menambahkan aria-pressed={liked} dan toast notification.
-        Impact: Aksesibilitas interaksi toggle lebih baik untuk screen reader dan feedback visual yang jelas */}
         <button
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
             toggleWishlist(product.id)
             if (liked) {
-              toast.success('Dihapus dari wishlist', { icon: '🤍' })
+              toast.success(t.product.removedFromWishlist, { icon: '🤍' })
             } else {
-              toast.success('Ditambahkan ke wishlist', { icon: '❤️' })
+              toast.success(t.product.addedToWishlist, { icon: '❤️' })
             }
           }}
           className="absolute top-3 right-3 p-1.5 bg-white/85 hover:bg-white border border-neutral-100 transition-all rounded-full duration-300 hover:scale-110 active:scale-90 z-10"
-          aria-label={liked ? 'Hapus dari wishlist' : 'Tambah ke wishlist'}
+          aria-label={liked ? t.product.removedFromWishlist : t.product.addedToWishlist}
           aria-pressed={liked}
         >
           <Heart
@@ -295,7 +291,7 @@ export const ProductCard = React.memo(function ProductCard({
             </div>
           ) : (
             <span className="text-sm font-heading font-medium uppercase tracking-wider text-brand-black py-1 text-center w-full block">
-              {t.common.filter === 'Filter' ? 'Lihat Detail' : 'View Detail'}
+              {isEnglish ? 'View Details' : 'Lihat Detail'}
             </span>
           )}
         </div>

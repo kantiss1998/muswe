@@ -107,7 +107,7 @@ export function ProductAccordionTabs({
                   formatProductDescription(product.size_guide)
                 ) : (
                   <p className="italic">
-                    Belum ada detail ukuran & bahan.
+                    {t.product.emptySizeGuide}
                   </p>
                 )}
               </div>
@@ -118,9 +118,9 @@ export function ProductAccordionTabs({
                   product.care_guide.replace(/<br\s*\/?>/gi, '\n')
                 ) : (
                   <ul className="list-disc pl-4 space-y-1">
-                    <li>Cuci dengan suhu dingin menggunakan warna senada</li>
-                    <li>Hindari pemutih</li>
-                    <li>Setrika dengan suhu rendah jika diperlukan</li>
+                    <li>{t.product.defaultCare1}</li>
+                    <li>{t.product.defaultCare2}</li>
+                    <li>{t.product.defaultCare3}</li>
                   </ul>
                 )}
               </div>

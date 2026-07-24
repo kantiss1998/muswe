@@ -10,10 +10,13 @@ import { staggerContainer, fadeUpItem } from '@/lib/motion'
 import { useGoogleLogin } from '@react-oauth/google'
 import toast from 'react-hot-toast'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 function LoginContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createBrowserClient()
+  const { t } = useTranslation()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -100,21 +103,21 @@ function LoginContent() {
               MUSWE
             </span>
             <h2 className="text-xl md:text-2xl font-heading font-semibold uppercase tracking-wider text-brand-black">
-              Masuk Akun
+              {t.auth.loginTitle}
             </h2>
             <p className="text-sm md:text-xs text-neutral-400 font-sans">
-              Silakan masukkan email dan kata sandi Anda untuk melanjutkan.
+              {t.auth.loginSubtitle}
             </p>
           </motion.div>
 
           <form onSubmit={handleEmailLogin} className="space-y-5">
             <motion.div variants={fadeUpItem}>
               <Input
-                label="Email"
+                label={t.auth.email}
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="nama@email.com"
+                placeholder={t.auth.emailPlaceholder}
                 required
                 autoComplete="email"
               />
@@ -123,13 +126,13 @@ function LoginContent() {
             <motion.div variants={fadeUpItem} className="flex flex-col space-y-1">
               <div className="flex justify-between items-center">
                 <label className="text-xs uppercase tracking-wider font-heading font-medium text-brand-black/70">
-                  Kata Sandi
+                  {t.auth.password}
                 </label>
                 <Link
                   href="/lupa-password"
                   className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-400 hover:text-brand-black transition-colors"
                 >
-                  Lupa sandi?
+                  {t.auth.forgotPasswordLink}
                 </Link>
               </div>
               <Input
@@ -145,7 +148,7 @@ function LoginContent() {
 
             <motion.div variants={fadeUpItem}>
               <Button type="submit" variant="primary" className="w-full mt-2" isLoading={isLoading}>
-                Masuk
+                {t.nav.login}
               </Button>
             </motion.div>
           </form>
@@ -156,7 +159,7 @@ function LoginContent() {
               <div className="w-full border-t border-neutral-200"></div>
             </div>
             <div className="relative flex justify-center text-xs uppercase tracking-wider font-heading">
-              <span className="bg-white px-3 text-neutral-400">Atau masuk dengan</span>
+              <span className="bg-white px-3 text-neutral-400">{t.auth.orSignInWith}</span>
             </div>
           </motion.div>
 
@@ -186,7 +189,7 @@ function LoginContent() {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                 />
               </svg>
-              <span>{isGoogleLoading ? 'Menghubungkan...' : 'Masuk dengan Google'}</span>
+              <span>{isGoogleLoading ? t.auth.connecting : t.auth.signInWithGoogle}</span>
             </button>
           </motion.div>
 
@@ -196,9 +199,9 @@ function LoginContent() {
             className="text-center mt-8 pt-4 border-t border-neutral-100"
           >
             <p className="text-xs text-neutral-500 font-sans">
-              Belum punya akun?{' '}
+              {t.auth.dontHaveAccount}{' '}
               <Link href="/daftar" className="text-brand-black font-semibold hover:underline">
-                Daftar sekarang
+                {t.auth.registerNow}
               </Link>
             </p>
           </motion.div>
@@ -209,8 +212,9 @@ function LoginContent() {
 }
 
 export default function LoginPage(): React.JSX.Element {
+  const { isEnglish } = useTranslation()
   return (
-    <Suspense fallback={<AuthLoading message="Memuat halaman masuk..." />}>
+    <Suspense fallback={<AuthLoading message={isEnglish ? 'Loading login page...' : 'Memuat halaman masuk...'} />}>
       <LoginContent />
     </Suspense>
   )

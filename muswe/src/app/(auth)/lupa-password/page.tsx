@@ -7,8 +7,11 @@ import { createBrowserClient } from '@/lib/supabase/client'
 import { Button, Input, Card } from '@/shared/components'
 import toast from 'react-hot-toast'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 export default function ForgotPasswordPage(): React.JSX.Element {
   const supabase = createBrowserClient()
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isSent, setIsSent] = useState(false)
@@ -52,39 +55,38 @@ export default function ForgotPasswordPage(): React.JSX.Element {
               MUSWE
             </span>
             <h2 className="text-xl md:text-2xl font-heading font-semibold uppercase tracking-wider text-brand-black">
-              Lupa Kata Sandi
+              {t.auth.forgotPasswordTitle}
             </h2>
             <p className="text-sm md:text-xs text-neutral-400 font-sans">
-              Masukkan alamat email Anda untuk menerima tautan reset kata sandi.
+              {t.auth.forgotPasswordSubtitle}
             </p>
           </div>
 
           {isSent ? (
             <div className="space-y-6 text-center">
               <div className="bg-neutral-50 border border-neutral-200 p-6 rounded-none text-xs leading-relaxed text-neutral-600">
-                Kami telah mengirimkan tautan untuk mengatur ulang kata sandi ke email{' '}
-                <strong className="text-brand-black">{email}</strong>. Silakan periksa kotak masuk
-                atau spam email Anda.
+                {t.auth.resetSentSuccess}{' '}
+                <strong className="text-brand-black">{email}</strong>. {t.auth.checkSpam}
               </div>
               <Link href="/masuk" className="w-full block">
                 <Button variant="primary" className="w-full">
-                  Kembali ke Halaman Masuk
+                  {t.auth.backToLogin}
                 </Button>
               </Link>
             </div>
           ) : (
             <form onSubmit={handleReset} className="space-y-6">
               <Input
-                label="Email"
+                label={t.auth.email}
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="nama@email.com"
+                placeholder={t.auth.emailPlaceholder}
                 required
               />
 
               <Button type="submit" variant="primary" className="w-full" isLoading={isLoading}>
-                Kirim Tautan Reset
+                {t.auth.sendResetLink}
               </Button>
             </form>
           )}
@@ -93,9 +95,9 @@ export default function ForgotPasswordPage(): React.JSX.Element {
           {!isSent && (
             <div className="text-center mt-8 pt-4 border-t border-neutral-100">
               <p className="text-xs text-neutral-500 font-sans">
-                Kembali ke{' '}
+                {t.common.back}{' '}
                 <Link href="/masuk" className="text-brand-black font-semibold hover:underline">
-                  Halaman Masuk
+                  {t.auth.signInHere}
                 </Link>
               </p>
             </div>

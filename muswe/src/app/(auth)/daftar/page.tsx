@@ -10,9 +10,12 @@ import { staggerContainer, fadeUpItem } from '@/lib/motion'
 import { useGoogleLogin } from '@react-oauth/google'
 import toast from 'react-hot-toast'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 export default function RegisterPage(): React.JSX.Element {
   const router = useRouter()
   const supabase = createBrowserClient()
+  const { t } = useTranslation()
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -103,20 +106,20 @@ export default function RegisterPage(): React.JSX.Element {
               MUSWE
             </span>
             <h2 className="text-xl md:text-2xl font-heading font-semibold uppercase tracking-wider text-brand-black">
-              Daftar Akun
+              {t.auth.registerTitle}
             </h2>
             <p className="text-sm md:text-xs text-neutral-400 font-sans">
-              Lengkapi data di bawah ini untuk bergabung dengan Muswe.
+              {t.auth.registerSubtitle}
             </p>
           </motion.div>
 
           <form onSubmit={handleRegister} className="space-y-4">
             <motion.div variants={fadeUpItem}>
               <Input
-                label="Nama Lengkap"
+                label={t.auth.fullName}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Masukkan nama lengkap Anda"
+                placeholder={t.auth.fullNamePlaceholder}
                 required
                 autoComplete="name"
               />
@@ -124,11 +127,11 @@ export default function RegisterPage(): React.JSX.Element {
 
             <motion.div variants={fadeUpItem}>
               <Input
-                label="Email"
+                label={t.auth.email}
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="nama@email.com"
+                placeholder={t.auth.emailPlaceholder}
                 required
                 autoComplete="email"
               />
@@ -136,18 +139,18 @@ export default function RegisterPage(): React.JSX.Element {
 
             <motion.div variants={fadeUpItem}>
               <Input
-                label="Nomor Telepon (Optional)"
+                label={t.auth.phoneOptional}
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="0812xxxxxxxx"
+                placeholder={t.auth.phonePlaceholder}
                 autoComplete="tel"
               />
             </motion.div>
 
             <motion.div variants={fadeUpItem}>
               <Input
-                label="Kata Sandi"
+                label={t.auth.password}
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -159,11 +162,11 @@ export default function RegisterPage(): React.JSX.Element {
 
             <motion.div variants={fadeUpItem}>
               <Input
-                label="Konfirmasi Kata Sandi"
+                label={t.auth.confirmPassword}
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Ulangi kata sandi"
+                placeholder={t.auth.confirmPasswordPlaceholder}
                 required
                 autoComplete="new-password"
               />
@@ -171,7 +174,7 @@ export default function RegisterPage(): React.JSX.Element {
 
             <motion.div variants={fadeUpItem}>
               <Button type="submit" variant="primary" className="w-full mt-4" isLoading={isLoading}>
-                Daftar
+                {t.nav.register}
               </Button>
             </motion.div>
           </form>
@@ -181,7 +184,7 @@ export default function RegisterPage(): React.JSX.Element {
               <div className="w-full border-t border-neutral-200" />
             </div>
             <div className="relative flex justify-center text-xs uppercase tracking-wider font-heading">
-              <span className="bg-white px-3 text-neutral-400">Atau daftar dengan</span>
+              <span className="bg-white px-3 text-neutral-400">{t.auth.orSignUpWith}</span>
             </div>
           </motion.div>
 
@@ -210,7 +213,7 @@ export default function RegisterPage(): React.JSX.Element {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                 />
               </svg>
-              <span>{isGoogleLoading ? 'Menghubungkan...' : 'Daftar dengan Google'}</span>
+              <span>{isGoogleLoading ? t.auth.connecting : t.auth.signUpWithGoogle}</span>
             </button>
           </motion.div>
 
@@ -220,9 +223,9 @@ export default function RegisterPage(): React.JSX.Element {
             className="text-center mt-8 pt-4 border-t border-neutral-100"
           >
             <p className="text-xs text-neutral-500 font-sans">
-              Sudah memiliki akun?{' '}
+              {t.auth.alreadyHaveAccount}{' '}
               <Link href="/masuk" className="text-brand-black font-semibold hover:underline">
-                Masuk disini
+                {t.auth.signInHere}
               </Link>
             </p>
           </motion.div>

@@ -88,7 +88,7 @@ export function ProductInfoSection({
 
           {!selectedVariant && minPrice !== maxPrice && (
              <span className="text-xs text-neutral-400 italic font-sans">
-               (Bervariasi)
+               {t.product.varies}
              </span>
           )}
         </div>
@@ -171,7 +171,7 @@ export function ProductInfoSection({
             whileHover={{ scale: 1.05 }}
             onClick={onToggleWishlist}
             className="p-4 border border-neutral-200 hover:border-brand-gold bg-white transition-all text-neutral-500 hover:text-brand-gold relative gold-border-hover"
-            aria-label={liked ? 'Hapus dari wishlist' : 'Tambah ke wishlist'}
+            aria-label={liked ? t.product.removedFromWishlist : t.product.addedToWishlist}
           >
             <Heart
               className={cn(
@@ -227,9 +227,9 @@ export function ProductInfoSection({
         >
           <Truck className="h-4 w-4 text-brand-black/70 group-hover:text-brand-black transition-colors" />
           <span className="text-[10px] uppercase tracking-wider font-heading font-semibold text-brand-black">
-            Ongkir Flat
+            {t.product.flatShipping}
           </span>
-          <span className="text-[9px] text-neutral-500 font-sans">Tarif murah per zona</span>
+          <span className="text-[9px] text-neutral-500 font-sans">{t.product.flatShippingDesc}</span>
         </motion.div>
         <motion.div
           whileHover={{ y: -2 }}
@@ -238,9 +238,9 @@ export function ProductInfoSection({
         >
           <RefreshCw className="h-4 w-4 text-brand-black/70 group-hover:text-brand-black transition-colors" />
           <span className="text-[10px] uppercase tracking-wider font-heading font-semibold text-brand-black">
-            7 Hari Retur
+            {t.product.return7Days}
           </span>
-          <span className="text-[9px] text-neutral-500 font-sans">Bebas tukar ukuran</span>
+          <span className="text-[9px] text-neutral-500 font-sans">{t.product.returnSizeDesc}</span>
         </motion.div>
         <motion.div
           whileHover={{ y: -2 }}
@@ -249,9 +249,9 @@ export function ProductInfoSection({
         >
           <ShieldCheck className="h-4 w-4 text-brand-black/70 group-hover:text-brand-black transition-colors" />
           <span className="text-[10px] uppercase tracking-wider font-heading font-semibold text-brand-black">
-            Kualitas Premium
+            {t.product.premiumQuality}
           </span>
-          <span className="text-[9px] text-neutral-500 font-sans">Bahan terkurasi</span>
+          <span className="text-[9px] text-neutral-500 font-sans">{t.product.curatedMaterialDesc}</span>
         </motion.div>
       </motion.div>
     </div>

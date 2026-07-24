@@ -1,0 +1,88 @@
+'use client'
+
+import React from 'react'
+import Image from 'next/image'
+import { PageHero, PageContainer, EmptyState } from '@/shared/components'
+import { ProductCard } from '@/modules/products/components/ProductCard'
+import { useTranslation } from '@/shared/i18n/useTranslation'
+import type { Collection } from '@/modules/collections/types'
+import type { ProductListItem } from '@/modules/products/types'
+
+interface CollectionDetailClientProps {
+  collection: Collection
+  products: ProductListItem[]
+}
+
+export function CollectionDetailClient({
+  collection,
+  products,
+}: CollectionDetailClientProps): React.JSX.Element {
+  const { isEnglish } = useTranslation()
+
+  return (
+    <div className="bg-white min-h-screen">
+      {collection.image_url ? (
+        <div className="relative h-[35vh] md:h-[50vh] w-full bg-neutral-100 overflow-hidden border-b border-neutral-200">
+          <Image
+            src={collection.image_url}
+            alt={collection.name}
+            fill
+            priority
+            className="object-cover"
+          />
+          <div className="absolute inset-0 gradient-overlay-dark" />
+          <div
+            className="absolute inset-0 section-texture opacity-20 pointer-events-none"
+            aria-hidden
+          />
+          <div className="absolute inset-0 flex items-end">
+            <div className="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 pb-10 md:pb-14">
+              <span className="inline-block text-xs uppercase tracking-[0.1em] font-heading font-medium text-brand-gold-light">
+                {isEnglish ? 'Special Collection' : 'Koleksi Khusus'}
+              </span>
+              <h1 className="text-2xl md:text-5xl font-heading font-light uppercase tracking-wider text-white mt-2 leading-tight">
+                {collection.name}
+              </h1>
+              <div className="w-12 h-px bg-brand-gold-light mt-3" />
+              {collection.description && (
+                <p className="text-xs text-neutral-300 font-sans max-w-lg leading-relaxed mt-3">
+                  {collection.description}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <PageHero
+          eyebrow={isEnglish ? 'Special Collection' : 'Koleksi Khusus'}
+          title={collection.name}
+          subtitle={collection.description || undefined}
+        />
+      )}
+
+      <PageContainer className="py-12 md:py-16 page-content">
+        {products.length === 0 ? (
+          <EmptyState
+            icon="PackageSearch"
+            title={isEnglish ? 'No Products Available' : 'Belum Ada Produk'}
+            description={
+              isEnglish
+                ? 'There are no products in this collection yet. Try exploring other collections.'
+                : 'Belum ada produk dalam koleksi ini. Coba jelajahi koleksi lain.'
+            }
+            action={{
+              label: isEnglish ? 'View All Collections' : 'Lihat Semua Koleksi',
+              href: '/koleksi',
+            }}
+          />
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 animate-fade-in">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
+      </PageContainer>
+    </div>
+  )
+}

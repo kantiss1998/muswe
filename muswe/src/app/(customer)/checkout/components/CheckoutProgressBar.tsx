@@ -2,11 +2,15 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { SmartLink as Link } from '@/shared/components'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 interface CheckoutProgressBarProps {
   checkoutStep: 'shipping' | 'payment'
 }
 
 export function CheckoutProgressBar({ checkoutStep }: CheckoutProgressBarProps): React.JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -20,7 +24,7 @@ export function CheckoutProgressBar({ checkoutStep }: CheckoutProgressBarProps):
           1
         </div>
         <span className="text-xs uppercase tracking-wider text-neutral-400 font-heading group-hover:text-brand-black transition-colors">
-          Keranjang
+          {t.checkoutProgress.cart}
         </span>
       </Link>
       <div className="w-8 md:w-12 h-px bg-neutral-200" aria-hidden="true" />
@@ -37,7 +41,7 @@ export function CheckoutProgressBar({ checkoutStep }: CheckoutProgressBarProps):
         <span
           className={`text-xs uppercase tracking-wider font-heading ${checkoutStep === 'shipping' ? 'font-semibold text-brand-gold' : 'text-neutral-400'}`}
         >
-          Pengiriman
+          {t.checkoutProgress.shipping}
         </span>
       </div>
       <div className="w-8 md:w-12 h-px bg-neutral-200" aria-hidden="true" />
@@ -54,7 +58,7 @@ export function CheckoutProgressBar({ checkoutStep }: CheckoutProgressBarProps):
         <span
           className={`text-xs uppercase tracking-wider font-heading ${checkoutStep === 'payment' ? 'font-semibold text-brand-gold' : 'text-neutral-400'}`}
         >
-          Pembayaran
+          {t.checkoutProgress.payment}
         </span>
       </div>
     </motion.div>

@@ -27,9 +27,12 @@ const cardVariants = {
   },
 }
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 function SearchResultsContent() {
   const searchParams = useSearchParams()
   const query = searchParams.get('q') || ''
+  const { t, isEnglish } = useTranslation()
 
   const {
     data: dataRes,
@@ -47,17 +50,17 @@ function SearchResultsContent() {
     return (
       <div className="bg-white min-h-screen">
         <PageHero
-          eyebrow="Hasil Pencarian"
-          title={query ? `"${query}"` : 'Pencarian Produk'}
-          subtitle="Gagal memuat hasil pencarian"
+          eyebrow={t.searchPage.eyebrow}
+          title={query ? `"${query}"` : t.searchPage.title}
+          subtitle={isEnglish ? 'Failed to load search results' : 'Gagal memuat hasil pencarian'}
         />
         <PageContainer className="py-10 page-content">
           <EmptyState
             icon={Search}
-            title="Gagal Memuat Hasil Pencarian"
-            description="Terjadi kesalahan koneksi saat mencari produk. Silakan coba kembali."
+            title={t.searchPage.errorTitle}
+            description={t.searchPage.errorDesc}
             action={{
-              label: 'Coba Lagi',
+              label: t.searchPage.tryAgain,
               onClick: () => window.location.reload(),
             }}
           />
@@ -69,9 +72,13 @@ function SearchResultsContent() {
   return (
     <div className="bg-white min-h-screen">
       <PageHero
-        eyebrow="Hasil Pencarian"
-        title={query ? `"${query}"` : 'Pencarian Produk'}
-        subtitle={`Ditemukan ${totalCount} produk yang cocok.`}
+        eyebrow={t.searchPage.eyebrow}
+        title={query ? `"${query}"` : t.searchPage.title}
+        subtitle={
+          isEnglish
+            ? `Found ${totalCount} matching product${totalCount !== 1 ? 's' : ''}.`
+            : `Ditemukan ${totalCount} produk yang cocok.`
+        }
       />
       <PageContainer className="py-10 page-content">
         {isLoading ? (
@@ -79,9 +86,13 @@ function SearchResultsContent() {
         ) : products.length === 0 ? (
           <EmptyState
             icon={Search}
-            title="Produk Tidak Ditemukan"
-            description={`Tidak ditemukan produk yang cocok dengan kata kunci "${query}".`}
-            action={{ label: 'Jelajahi Katalog', href: '/produk' }}
+            title={t.searchPage.notFoundTitle}
+            description={
+              isEnglish
+                ? `No products matched the keyword "${query}".`
+                : `Tidak ditemukan produk yang cocok dengan kata kunci "${query}".`
+            }
+            action={{ label: t.searchPage.browseCatalog, href: '/produk' }}
           />
         ) : (
           <motion.div

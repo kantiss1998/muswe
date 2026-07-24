@@ -144,7 +144,7 @@ export default function CartPage(): React.JSX.Element {
                             </h3>
                           </Link>
                           <p className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-400">
-                            Varian: {item.variantName || 'Default'}
+                            {t.product.variantLabel}: {item.variantName || 'Default'}
                           </p>
                           <p className="text-sm text-neutral-400 font-sans">SKU: {item.sku}</p>
 
@@ -157,7 +157,7 @@ export default function CartPage(): React.JSX.Element {
                             className="flex items-center text-xs text-red-500 hover:text-red-700 space-x-1 pt-2 font-sans"
                           >
                             <Trash2 className="h-3 w-3" />
-                            <span>Hapus</span>
+                            <span>{t.product.deleteItem}</span>
                           </motion.button>
                         </div>
 
@@ -259,8 +259,7 @@ export default function CartPage(): React.JSX.Element {
                 </Link>
 
                 <div className="bg-neutral-50/50 border border-neutral-200 border-l-2 border-l-brand-gold p-4 rounded-none text-xs text-neutral-400 leading-relaxed font-sans">
-                  Selesaikan pemesanan Anda dengan aman. Kami mendukung pembayaran Virtual Account,
-                  QRIS, E-Wallet, dan Kartu Kredit via DOKU Payment Gateway.
+                  {t.product.dokuNotice}
                 </div>
               </Card>
             </motion.div>

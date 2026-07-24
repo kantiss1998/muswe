@@ -7,9 +7,12 @@ import { createBrowserClient } from '@/lib/supabase/client'
 import { Button, Input, Card } from '@/shared/components'
 import toast from 'react-hot-toast'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 export default function ResetPasswordPage(): React.JSX.Element {
   const router = useRouter()
   const supabase = createBrowserClient()
+  const { t } = useTranslation()
 
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -102,16 +105,16 @@ export default function ResetPasswordPage(): React.JSX.Element {
               MUSWE
             </span>
             <h2 className="text-xl md:text-2xl font-heading font-semibold uppercase tracking-wider text-brand-black">
-              Reset Kata Sandi
+              {t.auth.resetPasswordTitle}
             </h2>
             <p className="text-sm md:text-xs text-neutral-400 font-sans">
-              Masukkan kata sandi baru Anda di bawah ini.
+              {t.auth.resetPasswordSubtitle}
             </p>
           </div>
 
           <form onSubmit={handleReset} className="space-y-4">
             <Input
-              label="Kata Sandi Baru"
+              label={t.auth.newPassword}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -120,16 +123,16 @@ export default function ResetPasswordPage(): React.JSX.Element {
             />
 
             <Input
-              label="Konfirmasi Kata Sandi Baru"
+              label={t.auth.confirmNewPassword}
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Ulangi kata sandi baru"
+              placeholder={t.auth.confirmPasswordPlaceholder}
               required
             />
 
             <Button type="submit" variant="primary" className="w-full mt-4" isLoading={isLoading}>
-              Perbarui Kata Sandi
+              {t.auth.updatePasswordButton}
             </Button>
           </form>
         </Card>
