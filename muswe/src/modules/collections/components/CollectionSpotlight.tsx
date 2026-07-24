@@ -11,6 +11,7 @@ import { ProductCard } from '@/modules/products/components/ProductCard'
 import { PageContainer } from '@/shared/components'
 import { EASE_PREMIUM } from '@/lib/motion'
 import { cn } from '@/lib/utils'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 interface CollectionSpotlightProps {
   collection: Collection
@@ -25,6 +26,7 @@ export function CollectionSpotlight({
   variant = 'light',
   index = 0,
 }: CollectionSpotlightProps): React.JSX.Element {
+  const { isEnglish } = useTranslation()
   const isReversed = index % 2 === 1
   const isDark = variant === 'dark'
 
@@ -109,7 +111,7 @@ export function CollectionSpotlight({
                   isDark ? 'text-white' : 'text-brand-black'
                 )}
               >
-                <span>Jelajahi {collection.name}</span>
+                <span>{isEnglish ? 'Explore' : 'Jelajahi'} {collection.name}</span>
               </Link>
             </motion.div>
 

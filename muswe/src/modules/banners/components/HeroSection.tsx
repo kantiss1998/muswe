@@ -9,11 +9,14 @@ import { Banner } from '@/modules/banners/types'
 import { Button } from '@/shared/components'
 import { cn } from '@/lib/utils'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 interface HeroSectionProps {
   banners: Banner[]
 }
 
 export function HeroSection({ banners: allBanners }: HeroSectionProps): React.JSX.Element {
+  const { isEnglish } = useTranslation()
   const banners = React.useMemo(() => allBanners.filter(b => !!b.image_url), [allBanners])
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -33,19 +36,20 @@ export function HeroSection({ banners: allBanners }: HeroSectionProps): React.JS
       <div className="relative w-full bg-brand-cream flex items-center justify-center aspect-[21/9] md:aspect-[16/9]">
         <div className="text-center space-y-4 max-w-lg px-4">
           <span className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-400">
-            Koleksi Baru
+            {isEnglish ? 'New Arrival' : 'Koleksi Baru'}
           </span>
           <h2 className="text-3xl md:text-5xl font-heading font-light uppercase tracking-wider text-brand-black leading-tight">
-            Elegan dalam Kesederhanaan
+            {isEnglish ? 'Elegance in Simplicity' : 'Elegan dalam Kesederhanaan'}
           </h2>
           <p className="text-xs text-neutral-500 font-sans max-w-sm mx-auto">
-            Temukan paduan gaya modest modern yang minimalis, nyaman, dan premium untuk aktivitas
-            sehari-hari Anda.
+            {isEnglish
+              ? 'Discover luxury modest apparel designed with modern minimalism and ultimate comfort.'
+              : 'Temukan paduan gaya modest modern yang minimalis, nyaman, dan premium untuk aktivitas sehari-hari Anda.'}
           </p>
           <div className="pt-4">
             <Link href="/produk">
               <Button variant="primary" size="md">
-                Belanja Sekarang
+                {isEnglish ? 'Shop Now' : 'Belanja Sekarang'}
               </Button>
             </Link>
           </div>

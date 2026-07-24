@@ -8,6 +8,8 @@ import { ProductListItem } from '@/modules/products/types'
 import { Button, PageContainer, SectionHeader } from '@/shared/components'
 import { staggerContainer, fadeUpItem } from '@/lib/motion'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 interface FeaturedProductsSectionProps {
   products: ProductListItem[]
 }
@@ -15,6 +17,8 @@ interface FeaturedProductsSectionProps {
 export function FeaturedProductsSection({
   products,
 }: FeaturedProductsSectionProps): React.JSX.Element | null {
+  const { t, isEnglish } = useTranslation()
+
   if (products.length === 0) return null
 
   return (
@@ -23,7 +27,10 @@ export function FeaturedProductsSection({
       <div className="absolute inset-0 gradient-mesh pointer-events-none" aria-hidden />
 
       <PageContainer className="relative">
-        <SectionHeader eyebrow="Kurasi Terbaik" title="Produk Pilihan" />
+        <SectionHeader
+          eyebrow={isEnglish ? 'Best Curations' : 'Kurasi Terbaik'}
+          title={isEnglish ? 'Featured Products' : 'Produk Pilihan'}
+        />
 
         <motion.div
           variants={staggerContainer}
@@ -52,7 +59,7 @@ export function FeaturedProductsSection({
         >
           <Link href="/produk?urutkan=featured">
             <Button variant="primary" size="md">
-              Lihat Semua Produk Pilihan
+              {isEnglish ? 'View All Featured Products' : 'Lihat Semua Produk Pilihan'}
             </Button>
           </Link>
         </motion.div>

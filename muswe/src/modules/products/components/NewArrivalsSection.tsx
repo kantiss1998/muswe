@@ -8,6 +8,8 @@ import { ProductListItem } from '@/modules/products/types'
 import { Button, PageContainer, SectionHeader } from '@/shared/components'
 import { staggerContainer, fadeUpItem } from '@/lib/motion'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 interface NewArrivalsSectionProps {
   products: ProductListItem[]
 }
@@ -15,12 +17,17 @@ interface NewArrivalsSectionProps {
 export function NewArrivalsSection({
   products,
 }: NewArrivalsSectionProps): React.JSX.Element | null {
+  const { isEnglish } = useTranslation()
+
   if (products.length === 0) return null
 
   return (
     <section className="bg-brand-cream section-texture py-16 md:py-20 border-b border-neutral-200">
       <PageContainer>
-        <SectionHeader eyebrow="Koleksi Terbaru" title="Keluaran Terbaru" />
+        <SectionHeader
+          eyebrow={isEnglish ? 'New Arrivals' : 'Koleksi Terbaru'}
+          title={isEnglish ? 'Fresh Drop' : 'Keluaran Terbaru'}
+        />
 
         <motion.div
           variants={staggerContainer}
@@ -49,7 +56,7 @@ export function NewArrivalsSection({
         >
           <Link href="/produk?urutkan=newest">
             <Button variant="outline" size="md">
-              Lihat Koleksi Terbaru
+              {isEnglish ? 'View New Arrivals' : 'Lihat Koleksi Terbaru'}
             </Button>
           </Link>
         </motion.div>

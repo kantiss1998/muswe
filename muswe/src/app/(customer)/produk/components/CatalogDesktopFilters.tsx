@@ -1,6 +1,7 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
 import type { Category } from '@/modules/categories/types'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 interface CatalogDesktopFiltersProps {
   categories: Category[]
@@ -17,11 +18,13 @@ export function CatalogDesktopFilters({
   handleCategorySelect,
   handleClearAll,
 }: CatalogDesktopFiltersProps): React.JSX.Element {
+  const { t, isEnglish } = useTranslation()
+
   return (
     <aside className="hidden md:block w-48 flex-shrink-0 space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black">
-          Kategori
+          {t.nav.categories}
         </h3>
         {(categorySlug || searchQuery) && (
           <button
@@ -42,7 +45,7 @@ export function CatalogDesktopFilters({
               !categorySlug ? 'text-brand-black font-semibold' : 'text-neutral-500'
             )}
           >
-            Semua Kategori
+            {isEnglish ? 'All Categories' : 'Semua Kategori'}
           </button>
         </li>
         {categories.map((cat) => (

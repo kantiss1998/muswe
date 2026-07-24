@@ -2,6 +2,7 @@ import React from 'react'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Category } from '@/modules/categories/types'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 interface CatalogMobileFiltersProps {
   showMobileFilters: boolean
@@ -20,6 +21,8 @@ export function CatalogMobileFilters({
   handleCategorySelect,
   handleClearAll,
 }: CatalogMobileFiltersProps): React.JSX.Element {
+  const { t, isEnglish } = useTranslation()
+
   return (
     <>
       <div
@@ -37,7 +40,7 @@ export function CatalogMobileFilters({
       >
         <div className="flex items-center justify-between p-5 border-b border-neutral-100">
           <h3 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black">
-            Filter
+            {t.common.filter}
           </h3>
           <button
             onClick={() => setShowMobileFilters(false)}
@@ -49,7 +52,7 @@ export function CatalogMobileFilters({
         <div className="flex-1 overflow-y-auto p-5 space-y-8">
           <div>
             <h4 className="text-xs font-heading font-semibold uppercase tracking-wider text-neutral-400 mb-4">
-              Kategori
+              {t.nav.categories}
             </h4>
             <ul className="space-y-3">
               <li>
@@ -63,7 +66,7 @@ export function CatalogMobileFilters({
                     !categorySlug ? 'text-brand-black font-semibold' : 'text-neutral-500'
                   )}
                 >
-                  Semua Kategori
+                  {isEnglish ? 'All Categories' : 'Semua Kategori'}
                 </button>
               </li>
               {categories.map((cat) => (
@@ -101,7 +104,7 @@ export function CatalogMobileFilters({
             onClick={() => setShowMobileFilters(false)}
             className="flex-1 py-3 bg-brand-black text-white text-xs font-heading font-bold uppercase tracking-wider hover:bg-neutral-800"
           >
-            Terapkan
+            {isEnglish ? 'Apply' : 'Terapkan'}
           </button>
         </div>
       </div>

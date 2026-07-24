@@ -46,13 +46,24 @@ interface CatalogClientProps {
   }
 }
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 export function CatalogClient({
   initialProducts,
   totalCount,
   categories,
   filters,
 }: CatalogClientProps): React.JSX.Element {
+  const { t, isEnglish } = useTranslation()
   const router = useRouter()
+
+  const SORT_OPTIONS = [
+    { value: 'newest', label: isEnglish ? 'Newest' : 'Terkini' },
+    { value: 'featured', label: isEnglish ? 'Featured' : 'Pilihan' },
+    { value: 'price-low', label: isEnglish ? 'Price: Low to High' : 'Harga Terendah' },
+    { value: 'price-high', label: isEnglish ? 'Price: High to Low' : 'Harga Tertinggi' },
+    { value: 'popular', label: isEnglish ? 'Most Popular' : 'Terpopuler' },
+  ]
 
   const { categorySlug, sortBy = 'newest', searchQuery, page = 1, limit = 12 } = filters
 
@@ -62,16 +73,13 @@ export function CatalogClient({
 
   // Update URL search params helpers
   const updateFilters = (newParams: Record<string, string | null>) => {
-    // Generate new URL with search params
     const searchParams = new URLSearchParams()
 
-    // Add existing filters
     if (categorySlug) searchParams.set('kategori', categorySlug)
     if (sortBy && sortBy !== 'newest') searchParams.set('urutkan', sortBy)
     if (searchQuery) searchParams.set('q', searchQuery)
     if (page > 1) searchParams.set('halaman', String(page))
 
-    // Apply new params
     Object.entries(newParams).forEach(([key, val]) => {
       if (val === null) {
         searchParams.delete(key)
@@ -80,7 +88,6 @@ export function CatalogClient({
       }
     })
 
-    // Always reset page to 1 on filter changes unless we are explicitly changing the page
     if (!newParams.halaman && searchParams.has('halaman')) {
       searchParams.delete('halaman')
     }
@@ -112,9 +119,13 @@ export function CatalogClient({
   return (
     <div className="bg-white min-h-screen">
       <PageHero
-        eyebrow="Katalog Busana"
-        title="Semua Produk"
-        subtitle="Jelajahi koleksi kerudung motif premium dengan desain minimalis dan bahan berkualitas."
+        eyebrow={isEnglish ? 'Apparel Catalog' : 'Katalog Busana'}
+        title={t.nav.products}
+        subtitle={
+          isEnglish
+            ? 'Discover our exclusive collection of luxury modest apparel and printed scarves.'
+            : 'Jelajahi koleksi kerudung motif premium dengan desain minimalis dan bahan berkualitas.'
+        }
       />
       <PageContainer
         className={cn(
@@ -124,9 +135,9 @@ export function CatalogClient({
       >
         {searchQuery && (
           <p className="text-xs text-neutral-500 font-sans -mt-6 mb-8">
-            Hasil pencarian untuk:{' '}
+            {isEnglish ? 'Search results for:' : 'Hasil pencarian untuk:'}{' '}
             <strong className="text-brand-black">&quot;{searchQuery}&quot;</strong> ({totalCount}{' '}
-            produk)
+            {isEnglish ? 'products' : 'produk'})
           </p>
         )}
 
@@ -137,7 +148,7 @@ export function CatalogClient({
             className="flex items-center space-x-2 text-xs font-heading font-semibold uppercase tracking-wider text-brand-black md:hidden py-2"
           >
             <SlidersHorizontal className="h-4 w-4" />
-            <span>Filter</span>
+            <span>{t.common.filter}</span>
           </button>
 
           <div className="hidden md:block" />
@@ -145,13 +156,13 @@ export function CatalogClient({
           {/* Sort Selector */}
           <div className="flex items-center space-x-2">
             <span className="text-xs uppercase tracking-wider font-heading font-medium text-neutral-400">
-              Urutkan:
+              {isEnglish ? 'Sort By:' : 'Urutkan:'}
             </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center space-x-1 bg-transparent text-xs font-heading font-bold uppercase tracking-wider text-brand-black hover:text-brand-gold transition-colors p-1">
                   <span>
-                    {SORT_OPTIONS.find((opt) => opt.value === sortBy)?.label || 'Urutkan'}
+                    {SORT_OPTIONS.find((opt) => opt.value === sortBy)?.label || (isEnglish ? 'Sort' : 'Urutkan')}
                   </span>
                   <ChevronDown className="w-3.5 h-3.5" />
                 </button>
