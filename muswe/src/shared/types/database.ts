@@ -1755,6 +1755,8 @@ export type Database = {
       user_addresses: {
         Row: {
           city_name: string
+          country_code: string | null
+          country_name: string | null
           created_at: string
           district_name: string
           full_address: string
@@ -1770,6 +1772,8 @@ export type Database = {
         }
         Insert: {
           city_name: string
+          country_code?: string | null
+          country_name?: string | null
           created_at?: string
           district_name: string
           full_address: string
@@ -1785,6 +1789,8 @@ export type Database = {
         }
         Update: {
           city_name?: string
+          country_code?: string | null
+          country_name?: string | null
           created_at?: string
           district_name?: string
           full_address?: string

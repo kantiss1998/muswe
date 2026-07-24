@@ -43,8 +43,12 @@ export async function searchDistrictsAction(searchQuery: string) {
   return shippingService.searchDistricts(searchQuery)
 }
 
-export async function calculateShippingRatesAction(destinationPostalCode: string, weightGram: number) {
-  return shippingService.calculateShippingRates(destinationPostalCode, weightGram)
+export async function calculateShippingRatesAction(
+  destinationPostalCode: string,
+  weightGram: number,
+  destinationCountryCode?: string
+) {
+  return shippingService.calculateShippingRates(destinationPostalCode, weightGram, undefined, destinationCountryCode)
 }
 
 // Admin Actions

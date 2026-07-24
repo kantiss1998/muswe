@@ -15,23 +15,40 @@ import { useForm, Controller, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { cn } from '@/lib/utils'
 
+const COUNTRIES = [
+  { code: 'ID', name: 'Indonesia', flag: '🇮🇩' },
+  { code: 'SG', name: 'Singapore', flag: '🇸🇬' },
+  { code: 'MY', name: 'Malaysia', flag: '🇲🇾' },
+  { code: 'AU', name: 'Australia', flag: '🇦🇺' },
+  { code: 'US', name: 'United States', flag: '🇺🇸' },
+  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },
+  { code: 'JP', name: 'Japan', flag: '🇯🇵' },
+  { code: 'KR', name: 'South Korea', flag: '🇰🇷' },
+  { code: 'DE', name: 'Germany', flag: '🇩🇪' },
+  { code: 'NL', name: 'Netherlands', flag: '🇳🇱' },
+  { code: 'AE', name: 'United Arab Emirates', flag: '🇦🇪' },
+  { code: 'TH', name: 'Thailand', flag: '🇹🇭' },
+  { code: 'VN', name: 'Vietnam', flag: '🇻🇳' },
+  { code: 'PH', name: 'Philippines', flag: '🇵🇭' },
+]
+
 const addressSchema = z.object({
   label: z.string().min(1, 'Label alamat wajib diisi (cth: Rumah)'),
   recipient_name: z.string().min(3, 'Nama penerima minimal 3 karakter'),
   phone: z
     .string()
-    .min(9, 'Nomor telepon minimal 9 digit')
-    .regex(/^[0-9+]+$/, 'Hanya angka yang diperbolehkan'),
-  province_name: z.string().min(1, 'Provinsi wajib dipilih'),
+    .min(7, 'Nomor telepon minimal 7 digit')
+    .regex(/^[0-9+ ]+$/, 'Nomor telepon tidak valid'),
+  country_code: z.string(),
+  country_name: z.string(),
+  province_name: z.string().min(1, 'Provinsi/State wajib diisi'),
   city_name: z.string().min(1, 'Kota wajib diisi'),
-  district_name: z.string().min(1, 'Kecamatan wajib diisi'),
+  district_name: z.string().min(1, 'Kecamatan/Distrik wajib diisi'),
   postal_code: z
     .string()
-    .min(5, 'Kode pos harus 5 digit')
-    .regex(/^[0-9]+$/, 'Hanya angka yang diperbolehkan')
     .optional()
     .or(z.literal('')),
-  full_address: z.string().min(10, 'Alamat lengkap minimal 10 karakter'),
+  full_address: z.string().min(5, 'Alamat lengkap minimal 5 karakter'),
   zone_id: z.string().nullable(),
   is_default: z.boolean(),
 })
@@ -118,6 +135,8 @@ export function AddressModal({
       label: '',
       recipient_name: '',
       phone: '',
+      country_code: 'ID',
+      country_name: 'Indonesia',
       province_name: '',
       city_name: '',
       district_name: '',
@@ -127,6 +146,9 @@ export function AddressModal({
       is_default: false,
     },
   })
+
+  const countryCode = useWatch({ control, name: 'country_code' })
+  const isDomestic = countryCode === 'ID'
 
   const provinceName = useWatch({
     control,
@@ -161,6 +183,8 @@ export function AddressModal({
           label: addressToEdit.label,
           recipient_name: addressToEdit.recipient_name,
           phone: addressToEdit.phone,
+          country_code: addressToEdit.country_code || 'ID',
+          country_name: addressToEdit.country_name || 'Indonesia',
           province_name: addressToEdit.province_name,
           city_name: addressToEdit.city_name,
           district_name: addressToEdit.district_name,
@@ -169,7 +193,6 @@ export function AddressModal({
           zone_id: addressToEdit.zone_id,
           is_default: addressToEdit.is_default,
         })
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSearchQuery(
           addressToEdit.district_name
             ? `${addressToEdit.district_name}, ${addressToEdit.city_name}`
@@ -184,6 +207,8 @@ export function AddressModal({
           label: '',
           recipient_name: '',
           phone: '',
+          country_code: 'ID',
+          country_name: 'Indonesia',
           province_name: '',
           city_name: '',
           district_name: '',
@@ -239,11 +264,14 @@ export function AddressModal({
   }, [provinceName, setValue])
 
   const onSubmitForm = async (data: AddressFormValues) => {
+    const selectedCountry = COUNTRIES.find((c) => c.code === data.country_code)
     const addressData = {
       user_id: userId,
       label: data.label,
       recipient_name: data.recipient_name,
       phone: data.phone,
+      country_code: data.country_code || 'ID',
+      country_name: selectedCountry ? selectedCountry.name : (data.country_name || 'Indonesia'),
       province_name: data.province_name,
       city_name: data.city_name,
       district_name: data.district_name,
@@ -337,6 +365,32 @@ export function AddressModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={isEdit ? 'Ubah Alamat' : 'Tambah Alamat Baru'}>
       <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-5 text-sm font-sans">
+        {/* Country Selector */}
+        <Controller
+          control={control}
+          name="country_code"
+          render={({ field }) => (
+            <Select
+              label="Negara Tujuan (Shipping Country)*"
+              value={field.value}
+              onChange={(code) => {
+                field.onChange(code)
+                const matched = COUNTRIES.find((c) => c.code === code)
+                if (matched) {
+                  setValue('country_name', matched.name)
+                }
+                if (code !== 'ID') {
+                  setValue('zone_id', null)
+                }
+              }}
+              options={COUNTRIES.map((c) => ({
+                label: `${c.flag} ${c.name}`,
+                value: c.code,
+              }))}
+            />
+          )}
+        />
+
         <div className="grid grid-cols-2 gap-4">
           <Controller
             control={control}
@@ -344,7 +398,7 @@ export function AddressModal({
             render={({ field }) => (
               <Input
                 {...field}
-                label="Label Alamat (cth: Rumah, Kantor)*"
+                label="Label Alamat (cth: Rumah, Office)*"
                 placeholder="cth: Rumah"
                 error={errors.label?.message}
               />
@@ -370,122 +424,167 @@ export function AddressModal({
           render={({ field }) => (
             <Input
               {...field}
-              label="Nomor Telepon Penerima*"
-              placeholder="cth: 08123456789"
+              label="Nomor Telepon Penerima (dengan kode negara jika luar negeri)*"
+              placeholder="cth: +65 9123 4567 atau 08123456789"
               error={errors.phone?.message}
             />
           )}
         />
 
-        {/* Autocomplete district search */}
-        <div className="relative">
-          <Input
-            ref={inputRef}
-            label="Cari Kota / Kecamatan (Ketik min. 2 karakter)*"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value)
-              setShowSuggestions(true)
-              setFocusedIndex(-1)
-            }}
-            onFocus={() => {
-              if (searchQuery.length >= 2) setShowSuggestions(true)
-            }}
-            onBlur={() => {
-              // Delay to allow click on suggestion to register
-              setTimeout(() => setShowSuggestions(false), 200)
-            }}
-            onKeyDown={handleKeyDown}
-            placeholder="Cari cth: Kebayoran Baru atau Bandung..."
-            helperText="Pencarian otomatis untuk provinsi, kota, kecamatan, dan kode pos."
-            aria-expanded={showSuggestions && searchResults.length > 0}
-            aria-autocomplete="list"
-            aria-controls={showSuggestions ? listboxId : undefined}
-            aria-activedescendant={
-              focusedIndex >= 0 ? `${listboxId}-opt-${focusedIndex}` : undefined
-            }
-            role="combobox"
-          />
-          {showSuggestions && searchResults.length > 0 && (
-            <div
-              ref={listboxRef}
-              id={listboxId}
-              role="listbox"
-              className="absolute z-10 w-full bg-white border border-neutral-200 shadow-lg max-h-48 overflow-y-auto mt-1 font-sans text-xs outline-none"
-            >
-              {searchResults.map((district, index) => (
+        {isDomestic ? (
+          <>
+            {/* Autocomplete district search */}
+            <div className="relative">
+              <Input
+                ref={inputRef}
+                label="Cari Kota / Kecamatan (Ketik min. 2 karakter)*"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  setShowSuggestions(true)
+                  setFocusedIndex(-1)
+                }}
+                onFocus={() => {
+                  if (searchQuery.length >= 2) setShowSuggestions(true)
+                }}
+                onBlur={() => {
+                  setTimeout(() => setShowSuggestions(false), 200)
+                }}
+                onKeyDown={handleKeyDown}
+                placeholder="Cari cth: Kebayoran Baru atau Bandung..."
+                helperText="Pencarian otomatis untuk provinsi, kota, kecamatan, dan kode pos."
+                aria-expanded={showSuggestions && searchResults.length > 0}
+                aria-autocomplete="list"
+                aria-controls={showSuggestions ? listboxId : undefined}
+                aria-activedescendant={
+                  focusedIndex >= 0 ? `${listboxId}-opt-${focusedIndex}` : undefined
+                }
+                role="combobox"
+              />
+              {showSuggestions && searchResults.length > 0 && (
                 <div
-                  key={district.id}
-                  id={`${listboxId}-opt-${index}`}
-                  role="option"
-                  aria-selected={focusedIndex === index}
-                  onClick={() => handleSelectDistrict(district)}
-                  onMouseMove={() => setFocusedIndex(index)}
-                  className={cn(
-                    'p-2.5 cursor-pointer border-b border-neutral-100 last:border-0 transition-colors',
-                    focusedIndex === index ? 'bg-neutral-50' : ''
-                  )}
+                  ref={listboxRef}
+                  id={listboxId}
+                  role="listbox"
+                  className="absolute z-10 w-full bg-white border border-neutral-200 shadow-lg max-h-48 overflow-y-auto mt-1 font-sans text-xs outline-none"
                 >
-                  <p className="font-bold text-neutral-800">
-                    {district.district_name}, {district.city_name}
-                  </p>
-                  <p className="text-xs text-neutral-400 uppercase tracking-wider">
-                    {district.province_name}{' '}
-                    {district.postal_code ? `• ${district.postal_code}` : ''}
-                  </p>
+                  {searchResults.map((district, index) => (
+                    <div
+                      key={district.id}
+                      id={`${listboxId}-opt-${index}`}
+                      role="option"
+                      aria-selected={focusedIndex === index}
+                      onClick={() => handleSelectDistrict(district)}
+                      onMouseMove={() => setFocusedIndex(index)}
+                      className={cn(
+                        'p-2.5 cursor-pointer border-b border-neutral-100 last:border-0 transition-colors',
+                        focusedIndex === index ? 'bg-neutral-50' : ''
+                      )}
+                    >
+                      <p className="font-bold text-neutral-800">
+                        {district.district_name}, {district.city_name}
+                      </p>
+                      <p className="text-xs text-neutral-400 uppercase tracking-wider">
+                        {district.province_name}{' '}
+                        {district.postal_code ? `• ${district.postal_code}` : ''}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
+              <div aria-live="polite" className="sr-only">
+                {showSuggestions ? `${searchResults.length} hasil ditemukan.` : ''}
+              </div>
             </div>
-          )}
-          {/* Invisible ARIA live region to announce results to screen readers */}
-          <div aria-live="polite" className="sr-only">
-            {showSuggestions ? `${searchResults.length} hasil ditemukan.` : ''}
-          </div>
-        </div>
 
-        {/* Province Select Dropdown */}
-        <Controller
-          control={control}
-          name="province_name"
-          render={({ field }) => (
-            <Select
-              label="Provinsi*"
-              value={field.value}
-              onChange={field.onChange}
-              options={PROVINCES.map((p) => ({ label: p, value: p }))}
-              placeholder="Pilih Provinsi"
-              error={errors.province_name?.message}
+            {/* Province Select Dropdown */}
+            <Controller
+              control={control}
+              name="province_name"
+              render={({ field }) => (
+                <Select
+                  label="Provinsi*"
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={PROVINCES.map((p) => ({ label: p, value: p }))}
+                  placeholder="Pilih Provinsi"
+                  error={errors.province_name?.message}
+                />
+              )}
             />
-          )}
-        />
 
-        {/* City and District inputs */}
-        <div className="grid grid-cols-2 gap-4">
-          <Controller
-            control={control}
-            name="city_name"
-            render={({ field }) => (
-              <Input
-                {...field}
-                label="Kota/Kabupaten*"
-                placeholder="cth: Jakarta Barat"
-                error={errors.city_name?.message}
+            {/* City and District inputs */}
+            <div className="grid grid-cols-2 gap-4">
+              <Controller
+                control={control}
+                name="city_name"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    label="Kota/Kabupaten*"
+                    placeholder="cth: Jakarta Barat"
+                    error={errors.city_name?.message}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            control={control}
-            name="district_name"
-            render={({ field }) => (
-              <Input
-                {...field}
-                label="Kecamatan*"
-                placeholder="cth: Kebayoran Baru"
-                error={errors.district_name?.message}
+              <Controller
+                control={control}
+                name="district_name"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    label="Kecamatan*"
+                    placeholder="cth: Kebayoran Baru"
+                    error={errors.district_name?.message}
+                  />
+                )}
               />
-            )}
-          />
-        </div>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* International Address Form Fields */}
+            <div className="grid grid-cols-2 gap-4">
+              <Controller
+                control={control}
+                name="province_name"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    label="Provinsi / State / Region*"
+                    placeholder="cth: California / Central Region"
+                    error={errors.province_name?.message}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name="city_name"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    label="Kota / City*"
+                    placeholder="cth: Singapore / Los Angeles"
+                    error={errors.city_name?.message}
+                  />
+                )}
+              />
+            </div>
+
+            <Controller
+              control={control}
+              name="district_name"
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  label="Distrik / Suburb / Area*"
+                  placeholder="cth: Orchard / Downtown"
+                  error={errors.district_name?.message}
+                />
+              )}
+            />
+          </>
+        )}
 
         {/* Postal Code input */}
         <Controller
@@ -494,8 +593,8 @@ export function AddressModal({
           render={({ field }) => (
             <Input
               {...field}
-              label="Kode Pos"
-              placeholder="cth: 12110"
+              label="Kode Pos / Zip Code"
+              placeholder="cth: 238801 atau 90210"
               error={errors.postal_code?.message}
             />
           )}
@@ -507,7 +606,7 @@ export function AddressModal({
           render={({ field }) => (
             <Textarea
               {...field}
-              label="Alamat Lengkap (Jalan, No. Rumah, RT/RW, Blok, Gg)*"
+              label="Alamat Lengkap (Jalan, No. Bangunan, Unit, Floor)*"
               placeholder="Tulis alamat detail..."
               error={errors.full_address?.message}
             />

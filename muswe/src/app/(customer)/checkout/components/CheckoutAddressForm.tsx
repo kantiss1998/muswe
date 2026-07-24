@@ -80,6 +80,9 @@ export function CheckoutAddressForm({
                 <p className="text-xs text-neutral-400 mt-1 font-sans">
                   {selectedAddress.district_name}, {selectedAddress.city_name},{' '}
                   {selectedAddress.province_name} {selectedAddress.postal_code}
+                  {selectedAddress.country_name && selectedAddress.country_code !== 'ID'
+                    ? `, ${selectedAddress.country_name}`
+                    : ''}
                 </p>
               </motion.div>
             ) : (
@@ -113,14 +116,19 @@ export function CheckoutAddressForm({
                         }}
                         className="p-3 border border-neutral-200 text-xs cursor-pointer bg-white transition-all duration-200"
                       >
-                        <p className="font-heading font-medium text-xs text-brand-black uppercase tracking-wider">
-                          {address.label}
+                        <p className="font-heading font-medium text-xs text-brand-black uppercase tracking-wider flex items-center justify-between">
+                          <span>{address.label}</span>
+                          {address.country_code && address.country_code !== 'ID' && (
+                            <span className="text-[10px] text-brand-gold border border-brand-gold px-1 font-bold">
+                              {address.country_code}
+                            </span>
+                          )}
                         </p>
                         <p className="font-sans text-neutral-700 mt-1 font-medium">
                           {address.recipient_name}
                         </p>
                         <p className="text-neutral-500 truncate mt-0.5 text-sm">
-                          {address.full_address}
+                          {address.full_address} ({address.country_name || 'Indonesia'})
                         </p>
                       </motion.div>
                     ))}
@@ -152,7 +160,7 @@ export function CheckoutAddressForm({
           <p className="text-xs text-neutral-400 italic">
             Harap pilih alamat terlebih dahulu untuk menampilkan opsi pengiriman.
           </p>
-        ) : !selectedAddress.postal_code || selectedAddress.postal_code.trim().length === 0 ? (
+        ) : selectedAddress.country_code === 'ID' && (!selectedAddress.postal_code || selectedAddress.postal_code.trim().length === 0) ? (
           <div className="p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium rounded-none">
             Alamat yang Anda pilih belum memiliki **Kode Pos**. Harap perbarui alamat atau pilih alamat yang menyertakan kode pos 5 digit agar tarif Biteship dapat dihitung.
           </div>
@@ -160,10 +168,10 @@ export function CheckoutAddressForm({
           <div className="border border-neutral-200 bg-neutral-50/70 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-none">
             <div>
               <p className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black">
-                Cek Opsi & Tarif Pengiriman
+                Cek Opsi & Tarif Pengiriman {selectedAddress.country_code !== 'ID' ? 'Internasional' : ''}
               </p>
               <p className="text-xs text-neutral-500 font-sans mt-0.5">
-                Klik tombol di sebelah untuk menghitung tarif kurir Biteship ke Kode Pos (<strong>{selectedAddress.postal_code}</strong>).
+                Klik tombol di sebelah untuk menghitung tarif kurir Biteship ke tujuan (<strong>{selectedAddress.country_name || 'Indonesia'}</strong>).
               </p>
             </div>
             <Button
@@ -199,7 +207,7 @@ export function CheckoutAddressForm({
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-[11px] text-neutral-500 font-sans">
-                Opsi kurir untuk kode pos <strong>{selectedAddress.postal_code}</strong>:
+                Opsi kurir pengiriman ke <strong>{selectedAddress.country_name || 'Indonesia'}</strong>:
               </span>
               <button
                 type="button"
@@ -256,7 +264,7 @@ export function CheckoutAddressForm({
           </div>
         ) : (
           <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-medium rounded-none">
-            Tidak ada opsi pengiriman Biteship yang tersedia untuk kode pos (<strong>{selectedAddress.postal_code}</strong>). Harap periksa kembali alamat Anda atau hubungi Admin.
+            Tidak ada opsi pengiriman Biteship yang tersedia untuk alamat ini. Harap periksa kembali alamat Anda atau hubungi Admin.
           </div>
         )}
       </div>

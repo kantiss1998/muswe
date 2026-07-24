@@ -9,9 +9,17 @@ export interface UserAddress {
   district_name: string
   postal_code: string
   full_address: string
+  country_code?: string
+  country_name?: string
   zone_id: string | null
   is_default: boolean
   created_at: string
+}
+
+export interface CountryOption {
+  code: string
+  name: string
+  flag: string
 }
 
 export interface District {

@@ -52,6 +52,11 @@ export function AddressCard({
               Utama
             </Badge>
           )}
+          {address.country_code && address.country_code !== 'ID' && (
+            <Badge variant="gold" className="text-xs py-0 px-2 rounded-none font-bold">
+              {address.country_name || address.country_code}
+            </Badge>
+          )}
         </div>
         {isSelected && (
           <span className="text-brand-gold">
@@ -67,6 +72,7 @@ export function AddressCard({
         <p className="text-xs text-neutral-500 font-medium">
           {address.district_name}, {address.city_name}, {address.province_name}{' '}
           {address.postal_code}
+          {address.country_name && address.country_code !== 'ID' ? `, ${address.country_name}` : ''}
         </p>
       </div>
 

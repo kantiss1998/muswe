@@ -188,12 +188,17 @@ export default function CheckoutPage(): React.JSX.Element {
 
   const [isRatesCalculated, setIsRatesCalculated] = useState(false)
 
-  // 6. Fetch Shipping Rates for selected postal code via Biteship (only triggered on button click)
+  // 6. Fetch Shipping Rates for selected postal code / country via Biteship (only triggered on button click)
   const {
     data: shippingDataRes,
     isLoading: shippingLoading,
     refetch: refetchShippingRates,
-  } = useShippingRates(selectedAddress?.postal_code || null, totalWeight, isRatesCalculated)
+  } = useShippingRates(
+    selectedAddress?.postal_code || null,
+    totalWeight,
+    isRatesCalculated,
+    selectedAddress?.country_code
+  )
 
   const shippingOptions = shippingDataRes?.data || []
   const shippingError =
@@ -208,8 +213,9 @@ export default function CheckoutPage(): React.JSX.Element {
   }, [selectedAddress])
 
   const handleCalculateShipping = () => {
-    if (!selectedAddress?.postal_code) {
-      toast.error('Harap pilih alamat dengan Kode Pos 5 digit terlebih dahulu.')
+    const isDomestic = !selectedAddress?.country_code || selectedAddress.country_code === 'ID'
+    if (isDomestic && !selectedAddress?.postal_code) {
+      toast.error('Harap pilih alamat dengan Kode Pos terlebih dahulu.')
       return
     }
     setIsRatesCalculated(true)

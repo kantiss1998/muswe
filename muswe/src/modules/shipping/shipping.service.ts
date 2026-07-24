@@ -23,6 +23,8 @@ export class ShippingService {
           district_name: row.district_name,
           postal_code: row.postal_code,
           full_address: row.full_address,
+          country_code: (row as any).country_code || 'ID',
+          country_name: (row as any).country_name || 'Indonesia',
           zone_id: row.zone_id,
           is_default: row.is_default,
           created_at: row.created_at,
@@ -50,6 +52,8 @@ export class ShippingService {
         district_name: data.district_name,
         postal_code: data.postal_code,
         full_address: data.full_address,
+        country_code: (data as any).country_code || 'ID',
+        country_name: (data as any).country_name || 'Indonesia',
         zone_id: data.zone_id,
         is_default: data.is_default,
         created_at: data.created_at,
@@ -78,6 +82,8 @@ export class ShippingService {
         district_name: data.district_name,
         postal_code: data.postal_code,
         full_address: data.full_address,
+        country_code: (data as any).country_code || 'ID',
+        country_name: (data as any).country_name || 'Indonesia',
         zone_id: data.zone_id,
         is_default: data.is_default,
         created_at: data.created_at,
@@ -134,9 +140,10 @@ export class ShippingService {
   async calculateShippingRates(
     destinationPostalCode: string,
     weightGram: number,
-    items?: ShippingCalculationItem[]
+    items?: ShippingCalculationItem[],
+    destinationCountryCode?: string
   ): Promise<ApiResponse<ShippingOption[]>> {
-    if (!destinationPostalCode) {
+    if (!destinationPostalCode && (!destinationCountryCode || destinationCountryCode === 'ID')) {
       return ok([])
     }
 
@@ -159,6 +166,7 @@ export class ShippingService {
 
       const pricing = await biteshipClient.getRates({
         destinationPostalCode,
+        destinationCountryCode,
         items: calcItems,
       })
 

@@ -7,7 +7,7 @@ export class ShippingRepository {
     const { data, error } = await supabase
       .from('user_addresses')
       .select(
-        'id, user_id, label, recipient_name, phone, province_name, city_name, district_name, postal_code, full_address, zone_id, is_default, created_at'
+        'id, user_id, label, recipient_name, phone, province_name, city_name, district_name, postal_code, full_address, country_code, country_name, zone_id, is_default, created_at'
       )
       .eq('user_id', userId)
       .order('is_default', { ascending: false })
