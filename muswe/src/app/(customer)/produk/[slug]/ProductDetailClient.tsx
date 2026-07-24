@@ -39,10 +39,13 @@ const itemVariants = {
   },
 }
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 export function ProductDetailClient({
   product,
   relatedProductsNode,
 }: ProductDetailClientProps): React.JSX.Element {
+  const { isEnglish } = useTranslation()
   const addItem = useCartStore((state) => state.addItem)
   const setCartDrawerOpen = useCartStore((state) => state.setCartDrawerOpen)
 
@@ -161,12 +164,12 @@ export function ProductDetailClient({
   // 2b. Buy now handler (adds to cart and redirects to checkout)
   const handleBuyNow = async () => {
     if (!selectedVariant) {
-      toast.error('Silakan pilih varian (ukuran/warna) terlebih dahulu.')
+      toast.error(isEnglish ? 'Please select a variant (size/color) first.' : 'Silakan pilih varian (ukuran/warna) terlebih dahulu.')
       return
     }
 
     if (selectedVariant.stock <= 0) {
-      toast.error('Stok untuk varian ini habis.')
+      toast.error(isEnglish ? 'This variant is out of stock.' : 'Stok untuk varian ini habis.')
       return
     }
 
@@ -188,7 +191,7 @@ export function ProductDetailClient({
       await addItem(cartItem, quantity)
       router.push('/checkout')
     } catch {
-      toast.error('Gagal memproses pembelian.')
+      toast.error(isEnglish ? 'Failed to process purchase.' : 'Gagal memproses pembelian.')
     } finally {
       setIsBuying(false)
     }
