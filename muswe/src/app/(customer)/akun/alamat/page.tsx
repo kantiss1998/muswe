@@ -15,8 +15,10 @@ import { AuthLoading, Button, PageContainer, PageHero } from '@/shared/component
 import { ArrowLeft, Plus } from 'lucide-react'
 import { SmartLink as Link } from '@/shared/components'
 import toast from 'react-hot-toast'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 export default function AlamatPage(): React.JSX.Element {
+  const { t, isEnglish } = useTranslation()
   const router = useRouter()
   const { user, isAuthenticated, isLoading: authLoading } = useAuthStore()
   const [modalOpen, setModalOpen] = useState(false)
@@ -41,13 +43,13 @@ export default function AlamatPage(): React.JSX.Element {
 
   const handleDelete = async (addressId: string) => {
     if (!user) return
-    if (confirm('Apakah Anda yakin ingin menghapus alamat ini?')) {
+    if (confirm(isEnglish ? 'Are you sure you want to delete this address?' : 'Apakah Anda yakin ingin menghapus alamat ini?')) {
       try {
         await deleteMutation.mutateAsync({ addressId, userId: user.id })
-        toast.success('Alamat berhasil dihapus')
+        toast.success(isEnglish ? 'Address deleted successfully' : 'Alamat berhasil dihapus')
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
-        toast.error('Gagal menghapus alamat')
+        toast.error(isEnglish ? 'Failed to delete address' : 'Gagal menghapus alamat')
       }
     }
   }
@@ -56,32 +58,36 @@ export default function AlamatPage(): React.JSX.Element {
     if (!user) return
     try {
       await setDefaultMutation.mutateAsync({ addressId, userId: user.id })
-      toast.success('Alamat utama berhasil diubah')
+      toast.success(isEnglish ? 'Primary address updated' : 'Alamat utama berhasil diperbarui')
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      toast.error('Gagal mengubah alamat utama')
+      toast.error(isEnglish ? 'Failed to update primary address' : 'Gagal mengubah alamat utama')
     }
   }
 
   if (authLoading || !isAuthenticated) {
-    return <AuthLoading message="Memuat halaman..." />
+    return <AuthLoading message={isEnglish ? 'Loading page...' : 'Memuat halaman...'} />
   }
 
   return (
     <div className="min-h-screen bg-white font-sans">
       <PageHero
-        eyebrow="Pengiriman"
-        title="Daftar Alamat"
-        subtitle="Kelola alamat pengiriman Anda untuk memudahkan proses checkout."
+        eyebrow={isEnglish ? 'Shipping' : 'Pengiriman'}
+        title={t.nav.addressBook}
+        subtitle={
+          isEnglish
+            ? 'Manage your shipping addresses to speed up checkout.'
+            : 'Kelola alamat pengiriman Anda untuk memudahkan proses checkout.'
+        }
       />
       <PageContainer size="lg" className="py-10 page-content">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center space-x-2 text-xs uppercase tracking-wider text-neutral-400">
             <Link href="/akun" className="hover:text-brand-gold transition">
-              Akun Saya
+              {t.nav.account}
             </Link>
             <span>/</span>
-            <span className="text-brand-black font-semibold">Daftar Alamat</span>
+            <span className="text-brand-black font-semibold">{t.nav.addressBook}</span>
           </div>
           <Button
             onClick={() => {
@@ -90,7 +96,7 @@ export default function AlamatPage(): React.JSX.Element {
             }}
             className="flex items-center justify-center text-xs uppercase tracking-wider font-semibold py-3 px-5"
           >
-            <Plus size={14} className="mr-2" /> Tambah Alamat
+            <Plus size={14} className="mr-2" /> {t.checkout.addAddress}
           </Button>
         </div>
 
@@ -113,7 +119,9 @@ export default function AlamatPage(): React.JSX.Element {
           </div>
         ) : (
           <div className="text-center py-16 border border-dashed border-neutral-200 bg-neutral-50/50">
-            <p className="text-sm text-neutral-500 mb-4">Anda belum memiliki alamat pengiriman.</p>
+            <p className="text-sm text-neutral-500 mb-4">
+              {isEnglish ? 'You do not have any saved shipping addresses yet.' : 'Anda belum memiliki alamat pengiriman.'}
+            </p>
             <Button
               onClick={() => {
                 setAddressToEdit(null)
@@ -122,7 +130,7 @@ export default function AlamatPage(): React.JSX.Element {
               variant="outline"
               className="text-xs uppercase tracking-wider font-semibold"
             >
-              Tambah Alamat Pertama
+              {isEnglish ? 'Add First Address' : 'Tambah Alamat Pertama'}
             </Button>
           </div>
         )}
@@ -132,7 +140,7 @@ export default function AlamatPage(): React.JSX.Element {
             href="/akun"
             className="inline-flex items-center text-xs uppercase tracking-wider font-semibold text-neutral-600 hover:text-brand-gold transition duration-100"
           >
-            <ArrowLeft size={14} className="mr-2" /> Kembali ke Akun
+            <ArrowLeft size={14} className="mr-2" /> {isEnglish ? 'Back to Account' : 'Kembali ke Akun'}
           </Link>
         </div>
       </PageContainer>

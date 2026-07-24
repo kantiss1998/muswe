@@ -7,7 +7,7 @@ import toast from 'react-hot-toast'
 import { useSiteSettings } from '@/shared/hooks/useSiteSettings'
 
 export function Footer(): React.JSX.Element {
-  const { t } = useTranslation()
+  const { t, isEnglish } = useTranslation()
   const { logoUrl, instagramUrl, tiktokUrl, whatsappUrl, shopeeUrl } = useSiteSettings()
 
   return (
@@ -24,7 +24,7 @@ export function Footer(): React.JSX.Element {
           <form
             onSubmit={(e) => {
               e.preventDefault()
-              toast.success('Terima kasih! Newsletter subscription saved.')
+              toast.success(isEnglish ? 'Thank you! Newsletter subscription saved.' : 'Terima kasih! Newsletter subscription saved.')
             }}
             className="flex flex-col sm:flex-row gap-0 max-w-md mx-auto mt-6"
           >
@@ -77,7 +77,7 @@ export function Footer(): React.JSX.Element {
                     href="/cara-belanja"
                     className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
-                    Cara Belanja
+                    {isEnglish ? 'How to Shop' : 'Cara Belanja'}
                   </Link>
                 </li>
                 <li>
@@ -85,7 +85,7 @@ export function Footer(): React.JSX.Element {
                     href="/pengiriman"
                     className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
-                    Informasi Pengiriman
+                    {isEnglish ? 'Shipping Information' : 'Informasi Pengiriman'}
                   </Link>
                 </li>
                 <li>
@@ -93,7 +93,7 @@ export function Footer(): React.JSX.Element {
                     href="/retur"
                     className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
-                    Kebijakan Pengembalian (Retur)
+                    {isEnglish ? 'Return & Refund Policy' : 'Kebijakan Pengembalian (Retur)'}
                   </Link>
                 </li>
                 <li>
@@ -101,7 +101,7 @@ export function Footer(): React.JSX.Element {
                     href="/kontak"
                     className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
-                    Hubungi Kami
+                    {isEnglish ? 'Contact Us' : 'Hubungi Kami'}
                   </Link>
                 </li>
               </ul>
@@ -110,7 +110,7 @@ export function Footer(): React.JSX.Element {
             {/* Col 3: Kebijakan & Hukum */}
             <div className="flex flex-col space-y-3">
               <h4 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black">
-                Informasi
+                {isEnglish ? 'Information' : 'Informasi'}
               </h4>
               <ul className="space-y-2">
                 <li>
@@ -118,7 +118,7 @@ export function Footer(): React.JSX.Element {
                     href="/syarat-ketentuan"
                     className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
-                    Syarat & Ketentuan
+                    {isEnglish ? 'Terms & Conditions' : 'Syarat & Ketentuan'}
                   </Link>
                 </li>
                 <li>
@@ -126,7 +126,7 @@ export function Footer(): React.JSX.Element {
                     href="/kebijakan-privasi"
                     className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
-                    Kebijakan Privasi
+                    {isEnglish ? 'Privacy Policy' : 'Kebijakan Privasi'}
                   </Link>
                 </li>
                 <li>
@@ -134,7 +134,7 @@ export function Footer(): React.JSX.Element {
                     href="/tentang"
                     className="text-sm text-neutral-500 hover:text-brand-gold transition-colors font-sans"
                   >
-                    Tentang Kami
+                    {isEnglish ? 'About Us' : 'Tentang Kami'}
                   </Link>
                 </li>
               </ul>
@@ -143,10 +143,12 @@ export function Footer(): React.JSX.Element {
             {/* Col 4: Social */}
             <div className="flex flex-col space-y-4">
               <h4 className="text-xs font-heading font-bold uppercase tracking-wider text-brand-black">
-                Ikuti Kami
+                {isEnglish ? 'Follow Us' : 'Ikuti Kami'}
               </h4>
               <p className="text-sm text-neutral-500 font-sans">
-                Temukan inspirasi gaya modest di media sosial kami.
+                {isEnglish
+                  ? 'Discover modern modest apparel inspiration on our official channels.'
+                  : 'Temukan inspirasi gaya modest di media sosial kami.'}
               </p>
               <div className="flex space-x-3 pt-1">
                 {instagramUrl && (
@@ -233,17 +235,17 @@ export function Footer(): React.JSX.Element {
 
           <div className="border-t border-neutral-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-xs text-neutral-400 font-sans">
-              &copy; <CurrentYear /> Muswe Store. All rights reserved.
+              &copy; <CurrentYear /> Muswe Store. {t.footer.rightsReserved}
             </p>
             <div className="flex space-x-6 text-xs text-neutral-400 font-heading uppercase tracking-wider">
               <Link href="/syarat-ketentuan" className="hover:text-brand-gold transition-colors">
-                Syarat
+                {isEnglish ? 'Terms' : 'Syarat'}
               </Link>
               <Link href="/kebijakan-privasi" className="hover:text-brand-gold transition-colors">
-                Privasi
+                {isEnglish ? 'Privacy' : 'Privasi'}
               </Link>
               <Link href="/kontak" className="hover:text-brand-gold transition-colors">
-                Kontak
+                {isEnglish ? 'Contact' : 'Kontak'}
               </Link>
             </div>
           </div>

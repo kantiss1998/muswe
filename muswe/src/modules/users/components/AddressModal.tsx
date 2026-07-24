@@ -114,12 +114,15 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue
 }
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 export function AddressModal({
   isOpen,
   onClose,
   userId,
   addressToEdit,
 }: AddressModalProps): React.JSX.Element {
+  const { t, isEnglish } = useTranslation()
   const isEdit = !!addressToEdit
 
   const {
@@ -363,7 +366,7 @@ export function AddressModal({
   const isSaving = addAddressMutation.isPending || updateAddressMutation.isPending
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={isEdit ? 'Ubah Alamat' : 'Tambah Alamat Baru'}>
+    <Modal isOpen={isOpen} onClose={onClose} title={isEdit ? (isEnglish ? 'Edit Address' : 'Ubah Alamat') : (isEnglish ? 'Add New Address' : 'Tambah Alamat Baru')}>
       <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-5 text-sm font-sans">
         {/* Country Selector */}
         <Controller
@@ -371,7 +374,7 @@ export function AddressModal({
           name="country_code"
           render={({ field }) => (
             <Select
-              label="Negara Tujuan (Shipping Country)*"
+              label={isEnglish ? 'Destination Country (Shipping Country)*' : 'Negara Tujuan (Shipping Country)*'}
               value={field.value}
               onChange={(code) => {
                 field.onChange(code)
@@ -398,8 +401,8 @@ export function AddressModal({
             render={({ field }) => (
               <Input
                 {...field}
-                label="Label Alamat (cth: Rumah, Office)*"
-                placeholder="cth: Rumah"
+                label={isEnglish ? 'Address Label (e.g. Home, Office)*' : 'Label Alamat (cth: Rumah, Office)*'}
+                placeholder={isEnglish ? 'e.g. Home' : 'cth: Rumah'}
                 error={errors.label?.message}
               />
             )}
@@ -410,8 +413,8 @@ export function AddressModal({
             render={({ field }) => (
               <Input
                 {...field}
-                label="Nama Penerima*"
-                placeholder="Nama lengkap penerima"
+                label={isEnglish ? 'Recipient Name*' : 'Nama Penerima*'}
+                placeholder={isEnglish ? 'Recipient full name' : 'Nama lengkap penerima'}
                 error={errors.recipient_name?.message}
               />
             )}
@@ -424,8 +427,8 @@ export function AddressModal({
           render={({ field }) => (
             <Input
               {...field}
-              label="Nomor Telepon Penerima (dengan kode negara jika luar negeri)*"
-              placeholder="cth: +65 9123 4567 atau 08123456789"
+              label={isEnglish ? 'Recipient Phone Number (with country code for intl)*' : 'Nomor Telepon Penerima (dengan kode negara jika luar negeri)*'}
+              placeholder={isEnglish ? 'e.g. +65 9123 4567 or +628123456789' : 'cth: +65 9123 4567 atau 08123456789'}
               error={errors.phone?.message}
             />
           )}
@@ -618,7 +621,7 @@ export function AddressModal({
           name="is_default"
           render={({ field: { value, onChange } }) => (
             <Checkbox
-              label="Jadikan alamat utama (default)"
+              label={isEnglish ? 'Set as primary address (default)' : 'Jadikan alamat utama (default)'}
               checked={value}
               onChange={(e) => onChange(e.target.checked)}
               className="py-1"
@@ -628,10 +631,12 @@ export function AddressModal({
 
         <div className="flex justify-end space-x-3 pt-3 border-t border-neutral-100">
           <Button type="button" variant="outline" onClick={onClose} disabled={isSaving}>
-            Batal
+            {isEnglish ? 'Cancel' : 'Batal'}
           </Button>
           <Button type="submit" disabled={isSaving}>
-            {isSaving ? 'Menyimpan...' : 'Simpan Alamat'}
+            {isSaving
+              ? isEnglish ? 'Saving...' : 'Menyimpan...'
+              : isEnglish ? 'Save Address' : 'Simpan Alamat'}
           </Button>
         </div>
       </form>
