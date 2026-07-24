@@ -64,13 +64,28 @@ export default function CheckoutPage(): React.JSX.Element {
   const createOrderMutation = useCreateOrder()
   const generatePaymentTokenMutation = useGeneratePaymentToken()
 
-  // 1. Redirect if not authenticated
+  // 1. Redirect if not authenticated (wait for both auth loading AND store hydration)
+  const [storeHydrated, setStoreHydrated] = useState(false)
+  useEffect(() => {
+    // Wait for zustand persist hydration to complete
+    if (useAuthStore.persist.hasHydrated()) {
+      setStoreHydrated(true)
+    } else {
+      const unsub = useAuthStore.persist.onFinishHydration(() => {
+        setStoreHydrated(true)
+      })
+      return unsub
+    }
+  }, [])
+
   useEffect(() => {
     if (!isMounted) return
-    if (!authLoading && !isAuthenticated) {
+    if (!storeHydrated) return
+    if (authLoading) return
+    if (!isAuthenticated) {
       router.push('/masuk?redirect=/checkout')
     }
-  }, [isMounted, isAuthenticated, authLoading, router])
+  }, [isMounted, storeHydrated, isAuthenticated, authLoading, router])
 
   // 2. Redirect if cart is empty (checked once after hydration and sync)
   useEffect(() => {

@@ -203,11 +203,19 @@ Deno.serve(async (req: Request) => {
 </html>`;
 
     // Upload as HTML file to Supabase Storage
-    const invoicePath = `invoices/${order_number}.html`;
+    const invoicePath = `${order_number}.html`;
 
     const { error: uploadError } = await supabase.storage
       .from("invoices")
       .upload(invoicePath, invoiceHtml, {
+        contentType: "text/html",
+        upsert: true,
+      });
+
+    // Also upload to subfolder invoices/ for backward compatibility
+    await supabase.storage
+      .from("invoices")
+      .upload(`invoices/${order_number}.html`, invoiceHtml, {
         contentType: "text/html",
         upsert: true,
       });

@@ -23,9 +23,24 @@ export async function updateSession(request: NextRequest): Promise<NextResponse<
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+
+          // Preserve cookies that were already set on the response by prior
+          // setAll calls (Supabase auth may call setAll multiple times when
+          // chunking large session tokens — common on mobile).
+          const existingCookies = supabaseResponse.cookies.getAll()
+
           supabaseResponse = NextResponse.next({
             request,
           })
+
+          // Restore previously-set cookies on the new response
+          existingCookies.forEach(({ name, value }) => {
+            // Don't restore if the current batch will overwrite it
+            if (!cookiesToSet.some((c) => c.name === name)) {
+              supabaseResponse.cookies.set(name, value)
+            }
+          })
+
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )

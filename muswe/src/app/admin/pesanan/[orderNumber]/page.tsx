@@ -108,7 +108,7 @@ function AdminOrderDetailContent({ params }: AdminOrderDetailPageProps): React.J
 
       const { data: urlData } = supabase.storage
         .from('invoices')
-        .getPublicUrl(`invoices/${order.order_number}.html`)
+        .getPublicUrl(`${order.order_number}.html`)
 
       if (urlData?.publicUrl) {
         const cdnUrl = urlData.publicUrl.replace(

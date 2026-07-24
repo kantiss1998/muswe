@@ -246,7 +246,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
       // Resolve public storage URL
       const { data: urlData } = supabase.storage
         .from('invoices')
-        .getPublicUrl(`invoices/${order.order_number}.html`)
+        .getPublicUrl(`${order.order_number}.html`)
 
       if (urlData?.publicUrl) {
         const cdnUrl = urlData.publicUrl.replace(
