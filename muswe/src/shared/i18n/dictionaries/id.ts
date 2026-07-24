@@ -11,9 +11,12 @@ export const idDictionary = {
     checkout: 'Checkout',
     orders: 'Pesanan Saya',
     account: 'Akun Saya',
+    addressBook: 'Daftar Alamat',
+    wishlist: 'Wishlist Saya',
     login: 'Masuk',
     register: 'Daftar',
     logout: 'Keluar',
+    signOut: 'Keluar dari Akun',
     admin: 'Admin Panel',
   },
   cart: {

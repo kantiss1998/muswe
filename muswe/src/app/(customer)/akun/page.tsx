@@ -11,6 +11,7 @@ import { Button, Input, AuthLoading, PageContainer, PageHero } from '@/shared/co
 import { SmartLink as Link } from '@/shared/components'
 import toast from 'react-hot-toast'
 import { AccountNavMenu, EditProfileForm, ChangePasswordForm } from './components'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 const supabase = createBrowserClient()
 
@@ -43,6 +44,7 @@ export default function AkunPage(): React.JSX.Element {
     isAuthenticated,
     isLoading: authLoading,
   } = useAuthStore()
+  const { isEnglish } = useTranslation()
 
   // Form states
   const [name, setName] = useState('')
@@ -164,9 +166,13 @@ export default function AkunPage(): React.JSX.Element {
   return (
     <div className="min-h-screen bg-white font-sans">
       <PageHero
-        eyebrow="Profil Pengguna"
-        title="Akun Saya"
-        subtitle="Kelola informasi pribadi Anda dan akses riwayat pesanan Anda."
+        eyebrow={isEnglish ? 'User Profile' : 'Profil Pengguna'}
+        title={isEnglish ? 'My Account' : 'Akun Saya'}
+        subtitle={
+          isEnglish
+            ? 'Manage your personal account details, password, and order history.'
+            : 'Kelola informasi pribadi Anda dan akses riwayat pesanan Anda.'
+        }
       />
       <PageContainer size="lg" className="py-10 page-content">
         <motion.div initial="hidden" animate="visible" variants={containerVariants}>

@@ -2,6 +2,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { User } from 'lucide-react'
 import { Input, Button } from '@/shared/components'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 interface EditProfileFormProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,6 +26,8 @@ export function EditProfileForm({
   handleUpdateProfile,
   isSaving,
 }: EditProfileFormProps): React.JSX.Element {
+  const { isEnglish } = useTranslation()
+
   return (
     <motion.div
       variants={itemVariants}
@@ -38,27 +41,27 @@ export function EditProfileForm({
             className="text-neutral-500 group-hover:text-brand-black transition-colors"
           />
         </motion.div>
-        Informasi Profil
+        {isEnglish ? 'Profile Information' : 'Informasi Profil'}
       </h2>
 
       <form onSubmit={handleUpdateProfile} className="space-y-6">
-        <Input label="Email (Tidak dapat diubah)" value={email} readOnly disabled />
+        <Input label={isEnglish ? 'Email Address (Read Only)' : 'Email (Tidak dapat diubah)'} value={email} readOnly disabled />
 
         <Input
-          label="Nama Lengkap*"
+          label={isEnglish ? 'Full Name*' : 'Nama Lengkap*'}
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Nama lengkap Anda"
+          placeholder={isEnglish ? 'Your full name' : 'Nama lengkap Anda'}
           maxLength={100}
           required
         />
 
         <Input
-          label="Nomor Telepon"
+          label={isEnglish ? 'Phone Number' : 'Nomor Telepon'}
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           maxLength={20}
-          placeholder="cth: 08123456789"
+          placeholder="e.g. +628123456789"
         />
 
         <div className="pt-4 border-t border-neutral-100 flex justify-end">
@@ -68,7 +71,7 @@ export function EditProfileForm({
             isLoading={isSaving}
             className="text-xs uppercase tracking-wider font-semibold py-3 px-6"
           >
-            Simpan Perubahan
+            {isEnglish ? 'Save Changes' : 'Simpan Perubahan'}
           </Button>
         </div>
       </form>

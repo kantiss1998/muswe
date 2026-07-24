@@ -7,8 +7,10 @@ import { useProducts } from '@/modules/products/hooks/useProducts'
 import { ProductCard } from '@/modules/products/components/ProductCard'
 import { PageContainer, ProductGridSkeleton, EmptyState, PageHero } from '@/shared/components'
 import { Heart } from 'lucide-react'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 export default function WishlistPage(): React.JSX.Element {
+  const { t, isEnglish } = useTranslation()
   const productIds = useWishlistStore((state) => state.productIds)
 
   const {
@@ -27,17 +29,25 @@ export default function WishlistPage(): React.JSX.Element {
     return (
       <div className="bg-white min-h-screen">
         <PageHero
-          eyebrow="Koleksi Disukai"
-          title="Daftar Keinginan"
-          subtitle="Simpan produk favorit Anda dan belanja kapan saja."
+          eyebrow={isEnglish ? 'Liked Collections' : 'Koleksi Disukai'}
+          title={t.nav.wishlist}
+          subtitle={
+            isEnglish
+              ? 'Save your favorite items and shop anytime.'
+              : 'Simpan produk favorit Anda dan belanja kapan saja.'
+          }
         />
         <PageContainer className="py-10 page-content">
           <EmptyState
             icon={Heart}
-            title="Gagal Memuat Wishlist"
-            description="Terjadi kesalahan saat memuat daftar keinginan Anda. Silakan coba kembali."
+            title={isEnglish ? 'Failed to Load Wishlist' : 'Gagal Memuat Wishlist'}
+            description={
+              isEnglish
+                ? 'An error occurred while loading your wishlist. Please try again.'
+                : 'Terjadi kesalahan saat memuat daftar keinginan Anda. Silakan coba kembali.'
+            }
             action={{
-              label: 'Coba Lagi',
+              label: isEnglish ? 'Try Again' : 'Coba Lagi',
               onClick: () => window.location.reload(),
             }}
           />
@@ -49,9 +59,13 @@ export default function WishlistPage(): React.JSX.Element {
   return (
     <div className="bg-white min-h-screen">
       <PageHero
-        eyebrow="Koleksi Disukai"
-        title="Daftar Keinginan"
-        subtitle="Simpan produk favorit Anda dan belanja kapan saja."
+        eyebrow={isEnglish ? 'Liked Collections' : 'Koleksi Disukai'}
+        title={t.nav.wishlist}
+        subtitle={
+          isEnglish
+            ? 'Save your favorite items and shop anytime.'
+            : 'Simpan produk favorit Anda dan belanja kapan saja.'
+        }
       />
       <PageContainer className="py-10 page-content">
         {isLoading ? (
@@ -59,9 +73,13 @@ export default function WishlistPage(): React.JSX.Element {
         ) : !hasItems ? (
           <EmptyState
             icon={Heart}
-            title="Daftar Keinginan Kosong"
-            description="Anda belum menambahkan produk apapun ke dalam daftar keinginan Anda."
-            action={{ label: 'Cari Produk Pilihan', href: '/produk' }}
+            title={isEnglish ? 'Wishlist is Empty' : 'Daftar Keinginan Kosong'}
+            description={
+              isEnglish
+                ? 'You have not added any products to your wishlist yet.'
+                : 'Anda belum menambahkan produk apapun ke dalam daftar keinginan Anda.'
+            }
+            action={{ label: isEnglish ? 'Browse Products' : 'Cari Produk Pilihan', href: '/produk' }}
           />
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8">

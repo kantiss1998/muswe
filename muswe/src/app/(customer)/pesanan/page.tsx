@@ -22,6 +22,16 @@ import { ArrowLeft, ClipboardList } from 'lucide-react'
 import { SmartLink as Link } from '@/shared/components'
 import toast from 'react-hot-toast'
 import { OrderCard } from './components/OrderCard'
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
+const TABS = [
+  { key: 'ALL', labelId: 'Semua', labelEn: 'All' },
+  { key: 'PENDING_PAYMENT', labelId: 'Menunggu Bayar', labelEn: 'Pending Payment' },
+  { key: 'PAID', labelId: 'Diproses', labelEn: 'Processing' },
+  { key: 'SHIPPED', labelId: 'Dikirim', labelEn: 'Shipped' },
+  { key: 'DELIVERED', labelId: 'Selesai', labelEn: 'Completed' },
+  { key: 'CANCELLED', labelId: 'Dibatalkan', labelEn: 'Cancelled' },
+]
 
 const STATUS_TABS = [
   { id: 'all', label: 'Semua' },
@@ -140,42 +150,63 @@ export default function PesananPage(): React.JSX.Element {
     }
   }
 
+  const { t, isEnglish } = useTranslation()
+
   if (authLoading || !isAuthenticated) {
-    return <AuthLoading message="Memuat riwayat..." />
+    return <AuthLoading message={isEnglish ? 'Loading history...' : 'Memuat riwayat...'} />
   }
 
   return (
     <div className="min-h-screen bg-white font-sans">
       <PageHero
-        eyebrow="Akun Saya"
-        title="Riwayat Pesanan"
-        subtitle="Lacak pengiriman dan riwayat pembelian produk Anda."
+        eyebrow={t.nav.account}
+        title={t.nav.orders}
+        subtitle={
+          isEnglish
+            ? 'Track parcel delivery and view your past product purchases.'
+            : 'Lacak pengiriman dan riwayat pembelian produk Anda.'
+        }
       />
       <PageContainer size="lg" className="py-10 page-content">
         {/* Navigation Breadcrumb */}
         <div className="mb-8 flex items-center space-x-2 text-xs uppercase tracking-wider text-neutral-400">
           <Link href="/akun" className="hover:text-neutral-900 transition">
-            Akun Saya
+            {t.nav.account}
           </Link>
           <span>/</span>
-          <span className="text-neutral-900 font-semibold">Pesanan Saya</span>
+          <span className="text-neutral-900 font-semibold">{t.nav.orders}</span>
         </div>
 
         {/* Tab Filter */}
         <div className="flex border-b border-neutral-200 overflow-x-auto no-scrollbar mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
-          {STATUS_TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => handleTabChange(tab.id)}
-              className={`py-3.5 px-4 text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b-2 transition duration-150 -mb-[2px] ${
-                activeTab === tab.id
-                  ? 'border-neutral-900 text-neutral-900'
-                  : 'border-transparent text-neutral-400 hover:text-neutral-600'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+          {STATUS_TABS.map((tab) => {
+            const tabLabel =
+              tab.id === 'all'
+                ? isEnglish ? 'All' : 'Semua'
+                : tab.id === 'pending_payment'
+                  ? isEnglish ? 'Pending Payment' : 'Menunggu Bayar'
+                  : tab.id === 'processing'
+                    ? isEnglish ? 'Processing' : 'Diproses'
+                    : tab.id === 'shipped'
+                      ? isEnglish ? 'Shipped' : 'Dikirim'
+                      : tab.id === 'completed'
+                        ? isEnglish ? 'Completed' : 'Selesai'
+                        : isEnglish ? 'Cancelled' : 'Dibatalkan'
+
+            return (
+              <button
+                key={tab.id}
+                onClick={() => handleTabChange(tab.id)}
+                className={`py-3.5 px-4 text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b-2 transition duration-150 -mb-[2px] ${
+                  activeTab === tab.id
+                    ? 'border-neutral-900 text-neutral-900'
+                    : 'border-transparent text-neutral-400 hover:text-neutral-600'
+                }`}
+              >
+                {tabLabel}
+              </button>
+            )
+          })}
         </div>
 
         {/* Orders Listing */}

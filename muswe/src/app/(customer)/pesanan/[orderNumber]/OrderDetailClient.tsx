@@ -22,6 +22,7 @@ import { OrderReviewModal } from './components/OrderReviewModal'
 import { OrderShippingSection } from './components/OrderShippingSection'
 import { SmartLink as Link } from '@/shared/components'
 import toast from 'react-hot-toast'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 const supabase = createBrowserClient()
 
 interface OrderDetailPageProps {
@@ -31,6 +32,7 @@ interface OrderDetailPageProps {
 }
 
 function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element | null {
+  const { isEnglish, t } = useTranslation()
   const { orderNumber } = params
   const { user, isAuthenticated, isLoading: authLoading } = useAuthStore()
   const searchParams = useSearchParams()
@@ -292,8 +294,8 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
   return (
     <div className="min-h-screen bg-white font-sans">
       <PageHero
-        eyebrow="Pesanan Saya"
-        title="Detail Pesanan"
+        eyebrow={t.nav.orders}
+        title={isEnglish ? 'Order Details' : 'Detail Pesanan'}
         subtitle={`No. ${order.order_number} · ${formattedDate || '...'}`}
       >
         <div className="flex flex-wrap items-center gap-4 mt-2">
@@ -301,7 +303,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
             href="/pesanan"
             className="inline-flex items-center text-xs uppercase tracking-wider font-semibold text-neutral-500 hover:text-brand-gold transition"
           >
-            <ArrowLeft size={13} className="mr-1" /> Kembali
+            <ArrowLeft size={13} className="mr-1" /> {isEnglish ? 'Back' : 'Kembali'}
           </Link>
           {order.status !== 'pending_payment' && order.status !== 'cancelled' && (
             <Button
@@ -310,7 +312,7 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
               isLoading={isInvoiceLoading}
               className="flex items-center text-xs uppercase tracking-wider font-bold py-2 px-4"
             >
-              <Download size={14} className="mr-2" /> Unduh Invoice
+              <Download size={14} className="mr-2" /> {isEnglish ? 'Download Invoice' : 'Unduh Invoice'}
             </Button>
           )}
         </div>

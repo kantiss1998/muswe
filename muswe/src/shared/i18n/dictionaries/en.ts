@@ -13,9 +13,12 @@ export const enDictionary: Dictionary = {
     checkout: 'Checkout',
     orders: 'My Orders',
     account: 'My Account',
+    addressBook: 'Address Book',
+    wishlist: 'My Wishlist',
     login: 'Sign In',
     register: 'Sign Up',
     logout: 'Log Out',
+    signOut: 'Sign Out Account',
     admin: 'Admin Panel',
   },
   cart: {

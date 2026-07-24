@@ -9,8 +9,10 @@ import { Button, Card, PageContainer, EmptyState, PageHero } from '@/shared/comp
 import { formatIDR } from '@/lib/utils'
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 
 export default function CartPage(): React.JSX.Element {
+  const { t, isEnglish } = useTranslation()
   const items = useCartStore((state) => state.items)
   const updateQuantity = useCartStore((state) => state.updateQuantity)
   const removeItem = useCartStore((state) => state.removeItem)
@@ -35,13 +37,13 @@ export default function CartPage(): React.JSX.Element {
     return (
       <div className="bg-white min-h-screen">
         <PageHero
-          eyebrow="Pembelian Anda"
-          title="Keranjang Belanja"
-          subtitle="Memuat keranjang belanja Anda..."
+          eyebrow={isEnglish ? 'Your Order' : 'Pembelian Anda'}
+          title={t.cart.title}
+          subtitle={isEnglish ? 'Loading your cart...' : 'Memuat keranjang belanja Anda...'}
         />
         <PageContainer className="py-10 page-content">
           <div className="py-20 text-center text-xs text-neutral-400 uppercase tracking-wider animate-pulse">
-            Memuat keranjang...
+            {isEnglish ? 'Loading cart...' : 'Memuat keranjang...'}
           </div>
         </PageContainer>
       </div>
@@ -57,12 +59,12 @@ export default function CartPage(): React.JSX.Element {
     const newQty = currentQty + change
     if (newQty <= 0) {
       await removeItem(variantId)
-      toast.success('Produk dihapus dari keranjang.')
+      toast.success(isEnglish ? 'Product removed from cart.' : 'Produk dihapus dari keranjang.')
       return
     }
 
     if (newQty > stock) {
-      toast.error('Jumlah pembelian melebihi stok yang tersedia.')
+      toast.error(isEnglish ? 'Quantity exceeds available stock.' : 'Jumlah pembelian melebihi stok yang tersedia.')
       return
     }
 
@@ -71,25 +73,33 @@ export default function CartPage(): React.JSX.Element {
 
   const handleRemove = async (variantId: string, name: string) => {
     await removeItem(variantId)
-    toast.success(`${name} dihapus dari keranjang.`)
+    toast.success(`${name} ${isEnglish ? 'removed from cart.' : 'dihapus dari keranjang.'}`)
   }
 
   return (
     <div className="bg-white min-h-screen">
       <PageHero
-        eyebrow="Pembelian Anda"
-        title="Keranjang Belanja"
+        eyebrow={isEnglish ? 'Your Order' : 'Pembelian Anda'}
+        title={t.cart.title}
         subtitle={
-          items.length > 0 ? `${totalQuantity} item dalam keranjang` : 'Keranjang belanja Anda'
+          items.length > 0
+            ? `${totalQuantity} ${isEnglish ? 'items in cart' : 'item dalam keranjang'}`
+            : isEnglish
+              ? 'Your shopping cart'
+              : 'Keranjang belanja Anda'
         }
       />
       <PageContainer className="py-10 page-content">
         {items.length === 0 ? (
           <EmptyState
             icon={ShoppingBag}
-            title="Keranjang Anda Kosong"
-            description="Anda belum menambahkan produk apapun ke dalam keranjang belanja."
-            action={{ label: 'Jelajahi Produk', href: '/produk' }}
+            title={t.cart.empty}
+            description={
+              isEnglish
+                ? 'You have not added any products to your cart yet.'
+                : 'Anda belum menambahkan produk apapun ke dalam keranjang belanja.'
+            }
+            action={{ label: isEnglish ? 'Explore Products' : 'Jelajahi Produk', href: '/produk' }}
           />
         ) : (
           // Cart Grid Layout
@@ -210,30 +220,30 @@ export default function CartPage(): React.JSX.Element {
               >
                 <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-gold to-brand-gold-light" />
                 <h3 className="text-xs font-heading font-semibold uppercase tracking-wider text-brand-black border-b border-neutral-200 pb-4">
-                  Ringkasan Belanja
+                  {t.checkout.orderSummary}
                 </h3>
 
                 <div className="space-y-3 text-xs font-sans text-neutral-600">
                   <div className="flex justify-between">
-                    <span>Jumlah Barang</span>
+                    <span>{isEnglish ? 'Total Items' : 'Jumlah Barang'}</span>
                     <span className="text-brand-black font-semibold">{totalQuantity} pcs</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Total Harga (Base)</span>
+                    <span>{isEnglish ? 'Base Price Total' : 'Total Harga (Base)'}</span>
                     <span>{formatIDR(originalSubtotal)}</span>
                   </div>
                   {totalDiscount > 0 && (
                     <div className="flex justify-between text-red-600">
-                      <span>Total Diskon Produk</span>
+                      <span>{isEnglish ? 'Product Discount' : 'Total Diskon Produk'}</span>
                       <span>-{formatIDR(totalDiscount)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-xs text-neutral-400 italic pt-1">
-                    <span>* Ongkos kirim dihitung saat checkout</span>
+                    <span>{isEnglish ? '* Shipping fees calculated at checkout' : '* Ongkos kirim dihitung saat checkout'}</span>
                   </div>
 
                   <div className="flex justify-between border-t border-neutral-200 pt-4 text-sm font-sans font-bold text-brand-black">
-                    <span>Subtotal</span>
+                    <span>{t.checkout.subtotal}</span>
                     <span className="text-base font-semibold">{formatIDR(subtotal)}</span>
                   </div>
                 </div>
@@ -243,7 +253,7 @@ export default function CartPage(): React.JSX.Element {
                     variant="primary"
                     className="w-full flex items-center justify-center space-x-2"
                   >
-                    <span>Lanjut Ke Checkout</span>
+                    <span>{t.cart.checkout}</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Button>
                 </Link>
