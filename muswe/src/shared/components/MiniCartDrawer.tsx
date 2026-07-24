@@ -8,9 +8,11 @@ import { ShoppingBag, X, Trash2, Plus, Minus, ArrowRight } from 'lucide-react'
 import { useCartStore } from '@/modules/cart/stores/cartStore'
 import { Button } from '@/shared/components/Button'
 import { formatIDR } from '@/lib/utils'
+import { useTranslation } from '@/shared/i18n/useTranslation'
 import { useFocusTrap } from '@/shared/hooks/useFocusTrap'
 
 export function MiniCartDrawer(): React.JSX.Element {
+  const { t } = useTranslation()
   const items = useCartStore((state) => state.items)
   const isCartDrawerOpen = useCartStore((state) => state.isCartDrawerOpen)
   const setCartDrawerOpen = useCartStore((state) => state.setCartDrawerOpen)
@@ -80,7 +82,7 @@ export function MiniCartDrawer(): React.JSX.Element {
               <div className="flex items-center space-x-2">
                 <ShoppingBag className="h-4 w-4 text-brand-gold" aria-hidden="true" />
                 <span className="font-heading text-sm font-bold tracking-wider text-brand-black uppercase">
-                  KERANJANG ({totalQuantity})
+                  {t.nav.cart} ({totalQuantity})
                 </span>
               </div>
               <button
@@ -98,88 +100,56 @@ export function MiniCartDrawer(): React.JSX.Element {
                 <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
                   <div
                     className="relative p-4 bg-brand-cream border border-brand-gold/10 rounded-none animate-gentle-float"
-                    aria-hidden="true"
                   >
-                    <ShoppingBag className="h-8 w-8 text-brand-gold" strokeWidth={1.5} />
+                    <ShoppingBag className="h-8 w-8 text-brand-gold/60" aria-hidden="true" />
                   </div>
-                  <div className="space-y-1">
-                    <p className="text-xs font-heading font-semibold uppercase tracking-wider text-brand-black">
-                      Keranjang Anda Kosong
-                    </p>
-                    <p className="text-xs text-neutral-400 font-sans max-w-[200px]">
-                      Simpan produk impian Anda untuk memproses checkout.
-                    </p>
-                  </div>
-                  <Button
-                    onClick={() => setCartDrawerOpen(false)}
-                    variant="outline"
-                    size="sm"
-                    className="text-xs uppercase font-bold tracking-wider mt-2"
-                  >
-                    Jelajahi Produk
-                  </Button>
+                  <p className="text-xs text-neutral-400 font-sans tracking-wide">
+                    {t.cart.empty}
+                  </p>
                 </div>
               ) : (
                 items.map((item) => (
-                  <div
-                    key={item.variantId}
-                    className="flex space-x-4 py-4 border-b border-neutral-100 last:border-0 items-start"
-                  >
-                    {/* Item Image */}
-                    <div
-                      className="relative aspect-[3/4] w-16 bg-neutral-100 border border-neutral-100 overflow-hidden flex-shrink-0"
-                      aria-hidden="true"
-                    >
+                  <div key={item.variantId} className="flex space-x-4 border-b border-neutral-100 pb-4">
+                    {/* Item Thumbnail */}
+                    <div className="relative w-16 h-20 bg-neutral-100 flex-shrink-0 overflow-hidden rounded-xs border border-neutral-200">
                       {item.imageUrl ? (
                         <Image
                           src={item.imageUrl}
-                          alt=""
+                          alt={item.name}
                           fill
-                          sizes="80px"
+                          sizes="64px"
                           className="object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-xs text-neutral-400 uppercase font-sans">
-                          No Img
+                        <div className="w-full h-full flex items-center justify-center bg-neutral-100 text-neutral-400 text-xs font-sans">
+                          No Image
                         </div>
                       )}
                     </div>
 
-                    {/* Item Info */}
-                    <div className="flex-1 min-w-0 space-y-1.5">
-                      <div className="flex justify-between items-start gap-2">
-                        <Link
-                          href={`/produk/${item.slug}`}
-                          onClick={() => setCartDrawerOpen(false)}
-                        >
-                          <h4 className="text-xs font-heading font-medium uppercase tracking-wider text-brand-black hover:text-brand-gold transition-colors line-clamp-2">
-                            {item.productName || item.name}
+                    {/* Item Details */}
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-start">
+                          <h4 className="text-xs font-sans font-semibold text-brand-black line-clamp-1">
+                            {item.name}
                           </h4>
-                        </Link>
-                        {/* 🎨 PALETTE ENHANCEMENT
-                        Problem: Tidak ada konfirmasi sebelum menghapus item dari keranjang (rentan terhapus tidak sengaja).
-                        Fix: Ditambahkan window.confirm
-                        Impact: Mencegah penghapusan item keranjang yang tidak disengaja */}
-                        <button
-                          onClick={() => {
-                            if (window.confirm('Hapus item ini dari keranjang?')) {
-                              removeItem(item.variantId)
-                            }
-                          }}
-                          className="text-neutral-400 hover:text-red-500 p-0.5 transition-colors cursor-pointer"
-                          aria-label="Hapus item"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
-                        </button>
+                          <button
+                            onClick={() => removeItem(item.variantId)}
+                            className="text-neutral-300 hover:text-red-500 transition-colors p-1"
+                            aria-label="Hapus produk"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                          </button>
+                        </div>
+                        <p className="text-xs text-neutral-400 font-sans mt-0.5">
+                          {item.variantName}
+                        </p>
                       </div>
 
-                      <p className="text-sm uppercase tracking-wider font-heading font-medium text-neutral-400">
-                        Varian: {item.variantName || 'Default'}
-                      </p>
-
-                      <div className="flex justify-between items-end pt-1">
-                        {/* Qty adjustments */}
-                        <div className="flex items-center border border-neutral-200 bg-white scale-90 origin-left">
+                      <div className="flex items-center justify-between mt-2">
+                        {/* Quantity Controls */}
+                        <div className="flex items-center border border-neutral-200 rounded-none">
                           <button
                             onClick={() =>
                               handleQtyChange(item.variantId, item.quantity, -1, item.stock)
@@ -189,10 +159,7 @@ export function MiniCartDrawer(): React.JSX.Element {
                           >
                             <Minus className="h-2.5 w-2.5" aria-hidden="true" />
                           </button>
-                          <span
-                            className="px-2 text-xs font-sans font-semibold text-brand-black w-6 text-center select-none"
-                            aria-live="polite"
-                          >
+                          <span className="px-2 text-xs font-sans font-medium text-brand-black min-w-[20px] text-center">
                             {item.quantity}
                           </span>
                           <button
@@ -205,8 +172,6 @@ export function MiniCartDrawer(): React.JSX.Element {
                             <Plus className="h-2.5 w-2.5" aria-hidden="true" />
                           </button>
                         </div>
-
-                        {/* Price */}
                         <span className="text-xs font-sans font-semibold text-brand-black">
                           {formatIDR(item.price * item.quantity)}
                         </span>
@@ -222,7 +187,7 @@ export function MiniCartDrawer(): React.JSX.Element {
               <div className="p-6 border-t border-neutral-100 bg-neutral-50/50 space-y-4">
                 <div className="flex justify-between items-baseline">
                   <span className="text-xs font-heading font-semibold uppercase tracking-wider text-neutral-500">
-                    Subtotal
+                    {t.cart.subtotal}
                   </span>
                   <span className="text-base font-sans font-bold text-brand-black">
                     {formatIDR(subtotal)}
@@ -235,7 +200,7 @@ export function MiniCartDrawer(): React.JSX.Element {
                       variant="outline"
                       className="w-full text-xs uppercase font-bold py-3.5"
                     >
-                      Lihat Keranjang
+                      {t.cart.viewCart}
                     </Button>
                   </Link>
                   <Link
@@ -247,7 +212,7 @@ export function MiniCartDrawer(): React.JSX.Element {
                       variant="primary"
                       className="w-full text-xs uppercase font-bold py-3.5 flex items-center justify-center space-x-1.5"
                     >
-                      <span>Checkout</span>
+                      <span>{t.cart.checkout}</span>
                       <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                     </Button>
                   </Link>

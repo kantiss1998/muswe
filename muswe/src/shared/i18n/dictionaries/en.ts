@@ -4,6 +4,7 @@ export const enDictionary: Dictionary = {
   nav: {
     home: 'Home',
     products: 'Shop Collections',
+    categories: 'Categories',
     collections: 'Collections',
     flashSale: 'Flash Sale',
     about: 'About Muswe',

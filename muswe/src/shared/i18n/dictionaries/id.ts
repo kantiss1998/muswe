@@ -2,6 +2,7 @@ export const idDictionary = {
   nav: {
     home: 'Beranda',
     products: 'Koleksi Produk',
+    categories: 'Kategori',
     collections: 'Koleksi',
     flashSale: 'Flash Sale',
     about: 'Tentang Muswe',

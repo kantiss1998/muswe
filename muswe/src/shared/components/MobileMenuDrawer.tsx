@@ -7,6 +7,8 @@ import { X, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useFocusTrap } from '@/shared/hooks/useFocusTrap'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 interface MobileMenuDrawerProps {
   isOpen: boolean
   onClose: () => void
@@ -24,6 +26,7 @@ export function MobileMenuDrawer({
   isAuthenticated,
   isMounted,
 }: MobileMenuDrawerProps) {
+  const { t } = useTranslation()
   const drawerRef = React.useRef<HTMLDivElement>(null)
 
   useFocusTrap(isOpen, drawerRef, {
@@ -85,7 +88,7 @@ export function MobileMenuDrawer({
                     onClick={onClose}
                     className="flex items-center justify-between py-2 text-xs font-heading font-medium uppercase tracking-wider text-brand-black border-t border-neutral-100 pt-4"
                   >
-                    <span>Masuk</span>
+                    <span>{t.nav.login}</span>
                     <ChevronRight className="h-3 w-3 text-brand-black" />
                   </Link>
                 )}

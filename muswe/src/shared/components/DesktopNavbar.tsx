@@ -10,6 +10,8 @@ import { cn } from '@/lib/utils'
 import { Category } from '@/modules/categories/types'
 import { Collection } from '@/modules/collections/types'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 interface DesktopNavbarProps {
   isScrolled: boolean
   navLinks: { name: string; href: string }[]
@@ -51,7 +53,8 @@ export function DesktopNavbar({
   profile,
   user,
   onLogout,
-}: DesktopNavbarProps) {
+}: DesktopNavbarProps): React.JSX.Element {
+  const { t } = useTranslation()
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [hoveredNav, setHoveredNav] = useState<string | null>(null)
   const isTransparentHome = pathname === '/' && !isScrolled
@@ -259,7 +262,7 @@ export function DesktopNavbar({
                       >
                         <div className="px-4 py-2 border-b border-neutral-100">
                           <p className="text-xs text-neutral-400 font-heading uppercase tracking-wider">
-                            Halo,
+                            {t.common.price ? (t.nav.home === 'Home' ? 'Hello,' : 'Halo,') : 'Halo,'}
                           </p>
                           <p className="text-xs font-semibold text-brand-black truncate">
                             {profile?.name || user?.email}
@@ -271,7 +274,7 @@ export function DesktopNavbar({
                           onClick={() => setIsUserMenuOpen(false)}
                           className="block px-4 py-2 text-xs text-neutral-600 hover:bg-neutral-50 hover:text-brand-black font-medium"
                         >
-                          Akun Saya
+                          {t.nav.orders === 'My Orders' ? 'My Account' : 'Akun Saya'}
                         </Link>
 
                         {profile?.role === 'admin' && (
@@ -280,7 +283,7 @@ export function DesktopNavbar({
                             onClick={() => setIsUserMenuOpen(false)}
                             className="block px-4 py-2 text-xs text-neutral-600 hover:bg-neutral-50 hover:text-brand-black font-semibold border-t border-neutral-50"
                           >
-                            Admin Panel
+                            {t.nav.admin}
                           </Link>
                         )}
 
@@ -289,12 +292,10 @@ export function DesktopNavbar({
                             setIsUserMenuOpen(false)
                             onLogout()
                           }}
-                          className="w-full text-left block px-4 py-2 text-xs text-red-600 hover:bg-neutral-50 font-medium border-t border-neutral-100"
+                          className="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 font-medium border-t border-neutral-100 flex items-center gap-1.5"
                         >
-                          <div className="flex items-center space-x-1">
-                            <LogOut className="h-3 w-3" />
-                            <span>Keluar</span>
-                          </div>
+                          <LogOut className="h-3.5 w-3.5" />
+                          <span>{t.nav.logout}</span>
                         </button>
                       </motion.div>
                     </>

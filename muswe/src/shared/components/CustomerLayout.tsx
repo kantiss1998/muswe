@@ -24,25 +24,28 @@ import { cn } from '@/lib/utils'
 import { Category } from '@/modules/categories/types'
 import { Collection } from '@/modules/collections/types'
 
+import { useTranslation } from '@/shared/i18n/useTranslation'
+
 interface CustomerLayoutProps {
   children: React.ReactNode
   categories?: Category[]
   collections?: Collection[]
 }
 
-const navLinks = [
-  { name: 'Katalog', href: '/produk' },
-  { name: 'Kategori', href: '/kategori' },
-  { name: 'Koleksi', href: '/koleksi' },
-  { name: 'Flash Sale', href: '/flash-sale' },
-  { name: 'Tentang Kami', href: '/tentang' },
-]
-
 export function CustomerLayout({ children, categories = [], collections = [] }: CustomerLayoutProps): React.JSX.Element {
   const pathname = usePathname()
   const router = useRouter()
+  const { t } = useTranslation()
   const [supabase] = useState(() => createBrowserClient())
   const { logoUrl, whatsappUrl } = useSiteSettings()
+
+  const navLinks = [
+    { name: t.nav.products, href: '/produk' },
+    { name: t.nav.categories, href: '/kategori' },
+    { name: t.nav.collections, href: '/koleksi' },
+    { name: t.nav.flashSale, href: '/flash-sale' },
+    { name: t.nav.about, href: '/tentang' },
+  ]
 
   const { user, profile, isAuthenticated, clearAuth } = useAuthStore()
   const totalQuantity = useCartStore((state) =>
