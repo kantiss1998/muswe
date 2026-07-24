@@ -68,49 +68,27 @@ export default function RegisterPage(): React.JSX.Element {
     }
   }
 
-  const triggerGoogleRegister = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      setIsGoogleLoading(true)
-      try {
-        const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-        })
-        const googleUser = await userInfoRes.json()
-
-        if (!googleUser.email) {
-          throw new Error('Email tidak ditemukan dari profil Google.')
-        }
-
-        const { data, error } = await supabase.auth.signInWithIdToken({
-          provider: 'google',
-          token: tokenResponse.access_token,
-        })
-
-        if (error) {
-          const { error: oauthErr } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-              redirectTo: `${window.location.origin}/auth/callback?next=/`,
-            },
-          })
-          if (oauthErr) throw oauthErr
-        } else if (data.user) {
-          toast.success('Pendaftaran dengan Google berhasil!')
-          router.push('/')
-        }
-      } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : 'Gagal mendaftar dengan Google.'
-        toast.error(msg)
-      } finally {
-        setIsGoogleLoading(false)
-      }
-    },
-    onError: (error) => {
-      console.error('Google Register Error:', error)
-      toast.error('Pendaftaran dengan Google dibatalkan atau gagal.')
+  const handleGoogleRegister = async () => {
+    setIsGoogleLoading(true)
+    try {
+      const callbackUrl = `${window.location.origin}/auth/callback?next=/`
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: callbackUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'select_account',
+          },
+        },
+      })
+      if (error) throw error
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Gagal mendaftar dengan Google.'
+      toast.error(msg)
       setIsGoogleLoading(false)
-    },
-  })
+    }
+  }
 
   return (
     <motion.div
@@ -210,7 +188,7 @@ export default function RegisterPage(): React.JSX.Element {
           <motion.div variants={fadeUpItem} className="flex justify-center">
             <button
               type="button"
-              onClick={() => triggerGoogleRegister()}
+              onClick={handleGoogleRegister}
               disabled={isGoogleLoading}
               className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-white border border-neutral-300 rounded-lg text-xs font-heading font-bold uppercase tracking-wider text-brand-black hover:bg-neutral-50 hover:border-neutral-400 transition-all duration-200 shadow-sm cursor-pointer disabled:opacity-50"
             >
