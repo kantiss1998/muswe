@@ -2,6 +2,13 @@ import { safeLogError } from './logger'
 
 const JUBELIO_BASE_URL = process.env.JUBELIO_BASE_URL || 'https://api2.jubelio.com'
 
+export interface JubelioStockItem {
+  sku: string
+  item_id: number
+  stock: number
+  name: string
+}
+
 export interface JubelioSyncItem {
   item_id?: number
   item_code?: string
@@ -114,6 +121,69 @@ export class JubelioClient {
     }
 
     return 17 // Fallback to verified 'Gudang Online' location_id 17
+  }
+
+  async getGudangOnlineStock(): Promise<JubelioStockItem[]> {
+    const isSandbox =
+      !this.email ||
+      !this.password ||
+      process.env.NODE_ENV === 'test'
+
+    if (isSandbox) {
+      return []
+    }
+
+    try {
+      if (!this.token) {
+        await this.login()
+      }
+      if (!this.token) return []
+
+      const locationId = await this.getGudangOnlineLocationId()
+      const stockItems: JubelioStockItem[] = []
+      let page = 1
+      const pageSize = 100
+      let hasMore = true
+
+      while (hasMore) {
+        const response = await fetch(
+          `${JUBELIO_BASE_URL}/inventory/items/to-sell/${locationId}?page=${page}&pageSize=${pageSize}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        )
+
+        if (!response.ok) break
+
+        const data: any = await response.json()
+        const items = Array.isArray(data?.data) ? data.data : []
+
+        for (const i of items) {
+          if (i.item_code) {
+            stockItems.push({
+              sku: i.item_code,
+              item_id: Number(i.item_id),
+              stock: Math.max(0, parseInt(i.available_qty || '0', 10)),
+              name: i.item_name || i.item_code,
+            })
+          }
+        }
+
+        if (items.length < pageSize || page >= 30) {
+          hasMore = false
+        } else {
+          page++
+        }
+      }
+
+      return stockItems
+    } catch (error) {
+      safeLogError('[JubelioClient] Error getting Gudang Online stock:', error)
+      return []
+    }
   }
 
   async syncSalesOrderShipment(

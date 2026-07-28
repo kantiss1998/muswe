@@ -1,4 +1,5 @@
 import { safeLogError } from '@/lib/logger'
+import { jubelioClient } from '@/lib/jubelio.client'
 import { adminLogRepository } from '@/modules/admin-logs/admin-log.repository'
 import { createServerClient } from '@/lib/supabase/server'
 import { ApiListResponse, ApiResponse, paginated, ok, fail } from '@/lib/api-response'
@@ -197,6 +198,47 @@ export class AdminProductService {
     } catch (error: any) {
       safeLogError('Update featured error:', error)
       return fail('Gagal memperbarui status featured', error.message)
+    }
+  }
+
+  async syncStockFromJubelio(): Promise<ApiResponse<{ updatedCount: number; message: string }>> {
+    try {
+      const stockItems = await jubelioClient.getGudangOnlineStock()
+
+      if (!stockItems || stockItems.length === 0) {
+        return fail('Gagal mengambil stok', 'Tidak ada data stok ditemukan dari Jubelio Gudang Online')
+      }
+
+      const supabase = await createServerClient()
+      let updatedCount = 0
+
+      // Update variant stock matching SKU
+      for (const item of stockItems) {
+        const { error, count } = await supabase
+          .from('product_variants')
+          .update({ stock: item.stock })
+          .eq('sku', item.sku)
+
+        if (!error && typeof count === 'number' && count > 0) {
+          updatedCount += count
+        }
+      }
+
+      await adminLogRepository.insertAdminActivityLog(
+        supabase,
+        'update',
+        'product',
+        'jubelio-stock-sync',
+        `Sinkronisasi stok Jubelio Gudang Online berhasil untuk ${updatedCount} varian produk`
+      )
+
+      return ok({
+        updatedCount,
+        message: `Stok ${updatedCount} varian produk berhasil disinkronkan dari Jubelio Gudang Online`,
+      })
+    } catch (error: any) {
+      safeLogError('Error in syncStockFromJubelio:', error)
+      return fail('Gagal menyinkronkan stok', error.message || 'Transaction failed')
     }
   }
 }

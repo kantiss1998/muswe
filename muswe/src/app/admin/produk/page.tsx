@@ -28,17 +28,34 @@ import {
   Star,
   Copy,
   MoreHorizontal,
+  RefreshCw,
 } from 'lucide-react'
 import { SmartLink as Link } from '@/shared/components'
 import toast from 'react-hot-toast'
 import type { Column } from '@/shared/components/DataTable'
+import { adminSyncJubelioStockAction } from '@/modules/products/actions'
 
 export default function AdminProductListPage(): React.JSX.Element {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
+  const [isSyncingStock, setIsSyncingStock] = useState(false)
   const limit = 10
 
   const { data: dataRes, isLoading, isError, refetch } = useAdminProducts(page, limit, search)
+
+  const handleSyncJubelioStock = useCallback(async () => {
+    setIsSyncingStock(true)
+    const toastId = toast.loading('Menyingkronkan stok dari Jubelio Gudang Online...')
+    try {
+      const result = await adminSyncJubelioStockAction()
+      toast.success(result.message || 'Stok berhasil disinkronkan', { id: toastId })
+      refetch()
+    } catch (err: any) {
+      toast.error(err?.message || 'Gagal menyinkronkan stok dari Jubelio', { id: toastId })
+    } finally {
+      setIsSyncingStock(false)
+    }
+  }, [refetch])
 
   const deleteMutation = useAdminDeleteProduct()
   const updateActiveStatusMutation = useAdminUpdateProductActiveStatus()
@@ -209,11 +226,23 @@ export default function AdminProductListPage(): React.JSX.Element {
         title="Daftar Produk"
         subtitle="Kelola katalog produk, harga, varian, dan stok."
       >
-        <Link href="/admin/produk/tambah">
-          <Button className="text-xs uppercase font-bold tracking-wider flex items-center py-3 px-5">
-            <Plus size={14} className="mr-1.5" /> Tambah Produk
+        <div className="flex items-center space-x-3">
+          <Button
+            onClick={handleSyncJubelioStock}
+            disabled={isSyncingStock}
+            variant="outline"
+            className="text-xs uppercase font-bold tracking-wider flex items-center py-3 px-4 border-neutral-300 hover:bg-neutral-50 transition"
+          >
+            <RefreshCw size={14} className={`mr-1.5 ${isSyncingStock ? 'animate-spin' : ''}`} />
+            {isSyncingStock ? 'Menyingkronkan...' : 'Sync Stok Jubelio ERP'}
           </Button>
-        </Link>
+
+          <Link href="/admin/produk/tambah">
+            <Button className="text-xs uppercase font-bold tracking-wider flex items-center py-3 px-5">
+              <Plus size={14} className="mr-1.5" /> Tambah Produk
+            </Button>
+          </Link>
+        </div>
       </AdminPageHeader>
 
       {/* Filters Toolbar */}

@@ -82,3 +82,10 @@ export async function adminDeleteProductAction(productId: string) {
   if (!res.success) throw new Error(res.error?.message)
   return res.data
 }
+
+export async function adminSyncJubelioStockAction() {
+  await requireAdmin()
+  const res = await adminProductService.syncStockFromJubelio()
+  if (!res.success) throw new Error(res.error?.message)
+  return res.data!
+}
