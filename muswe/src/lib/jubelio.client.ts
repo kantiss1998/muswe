@@ -123,6 +123,75 @@ export class JubelioClient {
     return 17 // Fallback to verified 'Gudang Online' location_id 17
   }
 
+  async getStockBySkus(skus: string[]): Promise<JubelioStockItem[]> {
+    const isSandbox =
+      !this.email ||
+      !this.password ||
+      process.env.NODE_ENV === 'test'
+
+    if (isSandbox || !skus || skus.length === 0) {
+      return []
+    }
+
+    try {
+      if (!this.token) {
+        await this.login()
+      }
+      if (!this.token) return []
+
+      const locationId = await this.getGudangOnlineLocationId()
+      const uniqueSkus = Array.from(new Set(skus.map((s) => s.trim()).filter(Boolean)))
+      const stockItems: JubelioStockItem[] = []
+
+      // Query SKUs in parallel chunks of 15
+      const chunkSize = 15
+      for (let i = 0; i < uniqueSkus.length; i += chunkSize) {
+        const chunk = uniqueSkus.slice(i, i + chunkSize)
+        const promises = chunk.map(async (sku) => {
+          try {
+            const response = await fetch(
+              `${JUBELIO_BASE_URL}/inventory/items/to-sell/${locationId}?q=${encodeURIComponent(sku)}`,
+              {
+                method: 'GET',
+                headers: {
+                  Authorization: `Bearer ${this.token}`,
+                },
+              }
+            )
+            if (!response.ok) return null
+            const data: any = await response.json()
+            const items = Array.isArray(data?.data) ? data.data : []
+            const match = items.find(
+              (item: any) =>
+                item.item_code && item.item_code.trim().toUpperCase() === sku.toUpperCase()
+            )
+            if (match) {
+              return {
+                sku: match.item_code,
+                item_id: Number(match.item_id),
+                stock: Math.max(0, parseInt(match.available_qty || '0', 10)),
+                name: match.item_name || match.item_code,
+              }
+            }
+          } catch {
+            return null
+          }
+          return null
+        })
+
+        const chunkResults = await Promise.all(promises)
+        chunkResults.forEach((res) => {
+          if (res) stockItems.push(res)
+        })
+      }
+
+      return stockItems
+    } catch (error) {
+      safeLogError('[JubelioClient] Error getting stock by SKUs:', error)
+      return []
+    }
+  }
+
   async getGudangOnlineStock(): Promise<JubelioStockItem[]> {
     const isSandbox =
       !this.email ||
@@ -172,7 +241,7 @@ export class JubelioClient {
           }
         }
 
-        if (items.length < pageSize || page >= 5) {
+        if (items.length < pageSize || page >= 50) {
           hasMore = false
         } else {
           page++

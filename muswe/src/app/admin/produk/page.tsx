@@ -51,7 +51,7 @@ export default function AdminProductListPage(): React.JSX.Element {
     try {
       const result = await adminSyncJubelioStockAction()
       toast.success(result.message || 'Stok berhasil disinkronkan', { id: toastId })
-      await queryClient.invalidateQueries({ queryKey: ['admin', 'products'] })
+      await queryClient.invalidateQueries({ queryKey: ['admin'] })
       refetch()
     } catch (err: any) {
       toast.error(err?.message || 'Gagal menyinkronkan stok dari Jubelio', { id: toastId })

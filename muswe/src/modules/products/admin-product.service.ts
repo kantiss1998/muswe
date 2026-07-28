@@ -205,7 +205,7 @@ export class AdminProductService {
     try {
       const supabase = await createServerClient()
 
-      // 1. Fetch local product variants SKUs to filter targets
+      // 1. Fetch local product variants SKUs to query Jubelio directly
       const { data: dbVariants, error: dbError } = await supabase
         .from('product_variants')
         .select('id, sku')
@@ -217,9 +217,12 @@ export class AdminProductService {
 
       // Map normalized SKU (trimmed, uppercase) -> original DB SKU list
       const dbSkusMap = new Map<string, string[]>()
+      const allLocalSkus: string[] = []
       for (const v of dbVariants) {
-        if (v.sku) {
-          const norm = v.sku.trim().toUpperCase()
+        if (v.sku && v.sku.trim()) {
+          const rawSku = v.sku.trim()
+          allLocalSkus.push(rawSku)
+          const norm = rawSku.toUpperCase()
           if (!dbSkusMap.has(norm)) {
             dbSkusMap.set(norm, [])
           }
@@ -227,14 +230,19 @@ export class AdminProductService {
         }
       }
 
-      // 2. Fetch stock items from Jubelio Gudang Online
-      const stockItems = await jubelioClient.getGudangOnlineStock()
+      // 2. Fetch stock items from Jubelio Gudang Online using direct SKU queries (?q=SKU)
+      let stockItems = await jubelioClient.getStockBySkus(allLocalSkus)
+
+      // Fallback to bulk pagination scan if direct query returned no items
+      if (!stockItems || stockItems.length === 0) {
+        stockItems = await jubelioClient.getGudangOnlineStock()
+      }
 
       if (!stockItems || stockItems.length === 0) {
         return fail('Gagal mengambil stok', 'Tidak ada data stok ditemukan dari Jubelio Gudang Online')
       }
 
-      // 3. Filter stock items to only those existing in local database (case & whitespace insensitive)
+      // 3. Filter stock items to matching local SKUs
       const matchingItems: Array<{ skus: string[]; stock: number }> = []
       for (const item of stockItems) {
         if (item.sku) {
