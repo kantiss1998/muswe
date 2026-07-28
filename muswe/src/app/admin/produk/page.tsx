@@ -34,6 +34,7 @@ import { SmartLink as Link } from '@/shared/components'
 import toast from 'react-hot-toast'
 import type { Column } from '@/shared/components/DataTable'
 import { adminSyncJubelioStockAction } from '@/modules/products/actions'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function AdminProductListPage(): React.JSX.Element {
   const [search, setSearch] = useState('')
@@ -41,6 +42,7 @@ export default function AdminProductListPage(): React.JSX.Element {
   const [isSyncingStock, setIsSyncingStock] = useState(false)
   const limit = 10
 
+  const queryClient = useQueryClient()
   const { data: dataRes, isLoading, isError, refetch } = useAdminProducts(page, limit, search)
 
   const handleSyncJubelioStock = useCallback(async () => {
@@ -49,13 +51,14 @@ export default function AdminProductListPage(): React.JSX.Element {
     try {
       const result = await adminSyncJubelioStockAction()
       toast.success(result.message || 'Stok berhasil disinkronkan', { id: toastId })
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'products'] })
       refetch()
     } catch (err: any) {
       toast.error(err?.message || 'Gagal menyinkronkan stok dari Jubelio', { id: toastId })
     } finally {
       setIsSyncingStock(false)
     }
-  }, [refetch])
+  }, [queryClient, refetch])
 
   const deleteMutation = useAdminDeleteProduct()
   const updateActiveStatusMutation = useAdminUpdateProductActiveStatus()

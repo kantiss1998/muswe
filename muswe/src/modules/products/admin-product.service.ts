@@ -215,7 +215,17 @@ export class AdminProductService {
         return fail('NO_VARIANTS', 'Tidak ada varian produk dengan SKU di database')
       }
 
-      const localSkus = new Set(dbVariants.map((v) => v.sku).filter(Boolean))
+      // Map normalized SKU (trimmed, uppercase) -> original DB SKU list
+      const dbSkusMap = new Map<string, string[]>()
+      for (const v of dbVariants) {
+        if (v.sku) {
+          const norm = v.sku.trim().toUpperCase()
+          if (!dbSkusMap.has(norm)) {
+            dbSkusMap.set(norm, [])
+          }
+          dbSkusMap.get(norm)!.push(v.sku)
+        }
+      }
 
       // 2. Fetch stock items from Jubelio Gudang Online
       const stockItems = await jubelioClient.getGudangOnlineStock()
@@ -224,8 +234,20 @@ export class AdminProductService {
         return fail('Gagal mengambil stok', 'Tidak ada data stok ditemukan dari Jubelio Gudang Online')
       }
 
-      // 3. Filter stock items to only those existing in local database
-      const matchingItems = stockItems.filter((i) => localSkus.has(i.sku))
+      // 3. Filter stock items to only those existing in local database (case & whitespace insensitive)
+      const matchingItems: Array<{ skus: string[]; stock: number }> = []
+      for (const item of stockItems) {
+        if (item.sku) {
+          const norm = item.sku.trim().toUpperCase()
+          const matchedSkus = dbSkusMap.get(norm)
+          if (matchedSkus && matchedSkus.length > 0) {
+            matchingItems.push({
+              skus: matchedSkus,
+              stock: item.stock,
+            })
+          }
+        }
+      }
 
       let updatedCount = 0
 
@@ -237,8 +259,8 @@ export class AdminProductService {
           const { error } = await supabase
             .from('product_variants')
             .update({ stock: item.stock })
-            .eq('sku', item.sku)
-          return error ? 0 : 1
+            .in('sku', item.skus)
+          return error ? 0 : item.skus.length
         })
 
         const results = await Promise.all(updatePromises)
