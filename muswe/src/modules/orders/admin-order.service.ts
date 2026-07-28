@@ -114,22 +114,97 @@ export class AdminOrderService {
     trackingNumber?: string
   ): Promise<ApiResponse<null>> {
     try {
-      await orderRepository.adminUpdateStatus(orderId, status, trackingNumber)
+      let effectiveTrackingNumber = trackingNumber?.trim()
+
+      if (status === 'shipped' && !effectiveTrackingNumber) {
+        const { shippingService } = await import('@/modules/shipping/shipping.service')
+        const shipmentRes = await shippingService.createShipmentForOrder(orderId)
+
+        if (!shipmentRes.success) {
+          return fail(
+            ApiErrorCode.INTERNAL_ERROR,
+            shipmentRes.error?.message || 'Gagal membuat order pengiriman otomatis ke Biteship'
+          )
+        }
+
+        effectiveTrackingNumber = shipmentRes.data.tracking_number
+      }
+
+      await orderRepository.adminUpdateStatus(orderId, status, effectiveTrackingNumber)
 
       const supabase = await createServerClient()
+
+      if (status === 'shipped' && effectiveTrackingNumber) {
+        try {
+          const { jubelioClient } = await import('@/lib/jubelio.client')
+          const { data: fullOrder } = await supabase
+            .from('orders')
+            .select(
+              `
+              order_number, total_amount,
+              order_items (sku, product_name, variant_name, quantity, price),
+              order_shipping (recipient_name, phone, full_address, postal_code, courier_name),
+              profiles (email)
+            `
+            )
+            .eq('id', orderId)
+            .single()
+
+          if (fullOrder) {
+            const shipping = Array.isArray(fullOrder.order_shipping)
+              ? fullOrder.order_shipping[0]
+              : fullOrder.order_shipping
+            const items = Array.isArray(fullOrder.order_items)
+              ? fullOrder.order_items
+              : []
+            const profile = Array.isArray(fullOrder.profiles)
+              ? fullOrder.profiles[0]
+              : fullOrder.profiles
+
+            const syncRes = await jubelioClient.syncSalesOrderShipment({
+              order_number: fullOrder.order_number,
+              customer_name: shipping?.recipient_name || 'Customer',
+              customer_phone: shipping?.phone || undefined,
+              customer_email: profile?.email || undefined,
+              shipping_address: shipping?.full_address || undefined,
+              postal_code: shipping?.postal_code || undefined,
+              courier_name: shipping?.courier_name || 'Expedition',
+              tracking_number: effectiveTrackingNumber,
+              total_amount: Number(fullOrder.total_amount || 0),
+              items: items.map((i: any) => ({
+                item_code: i.sku || i.product_name,
+                item_name: `${i.product_name || ''} ${i.variant_name || ''}`.trim(),
+                quantity: Number(i.quantity || 1),
+                price: Number(i.price || 0),
+              })),
+            })
+
+            await adminLogRepository.insertAdminActivityLog(
+              supabase,
+              'sync',
+              'order',
+              orderId,
+              `Jubelio ERP Sync: ${syncRes.message} ${syncRes.jubelio_order_id ? `(ID: ${syncRes.jubelio_order_id})` : ''}`
+            )
+          }
+        } catch (jubelioErr) {
+          safeLogError('Error syncing order to Jubelio ERP:', jubelioErr)
+        }
+      }
+
       await adminLogRepository.insertAdminActivityLog(
         supabase,
         'update',
         'order',
         orderId,
-        `Updated order status to ${status}`
+        `Updated order status to ${status}${effectiveTrackingNumber ? ` (Resi: ${effectiveTrackingNumber})` : ''}`
       )
 
       return ok(null)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       safeLogError('Error updating order status:', error)
-      return fail(ApiErrorCode.INTERNAL_ERROR, 'Gagal mengupdate pesanan')
+      return fail(ApiErrorCode.INTERNAL_ERROR, error.message || 'Gagal mengupdate pesanan')
     }
   }
 

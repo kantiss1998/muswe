@@ -60,22 +60,35 @@ export function AdminOrderStatusPanel({
 
         {status === 'processing' && (
           <div className="space-y-4 mt-2">
-            <Input
-              label="Nomor Resi Pengiriman (Aksi Kirim)*"
-              value={trackingNumber}
-              onChange={(e) => setTrackingNumber(e.target.value)}
-              placeholder="Masukkan no resi kurir..."
-            />
             <Button
               onClick={() => handleUpdateStatus('shipped')}
-              className="w-full py-3 text-xs uppercase tracking-wider font-bold"
+              className="w-full py-3 text-xs uppercase tracking-wider font-bold bg-neutral-900 text-white hover:bg-neutral-800"
             >
-              Kirim & Input Resi
+              Generate Resi Otomatis (Biteship)
             </Button>
+
+            <div className="border-t border-neutral-100 pt-3 space-y-3">
+              <Input
+                label="Atau Input Resi Manual (Kurir Lain)"
+                value={trackingNumber}
+                onChange={(e) => setTrackingNumber(e.target.value)}
+                placeholder="Masukkan no resi kurir..."
+              />
+              {trackingNumber.trim() && (
+                <Button
+                  onClick={() => handleUpdateStatus('shipped')}
+                  variant="outline"
+                  className="w-full py-2.5 text-xs uppercase tracking-wider font-bold border-neutral-300"
+                >
+                  Kirim & Gunakan Resi Manual
+                </Button>
+              )}
+            </div>
+
             <Button
               onClick={() => handleUpdateStatus('cancelled')}
               variant="outline"
-              className="w-full py-3 text-xs uppercase tracking-wider font-bold border-red-150 text-red-500 hover:bg-red-50"
+              className="w-full py-2.5 text-xs uppercase tracking-wider font-bold border-red-150 text-red-500 hover:bg-red-50"
             >
               Batalkan Transaksi
             </Button>

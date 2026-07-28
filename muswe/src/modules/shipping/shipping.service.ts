@@ -208,6 +208,84 @@ export class ShippingService {
       )
     }
   }
+
+  async createShipmentForOrder(orderId: string): Promise<ApiResponse<{ tracking_number: string }>> {
+    try {
+      const { createServerClient } = await import('@/lib/supabase/server')
+      const supabase = await createServerClient()
+
+      const { data: order, error } = await supabase
+        .from('orders')
+        .select(
+          `
+          id, order_number, user_id,
+          order_items (product_name, variant_name, price, quantity),
+          order_shipping (recipient_name, phone, full_address, postal_code, courier_name),
+          profiles (email)
+        `
+        )
+        .eq('id', orderId)
+        .single()
+
+      if (error || !order) {
+        throw new Error('Data pesanan tidak ditemukan')
+      }
+
+      const shipping = Array.isArray(order.order_shipping)
+        ? order.order_shipping[0]
+        : order.order_shipping
+      if (!shipping) {
+        throw new Error('Data pengiriman pesanan tidak ditemukan')
+      }
+
+      const itemsList = Array.isArray(order.order_items) ? order.order_items : []
+      const profile = Array.isArray(order.profiles) ? order.profiles[0] : order.profiles
+
+      // Infer courier company code from courier_name
+      let courierCompany = 'jne'
+      const lowerCourier = (shipping.courier_name || '').toLowerCase()
+      if (lowerCourier.includes('sicepat')) courierCompany = 'sicepat'
+      else if (lowerCourier.includes('j&t') || lowerCourier.includes('jnt')) courierCompany = 'jnt'
+      else if (lowerCourier.includes('pos')) courierCompany = 'pos'
+      else if (lowerCourier.includes('tiki')) courierCompany = 'tiki'
+      else if (lowerCourier.includes('anteraja')) courierCompany = 'anteraja'
+      else if (lowerCourier.includes('dhl')) courierCompany = 'dhl'
+
+      let courierType = 'reg'
+      if (lowerCourier.includes('ez')) courierType = 'ez'
+      else if (lowerCourier.includes('yes') || lowerCourier.includes('express')) courierType = 'express'
+
+      const items = itemsList.map((item: any) => ({
+        name: `${item.product_name || 'Produk'} ${item.variant_name ? `(${item.variant_name})` : ''}`.trim(),
+        value: Number(item.price || 50000),
+        quantity: Number(item.quantity || 1),
+        weight: 500, // Default 500g per item
+      }))
+
+      const biteshipRes = await biteshipClient.createOrder({
+        destination_contact_name: shipping.recipient_name || 'Customer',
+        destination_contact_phone: shipping.phone || '081234567890',
+        destination_contact_email: profile?.email || undefined,
+        destination_address: shipping.full_address || 'Alamat tujuan',
+        destination_postal_code: Number(shipping.postal_code || 10110),
+        courier_company: courierCompany,
+        courier_type: courierType,
+        items: items.length > 0 ? items : [{ name: 'Produk Muswe', value: 100000, quantity: 1, weight: 500 }],
+      })
+
+      if (!biteshipRes.waybill_id) {
+        throw new Error('Biteship tidak mengembalikan nomor resi valid.')
+      }
+
+      return ok({ tracking_number: biteshipRes.waybill_id })
+    } catch (error: any) {
+      safeLogError('Error creating Biteship shipment:', error)
+      return fail(
+        ApiErrorCode.INTERNAL_ERROR,
+        error.message || 'Gagal membuat order pengiriman ke Biteship.'
+      )
+    }
+  }
 }
 
 export const shippingService = new ShippingService()

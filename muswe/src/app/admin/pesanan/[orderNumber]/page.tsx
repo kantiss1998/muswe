@@ -51,23 +51,28 @@ function AdminOrderDetailContent({ params }: AdminOrderDetailPageProps): React.J
   ) => {
     if (!order) return
 
-    if (status === 'shipped' && !trackingNumber.trim()) {
-      toast.error('Harap masukkan nomor resi pengiriman')
-      return
-    }
+    const confirmMsg =
+      status === 'shipped' && !trackingNumber.trim()
+        ? 'Apakah Anda yakin ingin melakukan pengiriman dan merequest Resi Otomatis via Biteship?'
+        : `Apakah Anda yakin ingin mengubah status pesanan ke ${status}?`
 
-    if (confirm(`Apakah Anda yakin ingin mengubah status pesanan ke ${status}?`)) {
-      toast.loading('Mengubah status pesanan...', { id: 'status-update' })
+    if (confirm(confirmMsg)) {
+      toast.loading(
+        status === 'shipped' && !trackingNumber.trim()
+          ? 'Meminta nomor resi otomatis dari Biteship...'
+          : 'Mengubah status pesanan...',
+        { id: 'status-update' }
+      )
       try {
         await updateStatusMutation.mutateAsync({
           orderId: order.id,
           status,
-          trackingNumber: status === 'shipped' ? trackingNumber.trim() : undefined,
+          trackingNumber: status === 'shipped' && trackingNumber.trim() ? trackingNumber.trim() : undefined,
         })
         toast.success('Status pesanan berhasil diubah', { id: 'status-update' })
         refetch()
-      } catch {
-        toast.error('Gagal mengubah status', { id: 'status-update' })
+      } catch (err: any) {
+        toast.error(err?.message || 'Gagal mengubah status', { id: 'status-update' })
       }
     }
   }
