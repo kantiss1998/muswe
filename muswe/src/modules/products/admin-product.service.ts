@@ -203,25 +203,46 @@ export class AdminProductService {
 
   async syncStockFromJubelio(): Promise<ApiResponse<{ updatedCount: number; message: string }>> {
     try {
+      const supabase = await createServerClient()
+
+      // 1. Fetch local product variants SKUs to filter targets
+      const { data: dbVariants, error: dbError } = await supabase
+        .from('product_variants')
+        .select('id, sku')
+        .not('sku', 'is', null)
+
+      if (dbError || !dbVariants || dbVariants.length === 0) {
+        return fail('NO_VARIANTS', 'Tidak ada varian produk dengan SKU di database')
+      }
+
+      const localSkus = new Set(dbVariants.map((v) => v.sku).filter(Boolean))
+
+      // 2. Fetch stock items from Jubelio Gudang Online
       const stockItems = await jubelioClient.getGudangOnlineStock()
 
       if (!stockItems || stockItems.length === 0) {
         return fail('Gagal mengambil stok', 'Tidak ada data stok ditemukan dari Jubelio Gudang Online')
       }
 
-      const supabase = await createServerClient()
+      // 3. Filter stock items to only those existing in local database
+      const matchingItems = stockItems.filter((i) => localSkus.has(i.sku))
+
       let updatedCount = 0
 
-      // Update variant stock matching SKU
-      for (const item of stockItems) {
-        const { error, count } = await supabase
-          .from('product_variants')
-          .update({ stock: item.stock })
-          .eq('sku', item.sku)
+      // 4. Parallel batch updates (chunks of 20)
+      const chunkSize = 20
+      for (let i = 0; i < matchingItems.length; i += chunkSize) {
+        const chunk = matchingItems.slice(i, i + chunkSize)
+        const updatePromises = chunk.map(async (item) => {
+          const { error } = await supabase
+            .from('product_variants')
+            .update({ stock: item.stock })
+            .eq('sku', item.sku)
+          return error ? 0 : 1
+        })
 
-        if (!error && typeof count === 'number' && count > 0) {
-          updatedCount += count
-        }
+        const results = await Promise.all(updatePromises)
+        updatedCount += results.reduce((acc: number, val: number) => acc + val, 0)
       }
 
       await adminLogRepository.insertAdminActivityLog(

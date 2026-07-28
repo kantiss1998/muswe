@@ -142,7 +142,7 @@ export class JubelioClient {
       const locationId = await this.getGudangOnlineLocationId()
       const stockItems: JubelioStockItem[] = []
       let page = 1
-      const pageSize = 100
+      const pageSize = 500
       let hasMore = true
 
       while (hasMore) {
@@ -172,7 +172,7 @@ export class JubelioClient {
           }
         }
 
-        if (items.length < pageSize || page >= 30) {
+        if (items.length < pageSize || page >= 5) {
           hasMore = false
         } else {
           page++
