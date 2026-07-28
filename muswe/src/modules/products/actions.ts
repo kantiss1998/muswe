@@ -1,20 +1,32 @@
 'use server'
 
+import { revalidateTag, revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/auth-guard'
 import { adminProductService } from './admin-product.service'
 import { productService } from './product.service'
 import { ProductFilters, ProductPayload } from './types'
 
+function revalidateProductCache() {
+  try {
+    revalidatePath('/', 'layout')
+    revalidatePath('/produk', 'layout')
+  } catch (err) {
+    console.error('Failed to revalidate product cache:', err)
+  }
+}
+
 export async function updateProductActiveStatusAction(productId: string, isActive: boolean) {
   await requireAdmin()
   const res = await adminProductService.updateActiveStatus(productId, isActive)
   if (!res.success) throw new Error(res.error?.message)
+  revalidateProductCache()
 }
 
 export async function updateProductFeaturedStatusAction(productId: string, isFeatured: boolean) {
   await requireAdmin()
   const res = await adminProductService.updateFeaturedStatus(productId, isFeatured)
   if (!res.success) throw new Error(res.error?.message)
+  revalidateProductCache()
 }
 
 export async function getProductsAction(filters: ProductFilters = {}) {
@@ -52,6 +64,7 @@ export async function adminCreateProductAction(
     collectionIds
   )
   if (!res.success) throw new Error(res.error?.message)
+  revalidateProductCache()
   return res.data!
 }
 
@@ -73,6 +86,7 @@ export async function adminUpdateProductAction(
     collectionIds
   )
   if (!res.success) throw new Error(res.error?.message)
+  revalidateProductCache()
   return res.data!
 }
 
@@ -80,6 +94,7 @@ export async function adminDeleteProductAction(productId: string) {
   await requireAdmin()
   const res = await adminProductService.deleteProduct(productId)
   if (!res.success) throw new Error(res.error?.message)
+  revalidateProductCache()
   return res.data
 }
 
@@ -87,5 +102,6 @@ export async function adminSyncJubelioStockAction() {
   await requireAdmin()
   const res = await adminProductService.syncStockFromJubelio()
   if (!res.success) throw new Error(res.error?.message)
+  revalidateProductCache()
   return res.data!
 }
