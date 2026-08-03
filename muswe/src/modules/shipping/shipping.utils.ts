@@ -26,11 +26,37 @@ export async function validateAndGetShippingRate(
   if (!shippingRes.success || !shippingRes.data) return undefined
   const validRates = shippingRes.data
 
-  return params.shippingRateId
-    ? validRates.find((r) => r.id === params.shippingRateId)
-    : validRates.find(
-        (r) => r.courier_name === params.courierName || params.courierName?.includes(r.courier_name)
-      )
+  // Try matching by shippingRateId first (exact match, most reliable)
+  if (params.shippingRateId) {
+    const byId = validRates.find((r) => r.id === params.shippingRateId)
+    if (byId) return byId
+  }
+
+  // Fallback: match by courierName. The stored courierName may be in various formats
+  // (e.g. "jne_reg", "JNE", "JNE (Regular)"). Try multiple strategies.
+  if (params.courierName) {
+    const lowerParam = params.courierName.toLowerCase()
+
+    // 1. Exact match on id (composite key like "jne_reg")
+    const byServiceCode = validRates.find((r) => r.id.toLowerCase() === lowerParam)
+    if (byServiceCode) return byServiceCode
+
+    // 2. Exact courier_service_code match
+    const byCode = validRates.find(
+      (r) => r.courier_service_code.toLowerCase() === lowerParam
+    )
+    if (byCode) return byCode
+
+    // 3. courier_name contains the stored param or vice versa
+    const byPartial = validRates.find(
+      (r) =>
+        r.courier_name.toLowerCase().includes(lowerParam) ||
+        lowerParam.includes(r.courier_code.toLowerCase())
+    )
+    if (byPartial) return byPartial
+  }
+
+  return undefined
 }
 
 export function calculateCartWeight(cartItems: CartItemWithWeight[]): number {

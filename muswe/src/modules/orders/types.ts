@@ -54,7 +54,7 @@ export interface Order {
   order_number: string
   user_id: string
   voucher_id: string | null
-  status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled'
+  status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled' | 'refunded'
   subtotal: number
   shipping_cost: number
   discount_amount: number

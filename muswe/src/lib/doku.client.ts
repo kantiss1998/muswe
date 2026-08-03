@@ -153,7 +153,11 @@ export class DokuClient {
       digest,
     })
 
-    return expectedSignature === headers.receivedSignature
+    // Use constant-time comparison to prevent timing side-channel attacks
+    const expectedBuf = Buffer.from(expectedSignature, 'utf8')
+    const receivedBuf = Buffer.from(headers.receivedSignature, 'utf8')
+    if (expectedBuf.length !== receivedBuf.length) return false
+    return crypto.timingSafeEqual(expectedBuf, receivedBuf)
   }
 }
 

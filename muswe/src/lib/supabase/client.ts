@@ -6,6 +6,11 @@ let client: ReturnType<typeof createBrowserSupabaseClient<Database>> | null = nu
 
 export function createBrowserClient(): SupabaseClient<Database> {
   if (typeof window === 'undefined') {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(
+        'Warning: createBrowserClient called on server-side. This creates uncached instances per request. Use createServerClient instead.'
+      )
+    }
     return createBrowserSupabaseClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

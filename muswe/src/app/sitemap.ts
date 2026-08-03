@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/shared/types/database'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://muswe.com'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://muswedaily.com'
 
   // Core static public routes
   const staticRoutes = [
@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       productsRes.data.forEach((product) => {
         sitemapEntries.push({
           url: encodeURI(`${baseUrl}/produk/${product.slug}`),
-          lastModified: new Date(product.updated_at),
+          lastModified: product.updated_at ? new Date(product.updated_at) : new Date(),
           changeFrequency: 'weekly',
           priority: 0.7,
         })

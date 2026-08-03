@@ -87,6 +87,7 @@ export function mapOrder(
     shipped: 'shipped',
     completed: 'completed',
     cancelled: 'cancelled',
+    refunded: 'refunded',
   }
 
   return {

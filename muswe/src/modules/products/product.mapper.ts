@@ -100,7 +100,7 @@ export function mapProductListItem(p: any): ProductListItem {
     if (img.is_primary && !foundPrimary) {
       primaryImage = img.url
       foundPrimary = true
-    } else if (!img.is_primary && img.sort_order > 0 && !foundHover) {
+    } else if (!img.is_primary && !foundHover) {
       hoverImage = img.url
       foundHover = true
     }

@@ -204,6 +204,11 @@ export class FlashSaleRepository {
 
     const flashSaleId = res?.data?.id
 
+    if (!flashSaleId) {
+      safeLogError('Flash sale created but RPC did not return a valid ID:', res)
+      return fail(ApiErrorCode.INTERNAL_ERROR, 'Flash sale dibuat namun ID tidak dikembalikan dari server')
+    }
+
     await adminLogRepository.insertAdminActivityLog(
       supabase,
       'create',

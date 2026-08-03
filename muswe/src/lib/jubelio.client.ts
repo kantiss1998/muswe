@@ -85,6 +85,35 @@ export class JubelioClient {
     }
   }
 
+  private async fetchWithAuth(url: string, options: RequestInit = {}): Promise<Response> {
+    if (!this.token) {
+      await this.login()
+    }
+
+    let response = await fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        Authorization: `Bearer ${this.token}`,
+      },
+    })
+
+    // If token expired mid-way, refresh and retry once
+    if (response.status === 401) {
+      safeLogError('[JubelioClient]', 'Token expired during request, attempting to refresh...')
+      await this.login()
+      response = await fetch(url, {
+        ...options,
+        headers: {
+          ...options.headers,
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+    }
+
+    return response
+  }
+
   async getGudangOnlineLocationId(): Promise<number> {
     const envLocId = Number(process.env.JUBELIO_LOCATION_ID)
     if (!isNaN(envLocId) && envLocId > 0) {
@@ -97,11 +126,8 @@ export class JubelioClient {
       }
       if (!this.token) return 17 // Default Gudang Online ID
 
-      const response = await fetch(`${JUBELIO_BASE_URL}/locations/?pageSize=100`, {
+      const response = await this.fetchWithAuth(`${JUBELIO_BASE_URL}/locations/?pageSize=100`, {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
       })
 
       if (response.ok) {
@@ -149,13 +175,10 @@ export class JubelioClient {
         const chunk = uniqueSkus.slice(i, i + chunkSize)
         const promises = chunk.map(async (sku) => {
           try {
-            const response = await fetch(
+            const response = await this.fetchWithAuth(
               `${JUBELIO_BASE_URL}/inventory/items/to-sell/${locationId}?q=${encodeURIComponent(sku)}`,
               {
                 method: 'GET',
-                headers: {
-                  Authorization: `Bearer ${this.token}`,
-                },
               }
             )
             if (!response.ok) return null
@@ -215,13 +238,10 @@ export class JubelioClient {
       let hasMore = true
 
       while (hasMore) {
-        const response = await fetch(
+        const response = await this.fetchWithAuth(
           `${JUBELIO_BASE_URL}/inventory/items/to-sell/${locationId}?page=${page}&pageSize=${pageSize}`,
           {
             method: 'GET',
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
           }
         )
 

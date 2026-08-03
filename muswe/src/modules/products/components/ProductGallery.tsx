@@ -56,14 +56,6 @@ export function ProductGallery({
   const prevVariantIdRef = useRef<string | null>(null)
   const mobileGalleryRef = useRef<HTMLDivElement>(null)
 
-  if (images.length === 0) {
-    return (
-      <div className="aspect-[3/4] w-full bg-neutral-100 flex items-center justify-center text-xs text-neutral-400 font-sans">
-        Tidak ada gambar produk
-      </div>
-    )
-  }
-
   // Determine which images to display (always up to 4 images)
   // If variant is selected, place matching variant image(s) first, then fill up to 4 with other images.
   // If variant is unselected (null), revert back to the main 4 product images.
@@ -98,6 +90,14 @@ export function ProductGallery({
       }
     }
   }, [selectedVariantId, displayImages])
+
+  if (images.length === 0) {
+    return (
+      <div className="aspect-[3/4] w-full bg-neutral-100 flex items-center justify-center text-xs text-neutral-400 font-sans">
+        Tidak ada gambar produk
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col w-full group">

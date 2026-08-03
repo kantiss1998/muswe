@@ -161,10 +161,18 @@ export async function updateSession(request: NextRequest): Promise<NextResponse<
     if (!redirect.startsWith('/') || redirect.startsWith('//')) {
       redirect = '/'
     }
-    const url = request.nextUrl.clone()
-    url.pathname = redirect
-    url.search = ''
-    return NextResponse.redirect(url)
+    try {
+      const redirectUrl = new URL(redirect, 'http://localhost')
+      const url = request.nextUrl.clone()
+      url.pathname = redirectUrl.pathname
+      url.search = redirectUrl.search
+      return NextResponse.redirect(url)
+    } catch {
+      const url = request.nextUrl.clone()
+      url.pathname = '/'
+      url.search = ''
+      return NextResponse.redirect(url)
+    }
   }
 
   return supabaseResponse

@@ -1,4 +1,3 @@
-import { cacheLife, cacheTag } from 'next/cache'
 import { createStaticClient } from '@/lib/supabase/static'
 import { getActiveBannersAction } from '@/modules/banners/actions'
 import { getActiveCategoriesAction } from '@/modules/categories/actions'
@@ -9,23 +8,10 @@ import {
 import { flashSaleService } from '@/modules/flash-sales/flash-sale.service'
 import { getProductsAction } from '@/modules/products/actions'
 import { settingsService } from '@/modules/settings/settings.service'
+import { paginated } from '@/lib/api-response'
 
 export class HomeService {
-  getCachedHomepageData = async () => {
-    // 'use cache'
-    // cacheLife('hours')
-    // cacheTag(
-    //   'banners',
-    //   'categories',
-    //   'collections',
-    //   'flash-sales',
-    //   'products',
-    //   'settings',
-    //   'homepage-data'
-    // )
-
-
-    const supabase = createStaticClient()
+  getCachedHomepageData = async () => {    const supabase = createStaticClient()
 
     const [
       bannersRes,
@@ -66,10 +52,10 @@ export class HomeService {
     const [collection1Products, collection2Products] = await Promise.all([
       col1
         ? getProductsAction({ collectionSlug: col1.slug, limit: 4 })
-        : Promise.resolve({ data: [], success: true }),
+        : Promise.resolve(paginated([], 1, 4, 0)),
       col2
         ? getProductsAction({ collectionSlug: col2.slug, limit: 4 })
-        : Promise.resolve({ data: [], success: true }),
+        : Promise.resolve(paginated([], 1, 4, 0)),
     ])
 
       return {

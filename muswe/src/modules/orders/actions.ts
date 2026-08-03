@@ -10,6 +10,7 @@ import {
   type CartItemWithWeight,
 } from '@/modules/shipping/shipping.utils'
 import { fail, type ApiResponse } from '@/lib/api-response'
+import { safeLogError } from '@/lib/logger'
 
 const ERROR_CODES = {
   UNAUTHORIZED: 'UNAUTHORIZED',
@@ -129,7 +130,10 @@ export async function createSecureOrderAction(params: CreateOrderParams) {
 
   // Idempotency / Double-Submit Lock (Database-backed)
   // Clean up any stale locks (TTL 5 mins) before trying to acquire a new one
-  await supabase.rpc('cleanup_checkout_locks')
+  const { error: cleanupError } = await supabase.rpc('cleanup_checkout_locks')
+  if (cleanupError) {
+    safeLogError('Error cleaning up checkout locks:', cleanupError)
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error: lockError } = await supabase
@@ -193,6 +197,11 @@ export async function createSecureOrderAction(params: CreateOrderParams) {
       )
       .eq('user_id', user.id)
       .maybeSingle()
+
+    if (cartResCheck.error) {
+      safeLogError('Error checking cart state during checkout:', cartResCheck.error)
+      return fail(ERROR_CODES.CART_CHANGED, 'Terjadi kesalahan saat memverifikasi keranjang Anda')
+    }
 
     const newCartItems = Array.isArray(cartResCheck.data?.cart_items)
       ? cartResCheck.data.cart_items

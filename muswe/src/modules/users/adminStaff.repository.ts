@@ -64,27 +64,37 @@ export class AdminStaffRepository {
 
       const newUserId = authData.user.id
 
-      // Wait a moment for trigger to create profile (if a trigger exists)
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      // 2. Update/upsert profile with retry to avoid race condition with auth trigger
+      let profileData = null
+      let profileError = null
+      for (let i = 0; i < 3; i++) {
+        const result = await supabaseAdmin
+          .from('profiles')
+          .upsert(
+            {
+              id: newUserId,
+              email: staffData.email,
+              name: staffData.name,
+              role: staffData.role,
+              is_active: true,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: 'id' }
+          )
+          .select('id, name, email, phone, avatar_url, role, is_active, created_at, updated_at')
+          .single()
 
-      // 2. Update/upsert profile
-      const { data: profileData, error: profileError } = await supabaseAdmin
-        .from('profiles')
-        .upsert(
-          {
-            id: newUserId,
-            email: staffData.email,
-            name: staffData.name,
-            role: staffData.role,
-            is_active: true,
-            updated_at: new Date().toISOString(),
-          },
-          { onConflict: 'id' }
-        )
-        .select('id, name, email, phone, avatar_url, role, is_active, created_at, updated_at')
-        .single()
+        if (result.data) {
+          profileData = result.data
+          profileError = null
+          break
+        }
+        profileError = result.error
+        // Wait before retrying (exponential backoff)
+        await new Promise((resolve) => setTimeout(resolve, 200 * (i + 1)))
+      }
 
-      if (profileError) {
+      if (profileError || !profileData) {
         safeLogError('Error updating user profile after creation:', profileError)
         return { success: false, error: 'Failed to update user profile' }
       }

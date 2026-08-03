@@ -45,7 +45,7 @@ export class SettingsRepository {
     }
 
     const list = data ? data.map(mapSiteSetting) : []
-    return paginated(list)
+    return paginated(list, 1, list.length || 1, list.length)
   }
 
   async adminUpdateSettings(settings: Record<string, string>): Promise<ApiResponse<void>> {
@@ -117,7 +117,7 @@ export class SettingsRepository {
     }
 
     const list = data ? data.map(mapSiteSetting) : []
-    return paginated(list)
+    return paginated(list, 1, list.length || 1, list.length)
   }
 }
 

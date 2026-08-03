@@ -70,7 +70,11 @@ Deno.serve(async (req: Request) => {
       );
 
       if (receivedSignature !== expectedSignature) {
-        console.warn("Signature mismatch on DOKU webhook, checking fallback verification...");
+        console.error("CRITICAL: Signature mismatch on DOKU webhook. Request blocked.");
+        return new Response(
+          JSON.stringify({ success: false, message: "Unauthorized: Invalid Signature" }),
+          { status: 401, headers: { "Content-Type": "application/json" } }
+        );
       }
     }
 
