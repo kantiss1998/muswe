@@ -235,7 +235,7 @@ export class AdminProductService {
 
       // Fallback to bulk pagination scan if direct query returned no items
       if (!stockItems || stockItems.length === 0) {
-        stockItems = await jubelioClient.getGudangOnlineStock()
+        stockItems = await jubelioClient.getGudangForalStock()
       }
 
       if (!stockItems || stockItems.length === 0) {
