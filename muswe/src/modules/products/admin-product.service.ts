@@ -17,7 +17,7 @@ export class AdminProductService {
       const { page = 1, limit = 20 } = params
       const { data, count } = await productRepository.adminFindMany(params)
 
-      if (!data) return paginated([], 0, page, limit)
+      if (!data) return paginated([], page, limit, 0)
 
       const products: AdminProductListItem[] = data.map((p) => {
         const categories = mapCategory(p.categories)
@@ -74,7 +74,7 @@ export class AdminProductService {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       safeLogError('Gagal membuat produk', error)
-      return fail('Gagal membuat produk', error.message || 'Transaction failed')
+      return fail(ApiErrorCode.INTERNAL_ERROR, error.message || 'Gagal membuat produk')
     }
   }
 
@@ -146,7 +146,7 @@ export class AdminProductService {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       safeLogError('Gagal memperbarui produk', error)
-      return fail('Gagal memperbarui produk', error.message || 'Transaction failed')
+      return fail(ApiErrorCode.INTERNAL_ERROR, error.message || 'Gagal memperbarui produk')
     }
   }
 
@@ -175,7 +175,7 @@ export class AdminProductService {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       safeLogError('Delete error:', error)
-      return fail('Gagal menghapus produk', error.message)
+      return fail(ApiErrorCode.INTERNAL_ERROR, error.message || 'Gagal menghapus produk')
     }
   }
 
@@ -186,7 +186,7 @@ export class AdminProductService {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       safeLogError('Update status error:', error)
-      return fail('Gagal memperbarui status produk', error.message)
+      return fail(ApiErrorCode.INTERNAL_ERROR, error.message || 'Gagal memperbarui status produk')
     }
   }
 
@@ -197,7 +197,7 @@ export class AdminProductService {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       safeLogError('Update featured error:', error)
-      return fail('Gagal memperbarui status featured', error.message)
+      return fail(ApiErrorCode.INTERNAL_ERROR, error.message || 'Gagal memperbarui status featured')
     }
   }
 
@@ -212,7 +212,7 @@ export class AdminProductService {
         .not('sku', 'is', null)
 
       if (dbError || !dbVariants || dbVariants.length === 0) {
-        return fail('NO_VARIANTS', 'Tidak ada varian produk dengan SKU di database')
+        return fail(ApiErrorCode.INTERNAL_ERROR, 'Tidak ada varian produk dengan SKU di database')
       }
 
       // Map normalized SKU (trimmed, uppercase) -> original DB SKU list
@@ -235,11 +235,11 @@ export class AdminProductService {
 
       // Fallback to bulk pagination scan if direct query returned no items
       if (!stockItems || stockItems.length === 0) {
-        stockItems = await jubelioClient.getGudangOnlineStock()
+        stockItems = await jubelioClient.getGudangForalStock()
       }
 
       if (!stockItems || stockItems.length === 0) {
-        return fail('Gagal mengambil stok', 'Tidak ada data stok ditemukan dari Jubelio Gudang Online')
+        return fail(ApiErrorCode.INTERNAL_ERROR, 'Tidak ada data stok ditemukan dari Jubelio Gudang Online')
       }
 
       // 3. Filter stock items to matching local SKUs
@@ -289,7 +289,7 @@ export class AdminProductService {
       })
     } catch (error: any) {
       safeLogError('Error in syncStockFromJubelio:', error)
-      return fail('Gagal menyinkronkan stok', error.message || 'Transaction failed')
+      return fail(ApiErrorCode.INTERNAL_ERROR, error.message || 'Gagal menyinkronkan stok')
     }
   }
 }

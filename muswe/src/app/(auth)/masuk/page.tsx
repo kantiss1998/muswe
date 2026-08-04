@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 import { createBrowserClient } from '@/lib/supabase/client'
 import { Button, Input, Card, AuthLoading } from '@/shared/components'
 import { staggerContainer, fadeUpItem } from '@/lib/motion'
-import { useGoogleLogin } from '@react-oauth/google'
+import { useGoogleOneTapLogin } from '@react-oauth/google'
 import toast from 'react-hot-toast'
 
 import { useTranslation } from '@/shared/i18n/useTranslation'
@@ -39,6 +39,32 @@ function LoginContent() {
       window.history.replaceState({}, '', url.pathname + url.search)
     }
   }, [searchParams, isEnglish])
+
+  useGoogleOneTapLogin({
+    onSuccess: async (credentialResponse) => {
+      setIsGoogleLoading(true)
+      try {
+        const { data, error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: credentialResponse.credential!,
+        })
+        if (error) throw error
+        
+        if (data.user) {
+          toast.success(isEnglish ? 'Successfully signed in with Google!' : 'Berhasil masuk dengan Google!')
+          router.push(redirectPath)
+        }
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : (isEnglish ? 'Google sign-in failed.' : 'Login dengan Google gagal.')
+        toast.error(msg)
+      } finally {
+        setIsGoogleLoading(false)
+      }
+    },
+    onError: () => {
+      console.log('Google One Tap Failed')
+    },
+  })
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -186,9 +186,10 @@ export class OrderRepository {
     }
 
     if (escapedSearch) {
-      query = query.or(
-        `order_number.ilike.%${escapedSearch}%,order_shipping.recipient_name.ilike.%${escapedSearch}%`
-      )
+      // Note: PostgREST does not support top-level OR filters across joined tables.
+      // Searching by recipient_name requires a database view or RPC.
+      // Restricting search to order_number to prevent silently ignoring the filter.
+      query = query.or(`order_number.ilike.%${escapedSearch}%`)
     }
 
     const { data, count, error } = await query
@@ -201,7 +202,7 @@ export class OrderRepository {
 
   async adminUpdateStatus(
     orderId: string,
-    status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled',
+    status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled' | 'refunded',
     trackingNumber?: string
   ) {
     const supabase = await createServerClient()

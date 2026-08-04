@@ -37,7 +37,7 @@ export class AdminCustomerRepository {
       updated_at: row.updated_at,
     }))
 
-    return paginated(profiles, count || 0, page, limit)
+    return paginated(profiles, page, limit, count || 0)
   }
 
   async adminToggleCustomerStatus(
@@ -53,9 +53,7 @@ export class AdminCustomerRepository {
 
     if (error) {
       safeLogError('Error toggling customer status:', error)
-      return fail(ApiErrorCode.INTERNAL_ERROR, 'Gagal mengubah status pelanggan.', {
-        detail: [error.message],
-      })
+      return fail(ApiErrorCode.INTERNAL_ERROR, `Gagal mengubah status pelanggan: ${error.message}`)
     }
 
     await adminLogRepository.insertAdminActivityLog(

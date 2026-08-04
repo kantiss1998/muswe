@@ -56,16 +56,36 @@ export async function deleteImageByUrl(
   try {
     if (!url) return
 
-    // Extract file name from URL: https://cdn.muswedaily.com/<bucket>/<filename> 
-    // atau URL supabase bawaan
-    const urlParts = url.split('/')
-    const fileName = urlParts[urlParts.length - 1]
+    // Extract file path after bucket name from URL.
+    // CDN URL format:  https://cdn.muswedaily.com/<bucket>/<path>
+    // Supabase URL:    https://<id>.supabase.co/storage/v1/object/public/<bucket>/<path>
+    // We need to extract everything after the bucket segment.
+    const targetBucket = bucket.toLowerCase()
+    let filePath: string | null = null
 
-    if (!fileName) return
+    // Try CDN URL pattern
+    const cdnMatch = url.match(new RegExp(`cdn\\.muswedaily\\.com\\/${targetBucket}\\/(.+)`))
+    if (cdnMatch) {
+      filePath = cdnMatch[1]
+    } else {
+      // Try Supabase URL pattern
+      const supabaseMatch = url.match(
+        new RegExp(`\\/object\\/public\\/${targetBucket}\\/(.+)`)
+      )
+      if (supabaseMatch) {
+        filePath = supabaseMatch[1]
+      } else {
+        // Fallback: take everything after the last slash (original behavior)
+        const urlParts = url.split('/')
+        filePath = urlParts[urlParts.length - 1] || null
+      }
+    }
 
-    const { error } = await supabase.storage.from(bucket).remove([fileName])
+    if (!filePath) return
+
+    const { error } = await supabase.storage.from(bucket).remove([filePath])
     if (error) {
-      safeLogError(`Failed to delete image ${fileName} from ${bucket}:`, error.message)
+      safeLogError(`Failed to delete image ${filePath} from ${bucket}:`, error.message)
     }
   } catch (err) {
     safeLogError('Error in deleteImageByUrl:', err)

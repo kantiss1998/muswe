@@ -3,11 +3,11 @@ import { AdminPanel, Button, Input } from '@/shared/components'
 import { Clock, Package, Truck, CheckCircle, XCircle } from 'lucide-react'
 
 interface AdminOrderStatusPanelProps {
-  status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled'
+  status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled' | 'refunded'
   trackingNumber: string
   setTrackingNumber: (val: string) => void
   handleUpdateStatus: (
-    status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled'
+    status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled' | 'refunded'
   ) => void
 }
 

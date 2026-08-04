@@ -38,8 +38,8 @@ export async function getAdminAnalyticsAction(days: number = 30): Promise<Analyt
     supabase.rpc('get_analytics_data', { p_start_date: startDateStr }),
     supabase
       .from('carts')
-      .select('*', { count: 'exact', head: true })
-      .lte('created_at', yesterdayStr),
+      .select('id', { count: 'exact', head: true })
+      .lte('updated_at', yesterdayStr),
     supabase
       .from('orders')
       .select('voucher_id, discount_amount, vouchers(code)')

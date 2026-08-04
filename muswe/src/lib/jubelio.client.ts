@@ -85,7 +85,36 @@ export class JubelioClient {
     }
   }
 
-  async getGudangOnlineLocationId(): Promise<number> {
+  private async fetchWithAuth(url: string, options: RequestInit = {}): Promise<Response> {
+    if (!this.token) {
+      await this.login()
+    }
+
+    let response = await fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        Authorization: `Bearer ${this.token}`,
+      },
+    })
+
+    // If token expired mid-way, refresh and retry once
+    if (response.status === 401) {
+      safeLogError('[JubelioClient]', 'Token expired during request, attempting to refresh...')
+      await this.login()
+      response = await fetch(url, {
+        ...options,
+        headers: {
+          ...options.headers,
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+    }
+
+    return response
+  }
+
+  async getGudangForalLocationId(): Promise<number> {
     const envLocId = Number(process.env.JUBELIO_LOCATION_ID)
     if (!isNaN(envLocId) && envLocId > 0) {
       return envLocId
@@ -95,32 +124,29 @@ export class JubelioClient {
       if (!this.token) {
         await this.login()
       }
-      if (!this.token) return 17 // Default Gudang Online ID
+      if (!this.token) return 17 // Default Gudang Foral ID
 
-      const response = await fetch(`${JUBELIO_BASE_URL}/locations/?pageSize=100`, {
+      const response = await this.fetchWithAuth(`${JUBELIO_BASE_URL}/locations/?pageSize=100`, {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
       })
 
       if (response.ok) {
         const data: any = await response.json()
         const locations = Array.isArray(data?.data) ? data.data : []
-        const gudangOnline = locations.find(
+        const gudangForal = locations.find(
           (loc: any) =>
             loc.location_name &&
-            loc.location_name.toLowerCase().includes('gudang online')
+            loc.location_name.toLowerCase().includes('gudang foral')
         )
-        if (gudangOnline?.location_id) {
-          return Number(gudangOnline.location_id)
+        if (gudangForal?.location_id) {
+          return Number(gudangForal.location_id)
         }
       }
     } catch (error) {
       safeLogError('[JubelioClient] Error fetching locations:', error)
     }
 
-    return 17 // Fallback to verified 'Gudang Online' location_id 17
+    return 17 // Fallback to verified 'Gudang Foral' location_id 17
   }
 
   async getStockBySkus(skus: string[]): Promise<JubelioStockItem[]> {
@@ -139,7 +165,7 @@ export class JubelioClient {
       }
       if (!this.token) return []
 
-      const locationId = await this.getGudangOnlineLocationId()
+      const locationId = await this.getGudangForalLocationId()
       const uniqueSkus = Array.from(new Set(skus.map((s) => s.trim()).filter(Boolean)))
       const stockItems: JubelioStockItem[] = []
 
@@ -149,13 +175,10 @@ export class JubelioClient {
         const chunk = uniqueSkus.slice(i, i + chunkSize)
         const promises = chunk.map(async (sku) => {
           try {
-            const response = await fetch(
+            const response = await this.fetchWithAuth(
               `${JUBELIO_BASE_URL}/inventory/items/to-sell/${locationId}?q=${encodeURIComponent(sku)}`,
               {
                 method: 'GET',
-                headers: {
-                  Authorization: `Bearer ${this.token}`,
-                },
               }
             )
             if (!response.ok) return null
@@ -192,7 +215,7 @@ export class JubelioClient {
     }
   }
 
-  async getGudangOnlineStock(): Promise<JubelioStockItem[]> {
+  async getGudangForalStock(): Promise<JubelioStockItem[]> {
     const isSandbox =
       !this.email ||
       !this.password ||
@@ -208,20 +231,17 @@ export class JubelioClient {
       }
       if (!this.token) return []
 
-      const locationId = await this.getGudangOnlineLocationId()
+      const locationId = await this.getGudangForalLocationId()
       const stockItems: JubelioStockItem[] = []
       let page = 1
       const pageSize = 500
       let hasMore = true
 
       while (hasMore) {
-        const response = await fetch(
+        const response = await this.fetchWithAuth(
           `${JUBELIO_BASE_URL}/inventory/items/to-sell/${locationId}?page=${page}&pageSize=${pageSize}`,
           {
             method: 'GET',
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
           }
         )
 
@@ -285,7 +305,7 @@ export class JubelioClient {
         throw new Error('Gagal melakukan autentikasi ke Jubelio API.')
       }
 
-      const locationId = payload.location_id || (await this.getGudangOnlineLocationId())
+      const locationId = payload.location_id || (await this.getGudangForalLocationId())
 
       const requestBody = {
         salesorder_no: payload.order_number,

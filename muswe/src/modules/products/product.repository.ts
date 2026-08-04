@@ -38,13 +38,21 @@ export class ProductRepository {
       .eq('product_variants.is_active', true)
 
     if (categorySlug) {
-      const { data: categories } = await supabase.from('categories').select('id, slug, parent_id')
-      const category = categories?.find((c) => c.slug === categorySlug)
+      // 1. Get the target category
+      const { data: category } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('slug', categorySlug)
+        .maybeSingle()
+
       if (category) {
-        const categoryIds = [
-          category.id,
-          ...(categories?.filter((c) => c.parent_id === category.id).map((c) => c.id) || []),
-        ]
+        // 2. Get its direct children
+        const { data: subCategories } = await supabase
+          .from('categories')
+          .select('id')
+          .eq('parent_id', category.id)
+
+        const categoryIds = [category.id, ...(subCategories?.map((c) => c.id) || [])]
         query = query.in('category_id', categoryIds)
       } else {
         return { data: [], count: 0 }
