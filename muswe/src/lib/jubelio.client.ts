@@ -124,7 +124,7 @@ export class JubelioClient {
       if (!this.token) {
         await this.login()
       }
-      if (!this.token) return 17 // Default Gudang Foral ID
+      if (!this.token) return 17 // Default Forall location ID
 
       const response = await this.fetchWithAuth(`${JUBELIO_BASE_URL}/locations/?pageSize=100`, {
         method: 'GET',
@@ -136,7 +136,9 @@ export class JubelioClient {
         const gudangForal = locations.find(
           (loc: any) =>
             loc.location_name &&
-            loc.location_name.toLowerCase().includes('gudang foral')
+            (loc.location_name.toLowerCase().includes('forall') ||
+              loc.location_name.toLowerCase().includes('foral') ||
+              loc.location_name.toLowerCase().includes('gudang foral'))
         )
         if (gudangForal?.location_id) {
           return Number(gudangForal.location_id)
@@ -146,7 +148,7 @@ export class JubelioClient {
       safeLogError('[JubelioClient] Error fetching locations:', error)
     }
 
-    return 17 // Fallback to verified 'Gudang Foral' location_id 17
+    return 17 // Fallback to location_id 17
   }
 
   async getStockBySkus(skus: string[]): Promise<JubelioStockItem[]> {
