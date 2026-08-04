@@ -16,6 +16,8 @@ export function AuthLayout({ children }: AuthLayoutProps): React.JSX.Element {
           alt="Muswe Background"
           fill
           className="object-cover"
+          quality={100}
+          sizes="(max-width: 1024px) 100vw, 50vw"
           priority
         />
       </div>
