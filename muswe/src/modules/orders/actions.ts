@@ -23,7 +23,7 @@ const ERROR_CODES = {
 
 export async function adminUpdateOrderStatusAction(
   orderId: string,
-  status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled',
+  status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled' | 'refunded',
   trackingNumber?: string
 ) {
   await requireAdmin()

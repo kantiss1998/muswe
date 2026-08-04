@@ -110,7 +110,7 @@ export class AdminOrderService {
 
   async updateOrderStatus(
     orderId: string,
-    status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled',
+    status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled' | 'refunded',
     trackingNumber?: string
   ): Promise<ApiResponse<null>> {
     try {
