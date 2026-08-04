@@ -202,7 +202,7 @@ export class OrderRepository {
 
   async adminUpdateStatus(
     orderId: string,
-    status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled',
+    status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled' | 'refunded',
     trackingNumber?: string
   ) {
     const supabase = await createServerClient()
