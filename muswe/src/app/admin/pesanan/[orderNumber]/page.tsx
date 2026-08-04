@@ -47,7 +47,7 @@ function AdminOrderDetailContent({ params }: AdminOrderDetailPageProps): React.J
     : '-'
 
   const handleUpdateStatus = async (
-    status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled'
+    status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled' | 'refunded'
   ) => {
     if (!order) return
 
