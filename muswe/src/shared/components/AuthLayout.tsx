@@ -1,5 +1,6 @@
 import { SmartLink as Link } from '@/shared/components'
 import React from 'react'
+import Image from 'next/image'
 import { CurrentYear } from '@/shared/components/CurrentYear'
 
 interface AuthLayoutProps {
@@ -9,42 +10,16 @@ interface AuthLayoutProps {
 export function AuthLayout({ children }: AuthLayoutProps): React.JSX.Element {
   return (
     <div className="min-h-screen flex">
-      {/* Brand panel — visible on desktop */}
       <div className="hidden lg:flex lg:w-[45%] xl:w-1/2 relative bg-brand-black overflow-hidden">
-        <div className="absolute inset-0 section-texture opacity-50" />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-black via-brand-dark to-brand-black" />
-
-        {/* Decorative gold accent lines */}
-        <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-brand-gold/40 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-gold/30 to-transparent" />
-
-        <div className="relative z-10 flex flex-col justify-between p-12 xl:p-16 w-full">
-          <Link
-            href="/"
-            className="font-heading text-sm font-bold tracking-[0.1em] text-white uppercase hover:text-brand-gold-light transition-colors duration-300"
-          >
-            MUSWE
-          </Link>
-
-          <div className="space-y-6 max-w-md">
-            <div className="accent-line">
-              <span className="text-xs uppercase tracking-[0.1em] font-heading font-medium text-brand-gold-light">
-                Kerudung Motif Premium
-              </span>
-            </div>
-            <h1 className="text-3xl xl:text-4xl font-heading font-light uppercase tracking-wider text-white leading-tight">
-              Elegan dalam Setiap Benang
-            </h1>
-            <p className="text-sm text-neutral-400 font-sans leading-relaxed">
-              Temukan koleksi busana muslim wanita dengan desain minimalis, bahan berkualitas
-              premium, dan kenyamanan sepanjang hari.
-            </p>
-          </div>
-
-          <p className="text-xs text-neutral-500 font-sans tracking-wide">
-            &copy; <CurrentYear /> Muswe Store
-          </p>
-        </div>
+        <Image
+          src="/login-bg.jpg"
+          alt="Muswe Background"
+          fill
+          className="object-cover"
+          quality={100}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          priority
+        />
       </div>
 
       {/* Form panel */}
