@@ -122,7 +122,8 @@ export class ShippingService {
       if (!data) return ok([])
 
       return ok(
-        data.map((row) => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data.map((row: any) => ({
           id: row.id,
           province_name: row.province_name,
           city_name: row.city_name,

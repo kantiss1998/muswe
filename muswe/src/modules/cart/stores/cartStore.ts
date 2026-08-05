@@ -64,15 +64,17 @@ export const useCartStore = create<CartState>()(
 
       addItem: async (newItem, qty = 1) => {
         set((state) => {
+          const effectiveStock = newItem.stock > 0 ? newItem.stock : 9999
+          const safeQty = Math.max(1, qty)
           const existingItem = state.items.find((item) => item.variantId === newItem.variantId)
           let updatedItems: CartItem[]
           if (existingItem) {
-            const newQty = Math.min(existingItem.quantity + qty, newItem.stock)
+            const newQty = Math.max(1, Math.min(existingItem.quantity + safeQty, effectiveStock))
             updatedItems = state.items.map((item) =>
               item.variantId === newItem.variantId ? { ...item, quantity: newQty } : item
             )
           } else {
-            updatedItems = [...state.items, { ...newItem, quantity: Math.min(qty, newItem.stock) }]
+            updatedItems = [...state.items, { ...newItem, quantity: Math.max(1, Math.min(safeQty, effectiveStock)) }]
           }
           return { items: updatedItems, needsResync: state.isSyncing }
         })
@@ -86,11 +88,14 @@ export const useCartStore = create<CartState>()(
 
       updateQuantity: async (variantId, quantity) => {
         set((state) => ({
-          items: state.items.map((item) =>
-            item.variantId === variantId
-              ? { ...item, quantity: Math.max(1, Math.min(quantity, item.stock)) }
-              : item
-          ),
+          items: state.items.map((item) => {
+            if (item.variantId !== variantId) return item
+            const effectiveStock = item.stock > 0 ? item.stock : 9999
+            return {
+              ...item,
+              quantity: Math.max(1, Math.min(quantity, effectiveStock)),
+            }
+          }),
           needsResync: state.isSyncing,
         }))
 
@@ -149,7 +154,7 @@ export const useCartStore = create<CartState>()(
         try {
           while (keepSyncing) {
             set({ needsResync: false })
-            const localItems = get().items
+            const localItems = get().items.filter((i) => i.quantity > 0)
 
             const res = await syncCartAction(localItems, merge)
 

@@ -67,24 +67,44 @@ export class ShippingRepository {
 
   async searchDistricts(searchQuery: string) {
     const supabase = await createServerClient()
-    const escapedQuery = searchQuery
-      .trim()
-      .replace(/\\/g, '\\\\')
-      .replace(/%/g, '\\%')
-      .replace(/_/g, '\\_')
-      .replace(/,/g, '\\,')
-      .replace(/\(/g, '\\(')
-      .replace(/\)/g, '\\)')
-    const formattedQuery = `%${escapedQuery}%`
+    const raw = searchQuery.trim()
+    if (!raw) return []
+
+    const clean = (str: string) =>
+      str
+        .replace(/"/g, '""')
+        .replace(/%/g, '\\%')
+        .replace(/_/g, '\\_')
+
+    const parts = raw.split(',').map((s) => s.trim()).filter(Boolean)
+
+    if (parts.length >= 2) {
+      const p0 = `%${clean(parts[0])}%`
+      const p1 = `%${clean(parts[1])}%`
+
+      const { data, error } = await supabase
+        .from('districts')
+        .select('id, province_name, city_name, district_name, postal_code, zone_id')
+        .ilike('district_name', p0)
+        .ilike('city_name', p1)
+        .limit(15)
+
+      if (!error && data && data.length > 0) {
+        return data
+      }
+    }
+
+    const firstPart = parts[0] || raw
+    const pattern = `"%${clean(firstPart)}%"`
 
     const { data, error } = await supabase
       .from('districts')
       .select('id, province_name, city_name, district_name, postal_code, zone_id')
-      .or(`district_name.ilike.${formattedQuery},city_name.ilike.${formattedQuery}`)
+      .or(`district_name.ilike.${pattern},city_name.ilike.${pattern}`)
       .limit(15)
 
     if (error) throw error
-    return data
+    return data || []
   }
 }
 

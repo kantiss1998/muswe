@@ -14,6 +14,9 @@ export class CartService {
     try {
       const cartId = await cartRepository.getOrCreateCartId(userId)
 
+      // Filter out invalid items where quantity <= 0
+      const validLocalItems = localItems.filter((i) => i.quantity > 0)
+
       if (merge) {
         // Merge logic
         const dbItems = await cartRepository.getCartItems(cartId)
@@ -23,12 +26,13 @@ export class CartService {
           dbItems.forEach((item: any) => dbItemsMap.set(item.variant_id, item.quantity))
         }
 
-        if (localItems.length > 0) {
-          const upsertData = localItems.map((localItem) => {
+        if (validLocalItems.length > 0) {
+          const upsertData = validLocalItems.map((localItem) => {
             const dbQty = dbItemsMap.get(localItem.variantId)
+            const effectiveStock = (localItem.stock ?? 0) > 0 ? localItem.stock! : 9999
             const combinedQty = dbQty
-              ? Math.min(dbQty + localItem.quantity, localItem.stock ?? 9999)
-              : localItem.quantity
+              ? Math.max(1, Math.min(dbQty + localItem.quantity, effectiveStock))
+              : Math.max(1, localItem.quantity)
 
             return {
               variant_id: localItem.variantId,
@@ -39,9 +43,9 @@ export class CartService {
         }
       } else {
         // Replace logic
-        const itemsToSave = localItems.map((i) => ({
+        const itemsToSave = validLocalItems.map((i) => ({
           variant_id: i.variantId,
-          quantity: i.quantity,
+          quantity: Math.max(1, i.quantity),
         }))
         await cartRepository.replaceItems(cartId, itemsToSave)
       }
