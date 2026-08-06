@@ -10,6 +10,7 @@ import {
 
 import { Button, AdminPageHeader, AdminPanel } from '@/shared/components'
 import { createBrowserClient } from '@/lib/supabase/client'
+import { fetchInvoiceHtml } from '@/app/invoice-actions'
 import { ArrowLeft, Download } from 'lucide-react'
 import { SmartLink as Link } from '@/shared/components'
 import toast from 'react-hot-toast'
@@ -111,14 +112,11 @@ function AdminOrderDetailContent({ params }: AdminOrderDetailPageProps): React.J
         return
       }
 
-      const { data: urlData } = supabase.storage
-        .from('invoices')
-        .getPublicUrl(`${order.order_number}.html`)
-
-      if (urlData?.publicUrl) {
-        // Use our internal API proxy to force text/html content type
-        const internalInvoiceUrl = `/api/invoice/${order.order_number}`
-        window.open(internalInvoiceUrl, '_blank')
+      if (order.order_number) {
+        const htmlString = await fetchInvoiceHtml(order.order_number)
+        const blob = new Blob([htmlString], { type: 'text/html' })
+        const blobUrl = URL.createObjectURL(blob)
+        window.open(blobUrl, '_blank')
       } else {
         toast.error('Gagal menemukan tautan unduh invoice')
       }

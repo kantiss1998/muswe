@@ -22,6 +22,7 @@ import { OrderReviewModal } from './components/OrderReviewModal'
 import { OrderShippingSection } from './components/OrderShippingSection'
 import { SmartLink as Link } from '@/shared/components'
 import toast from 'react-hot-toast'
+import { fetchInvoiceHtml } from '@/app/invoice-actions'
 import { useTranslation } from '@/shared/i18n/useTranslation'
 const supabase = createBrowserClient()
 
@@ -247,15 +248,12 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
         return
       }
 
-      // Resolve public storage URL
-      const { data: urlData } = supabase.storage
-        .from('invoices')
-        .getPublicUrl(`${order.order_number}.html`)
-
-      if (urlData?.publicUrl) {
-        // Use our internal API proxy to force text/html content type
-        const internalInvoiceUrl = `/api/invoice/${order.order_number}`
-        window.open(internalInvoiceUrl, '_blank')
+      if (order.order_number) {
+        const htmlString = await fetchInvoiceHtml(order.order_number)
+        const blob = new Blob([htmlString], { type: 'text/html' })
+        const blobUrl = URL.createObjectURL(blob)
+        window.open(blobUrl, '_blank')
+        // We do not revoke the URL immediately because the new tab needs time to load it
       } else {
         toast.error(isEnglish ? 'Failed to find invoice download link' : 'Gagal menemukan tautan unduh invoice')
       }
