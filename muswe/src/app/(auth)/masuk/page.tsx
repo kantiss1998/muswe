@@ -41,6 +41,7 @@ function LoginContent() {
   }, [searchParams, isEnglish])
 
   useGoogleOneTapLogin({
+    use_fedcm_for_prompt: false,
     onSuccess: async (credentialResponse) => {
       setIsGoogleLoading(true)
       try {

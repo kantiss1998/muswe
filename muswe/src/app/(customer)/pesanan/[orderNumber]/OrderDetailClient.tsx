@@ -257,7 +257,18 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
           /https:\/\/[a-zA-Z0-9]+\.supabase\.co\/storage\/v1\/object\/public/,
           'https://cdn.muswedaily.com'
         )
-        window.open(cdnUrl, '_blank')
+        
+        try {
+          // Fetch and override MIME type to ensure it renders as HTML
+          const response = await fetch(cdnUrl)
+          const text = await response.text()
+          const blob = new Blob([text], { type: 'text/html' })
+          const blobUrl = URL.createObjectURL(blob)
+          window.open(blobUrl, '_blank')
+        } catch (fetchErr) {
+          // Fallback if fetch fails (e.g., CORS)
+          window.open(cdnUrl, '_blank')
+        }
       } else {
         toast.error(isEnglish ? 'Failed to find invoice download link' : 'Gagal menemukan tautan unduh invoice')
       }
