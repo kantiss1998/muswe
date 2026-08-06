@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 import { createBrowserClient } from '@/lib/supabase/client'
 import { Button, Input, Card, AuthLoading } from '@/shared/components'
 import { staggerContainer, fadeUpItem } from '@/lib/motion'
-import { useGoogleOneTapLogin } from '@react-oauth/google'
+import { useGoogleOAuth } from '@react-oauth/google'
 import toast from 'react-hot-toast'
 
 import { useTranslation } from '@/shared/i18n/useTranslation'
@@ -40,32 +40,69 @@ function LoginContent() {
     }
   }, [searchParams, isEnglish])
 
-  useGoogleOneTapLogin({
-    use_fedcm_for_prompt: false,
-    onSuccess: async (credentialResponse) => {
-      setIsGoogleLoading(true)
+  const { clientId, scriptLoadedSuccessfully } = useGoogleOAuth()
+
+  useEffect(() => {
+    if (!scriptLoadedSuccessfully || !clientId || typeof window === 'undefined' || !(window as any).google) return
+
+    let isMounted = true
+
+    const initGoogleOneTap = async () => {
       try {
-        const { data, error } = await supabase.auth.signInWithIdToken({
-          provider: 'google',
-          token: credentialResponse.credential!,
+        // Generate a random nonce and hash it
+        const rawNonce = Array.from(crypto.getRandomValues(new Uint8Array(32)))
+          .map((b) => b.toString(16).padStart(2, '0'))
+          .join('')
+        const encoder = new TextEncoder()
+        const encodedNonce = encoder.encode(rawNonce)
+        const hashBuffer = await crypto.subtle.digest('SHA-256', encodedNonce)
+        const hashArray = Array.from(new Uint8Array(hashBuffer))
+        const hashedNonce = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+
+        if (!isMounted) return
+
+        ;(window as any).google.accounts.id.initialize({
+          client_id: clientId,
+          nonce: hashedNonce,
+          use_fedcm_for_prompt: true,
+          callback: async (response: any) => {
+            setIsGoogleLoading(true)
+            try {
+              const { data, error } = await supabase.auth.signInWithIdToken({
+                provider: 'google',
+                token: response.credential,
+                nonce: rawNonce, // Pass raw nonce to Supabase!
+              })
+              if (error) throw error
+              
+              if (data.user) {
+                toast.success(isEnglish ? 'Successfully signed in with Google!' : 'Berhasil masuk dengan Google!')
+                router.push(redirectPath)
+              }
+            } catch (err: unknown) {
+              const msg = err instanceof Error ? err.message : (isEnglish ? 'Google sign-in failed.' : 'Login dengan Google gagal.')
+              toast.error(msg)
+            } finally {
+              setIsGoogleLoading(false)
+            }
+          },
         })
-        if (error) throw error
         
-        if (data.user) {
-          toast.success(isEnglish ? 'Successfully signed in with Google!' : 'Berhasil masuk dengan Google!')
-          router.push(redirectPath)
-        }
-      } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : (isEnglish ? 'Google sign-in failed.' : 'Login dengan Google gagal.')
-        toast.error(msg)
-      } finally {
-        setIsGoogleLoading(false)
+        ;(window as any).google.accounts.id.prompt()
+      } catch (e) {
+        console.error('Failed to init Google One Tap', e)
       }
-    },
-    onError: () => {
-      console.log('Google One Tap Failed')
-    },
-  })
+    }
+
+    initGoogleOneTap()
+
+    return () => {
+      isMounted = false
+      if ((window as any).google?.accounts?.id?.cancel) {
+        (window as any).google.accounts.id.cancel()
+      }
+    }
+  }, [scriptLoadedSuccessfully, clientId, isEnglish, redirectPath, router, supabase.auth])
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -116,20 +116,9 @@ function AdminOrderDetailContent({ params }: AdminOrderDetailPageProps): React.J
         .getPublicUrl(`${order.order_number}.html`)
 
       if (urlData?.publicUrl) {
-        const cdnUrl = urlData.publicUrl.replace(
-          /https:\/\/[a-zA-Z0-9]+\.supabase\.co\/storage\/v1\/object\/public/,
-          'https://cdn.muswedaily.com'
-        )
-        
-        try {
-          const response = await fetch(cdnUrl)
-          const text = await response.text()
-          const blob = new Blob([text], { type: 'text/html' })
-          const blobUrl = URL.createObjectURL(blob)
-          window.open(blobUrl, '_blank')
-        } catch (fetchErr) {
-          window.open(cdnUrl, '_blank')
-        }
+        // Use our internal API proxy to force text/html content type
+        const internalInvoiceUrl = `/api/invoice/${order.order_number}`
+        window.open(internalInvoiceUrl, '_blank')
       } else {
         toast.error('Gagal menemukan tautan unduh invoice')
       }
