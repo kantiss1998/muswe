@@ -4,9 +4,19 @@ import { ApiErrorCode } from '@/lib/api-errors'
 import { adminLogRepository } from '@/modules/admin-logs/admin-log.repository'
 import { createServerClient } from '@/lib/supabase/server'
 import { orderRepository } from './order.repository'
-import { AdminOrderListItem, AdminReturnRequestListItem } from './types'
+import { AdminOrderListItem, AdminReturnRequestListItem, Order } from './types'
 
 export class AdminOrderService {
+  async getOrderDetail(orderNumber: string): Promise<ApiResponse<Order | null>> {
+    try {
+      const { orderService } = await import('./order.service')
+      return orderService.getOrderDetail(orderNumber)
+    } catch (error) {
+      safeLogError('Error fetching admin order detail:', error)
+      return fail(ApiErrorCode.INTERNAL_ERROR, 'Gagal mengambil detail pesanan')
+    }
+  }
+
   async getOrders(
     params: { status?: string; search?: string; page?: number; limit?: number } = {}
   ): Promise<ApiListResponse<AdminOrderListItem>> {

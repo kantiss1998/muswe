@@ -2,10 +2,10 @@
 
 import React, { use, useState } from 'react'
 
-import { useOrderDetail } from '@/modules/orders/hooks/useOrders'
 import {
   useAdminUpdateOrderStatus,
   useAdminUpdateTrackingNumber,
+  useAdminOrderDetail,
 } from '@/modules/orders/hooks/useAdminOrders'
 
 import { Button, AdminPageHeader, AdminPanel } from '@/shared/components'
@@ -28,7 +28,7 @@ interface AdminOrderDetailPageProps {
 function AdminOrderDetailContent({ params }: AdminOrderDetailPageProps): React.JSX.Element {
   const { orderNumber } = use(params)
 
-  const { data: orderResponse, isLoading, isError, refetch } = useOrderDetail(orderNumber as string)
+  const { data: orderResponse, isLoading, isError, refetch } = useAdminOrderDetail(orderNumber as string)
   const order = orderResponse?.data
   const updateStatusMutation = useAdminUpdateOrderStatus()
   const updateTrackingMutation = useAdminUpdateTrackingNumber()

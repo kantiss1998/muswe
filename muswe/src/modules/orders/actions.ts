@@ -59,6 +59,11 @@ export async function adminGetReturnRequestsAction() {
   return adminOrderService.getReturnRequests()
 }
 
+export async function adminGetOrderDetailAction(orderNumber: string) {
+  await requireAdmin()
+  return adminOrderService.getOrderDetail(orderNumber)
+}
+
 export async function getOrdersAction(userId: string, status?: string, page = 1, limit = 10) {
   const { user } = await requireAuth()
   if (user.id !== userId) throw new Error('Unauthorized')
@@ -66,7 +71,19 @@ export async function getOrdersAction(userId: string, status?: string, page = 1,
 }
 
 export async function getOrderDetailAction(orderNumber: string, userId?: string) {
-  const { user } = await requireAuth()
+  const { user, supabase } = await requireAuth()
+
+  // Check if current user is admin
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (profile?.role === 'admin') {
+    return orderService.getOrderDetail(orderNumber)
+  }
+
   // If userId is provided, verify ownership. Otherwise use the authenticated user's ID.
   const effectiveUserId = userId || user.id
   if (user.id !== effectiveUserId) throw new Error('Unauthorized')

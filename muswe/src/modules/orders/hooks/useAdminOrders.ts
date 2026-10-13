@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { invalidateAdminQueries } from '@/shared/hooks/invalidation'
 import {
   adminGetOrdersAction,
+  adminGetOrderDetailAction,
   adminGetReturnRequestsAction,
   adminUpdateReturnRequestAction,
   adminUpdateOrderStatusAction,
@@ -25,6 +26,14 @@ export function useAdminOrders(status = 'all', search = '', page = 1, limit = 20
   return useQuery({
     queryKey: ['admin', 'orders', status, search, page, limit],
     queryFn: () => adminGetOrdersAction({ status, search, page, limit }),
+  })
+}
+
+export function useAdminOrderDetail(orderNumber: string) {
+  return useQuery({
+    queryKey: ['admin', 'order', orderNumber],
+    queryFn: () => adminGetOrderDetailAction(orderNumber),
+    enabled: !!orderNumber,
   })
 }
 
