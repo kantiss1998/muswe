@@ -277,6 +277,39 @@ export class JubelioClient {
     }
   }
 
+  async getItemIdBySku(sku?: string): Promise<number | null> {
+    if (!sku) return null
+    const cleanSku = sku.trim().toUpperCase()
+
+    try {
+      if (!this.token) {
+        await this.login()
+      }
+      if (!this.token) return null
+
+      const response = await this.fetchWithAuth(
+        `${JUBELIO_BASE_URL}/inventory/items/?q=${encodeURIComponent(cleanSku)}`,
+        { method: 'GET' }
+      )
+      if (!response.ok) return null
+      const data: any = await response.json()
+      const groups = Array.isArray(data?.data) ? data.data : []
+      for (const group of groups) {
+        if (Array.isArray(group.variants)) {
+          const found = group.variants.find(
+            (v: any) => v.item_code && v.item_code.trim().toUpperCase() === cleanSku
+          )
+          if (found && typeof found.item_id === 'number') {
+            return found.item_id
+          }
+        }
+      }
+    } catch (err) {
+      safeLogError('[JubelioClient] Error getting item_id by SKU:', err)
+    }
+    return null
+  }
+
   async syncSalesOrderShipment(
     payload: JubelioSalesOrderShipmentPayload
   ): Promise<JubelioSyncResponse> {
@@ -308,6 +341,31 @@ export class JubelioClient {
       }
 
       const locationId = payload.location_id || (await this.getGudangForalLocationId())
+
+      const resolvedItems = await Promise.all(
+        payload.items.map(async (item) => {
+          let resolvedItemId = item.item_id
+          if (!resolvedItemId && item.item_code) {
+            resolvedItemId = (await this.getItemIdBySku(item.item_code)) || undefined
+          }
+
+          return {
+            salesorder_detail_id: 0,
+            item_id: resolvedItemId || 731,
+            price: item.price,
+            amount: item.price * item.quantity,
+            qty_in_base: item.quantity,
+            unit: item.unit || 'Buah',
+            disc: 0,
+            disc_amount: 0,
+            tax_amount: 0,
+            tax_id: 1,
+            location_id: locationId,
+            shipper: payload.courier_name,
+            tracking_no: payload.tracking_number,
+          }
+        })
+      )
 
       const requestBody = {
         salesorder_no: payload.order_number,
@@ -347,21 +405,7 @@ export class JubelioClient {
         is_cod: false,
         is_po: false,
         attachment: [],
-        items: payload.items.map((item) => ({
-          salesorder_detail_id: 0,
-          item_id: item.item_id || 731,
-          price: item.price,
-          amount: item.price * item.quantity,
-          qty_in_base: item.quantity,
-          unit: item.unit || 'Buah',
-          disc: 0,
-          disc_amount: 0,
-          tax_amount: 0,
-          tax_id: 1,
-          location_id: locationId,
-          shipper: payload.courier_name,
-          tracking_no: payload.tracking_number,
-        })),
+        items: resolvedItems,
       }
 
       const response = await fetch(`${JUBELIO_BASE_URL}/sales/orders/`, {
