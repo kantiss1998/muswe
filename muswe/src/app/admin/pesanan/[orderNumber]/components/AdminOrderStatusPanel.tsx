@@ -9,6 +9,8 @@ interface AdminOrderStatusPanelProps {
   handleUpdateStatus: (
     status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled' | 'refunded'
   ) => void
+  handleCheckPaymentStatus?: () => void
+  isCheckingPayment?: boolean
 }
 
 export function AdminOrderStatusPanel({
@@ -16,6 +18,8 @@ export function AdminOrderStatusPanel({
   trackingNumber,
   setTrackingNumber,
   handleUpdateStatus,
+  handleCheckPaymentStatus,
+  isCheckingPayment,
 }: AdminOrderStatusPanelProps): React.JSX.Element {
   return (
     <AdminPanel title="Status Alur Kerja">
@@ -42,6 +46,17 @@ export function AdminOrderStatusPanel({
       <div className="space-y-2 pt-2 border-t border-neutral-100 mt-4">
         {status === 'pending_payment' && (
           <>
+            {handleCheckPaymentStatus && (
+              <Button
+                onClick={handleCheckPaymentStatus}
+                isLoading={isCheckingPayment}
+                disabled={isCheckingPayment}
+                variant="outline"
+                className="w-full py-3 text-xs uppercase tracking-wider font-bold border-brand-gold text-brand-gold hover:bg-brand-gold/10"
+              >
+                Cek Status Gateway (DOKU)
+              </Button>
+            )}
             <Button
               onClick={() => handleUpdateStatus('processing')}
               className="w-full py-3 text-xs uppercase tracking-wider font-bold"

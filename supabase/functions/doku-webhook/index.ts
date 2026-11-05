@@ -60,7 +60,7 @@ Deno.serve(async (req: Request) => {
     if (secretKey && receivedSignature) {
       const targetPath = new URL(req.url).pathname;
       const digest = await generateDigest(rawBody);
-      const expectedSignature = await generateSignature(
+      let expectedSignature = await generateSignature(
         clientId!,
         secretKey,
         requestId,
@@ -68,6 +68,24 @@ Deno.serve(async (req: Request) => {
         targetPath,
         digest
       );
+
+      // Also try alternative target path if signature doesn't match (e.g. gateway path mapping)
+      if (receivedSignature !== expectedSignature) {
+        const altPath = targetPath.includes("/functions/v1")
+          ? targetPath.replace("/functions/v1", "")
+          : `/functions/v1${targetPath.startsWith("/") ? "" : "/"}${targetPath}`;
+        const altSignature = await generateSignature(
+          clientId!,
+          secretKey,
+          requestId,
+          timestamp,
+          altPath,
+          digest
+        );
+        if (receivedSignature === altSignature) {
+          expectedSignature = altSignature;
+        }
+      }
 
       if (receivedSignature !== expectedSignature) {
         console.error("CRITICAL: Signature mismatch on DOKU webhook. Request blocked.");

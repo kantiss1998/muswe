@@ -97,12 +97,20 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Verify ownership
+    // Verify ownership or admin role
     if (order.user_id !== user.id) {
-      return new Response(
-        JSON.stringify({ success: false, message: "Akses ditolak" }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      if (profile?.role !== "admin") {
+        return new Response(
+          JSON.stringify({ success: false, message: "Akses ditolak" }),
+          { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
     }
 
     let payment = Array.isArray(order.payments) ? order.payments[0] : order.payments;

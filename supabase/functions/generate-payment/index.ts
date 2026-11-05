@@ -197,9 +197,9 @@ Deno.serve(async (req: Request) => {
         amount: Math.round(Number(order.total_amount)),
         invoice_number: order.order_number,
         currency: "IDR",
-        callback_url: `${appUrl}/pesanan/${order.order_number}`,
+        callback_url: `${appUrl}/pesanan/${order.order_number}?verifying=1`,
         callback_url_cancel: `${appUrl}/pesanan/${order.order_number}`,
-        callback_url_result: `${appUrl}/pesanan/${order.order_number}`,
+        callback_url_result: `${appUrl}/pesanan/${order.order_number}?verifying=1`,
         line_items: lineItems,
       },
       payment: {

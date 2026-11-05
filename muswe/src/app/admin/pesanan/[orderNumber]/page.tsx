@@ -6,6 +6,7 @@ import {
   useAdminUpdateOrderStatus,
   useAdminUpdateTrackingNumber,
   useAdminOrderDetail,
+  useAdminCheckPaymentStatus,
 } from '@/modules/orders/hooks/useAdminOrders'
 
 import { Button, AdminPageHeader, AdminPanel } from '@/shared/components'
@@ -32,6 +33,7 @@ function AdminOrderDetailContent({ params }: AdminOrderDetailPageProps): React.J
   const order = orderResponse?.data
   const updateStatusMutation = useAdminUpdateOrderStatus()
   const updateTrackingMutation = useAdminUpdateTrackingNumber()
+  const checkPaymentMutation = useAdminCheckPaymentStatus()
 
   const [trackingNumber, setTrackingNumber] = useState('')
   const [isEditingResi, setIsEditingResi] = useState(false)
@@ -46,6 +48,23 @@ function AdminOrderDetailContent({ params }: AdminOrderDetailPageProps): React.J
         minute: '2-digit',
       })
     : '-'
+
+  const handleCheckPaymentStatus = async () => {
+    if (!orderNumber) return
+    toast.loading('Memeriksa status ke DOKU Gateway...', { id: 'check-doku' })
+    try {
+      const res = await checkPaymentMutation.mutateAsync(orderNumber as string)
+      toast.dismiss('check-doku')
+      if (res.order_status && res.order_status !== 'pending_payment') {
+        toast.success(`Status pesanan berhasil diperbarui: ${res.order_status.toUpperCase()}`)
+        refetch()
+      } else {
+        toast('Status di DOKU: Masih menunggu pembayaran / belum dibayar.', { icon: 'ℹ️' })
+      }
+    } catch (err: any) {
+      toast.error(err?.message || 'Gagal memeriksa status pembayaran di DOKU', { id: 'check-doku' })
+    }
+  }
 
   const handleUpdateStatus = async (
     status: 'pending_payment' | 'processing' | 'shipped' | 'completed' | 'cancelled' | 'refunded'
@@ -225,6 +244,8 @@ function AdminOrderDetailContent({ params }: AdminOrderDetailPageProps): React.J
             trackingNumber={trackingNumber}
             setTrackingNumber={setTrackingNumber}
             handleUpdateStatus={handleUpdateStatus}
+            handleCheckPaymentStatus={handleCheckPaymentStatus}
+            isCheckingPayment={checkPaymentMutation.isPending}
           />
 
           <AdminPanel title="Rincian Biaya">

@@ -719,6 +719,7 @@ export type Database = {
         Row: {
           created_at: string
           event_type: string
+          gateway_order_id: string | null
           id: string
           midtrans_order_id: string | null
           payment_id: string | null
@@ -727,6 +728,7 @@ export type Database = {
         Insert: {
           created_at?: string
           event_type: string
+          gateway_order_id?: string | null
           id?: string
           midtrans_order_id?: string | null
           payment_id?: string | null
@@ -735,6 +737,7 @@ export type Database = {
         Update: {
           created_at?: string
           event_type?: string
+          gateway_order_id?: string | null
           id?: string
           midtrans_order_id?: string | null
           payment_id?: string | null
@@ -761,7 +764,11 @@ export type Database = {
         Row: {
           amount: number
           created_at: string
+          doku_session_id: string | null
           expired_at: string | null
+          gateway_order_id: string | null
+          gateway_response: Json | null
+          gateway_transaction_id: string | null
           id: string
           invoice_url: string | null
           midtrans_order_id: string | null
@@ -770,13 +777,18 @@ export type Database = {
           order_id: string
           paid_at: string | null
           payment_type: string | null
+          payment_url: string | null
           status: string
           updated_at: string
         }
         Insert: {
           amount: number
           created_at?: string
+          doku_session_id?: string | null
           expired_at?: string | null
+          gateway_order_id?: string | null
+          gateway_response?: Json | null
+          gateway_transaction_id?: string | null
           id?: string
           invoice_url?: string | null
           midtrans_order_id?: string | null
@@ -785,13 +797,18 @@ export type Database = {
           order_id: string
           paid_at?: string | null
           payment_type?: string | null
+          payment_url?: string | null
           status?: string
           updated_at?: string
         }
         Update: {
           amount?: number
           created_at?: string
+          doku_session_id?: string | null
           expired_at?: string | null
+          gateway_order_id?: string | null
+          gateway_response?: Json | null
+          gateway_transaction_id?: string | null
           id?: string
           invoice_url?: string | null
           midtrans_order_id?: string | null
@@ -800,6 +817,7 @@ export type Database = {
           order_id?: string
           paid_at?: string | null
           payment_type?: string | null
+          payment_url?: string | null
           status?: string
           updated_at?: string
         }

@@ -30,6 +30,11 @@ export async function adminUpdateOrderStatusAction(
   return adminOrderService.updateOrderStatus(orderId, status, trackingNumber)
 }
 
+export async function adminCheckPaymentStatusAction(orderNumber: string) {
+  await requireAdmin()
+  return orderService.checkPaymentStatus(orderNumber)
+}
+
 export async function adminUpdateTrackingNumberAction(orderId: string, trackingNumber: string) {
   await requireAdmin()
   return adminOrderService.updateTrackingNumber(orderId, trackingNumber)

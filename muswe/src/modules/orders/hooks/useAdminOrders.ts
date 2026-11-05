@@ -7,6 +7,7 @@ import {
   adminUpdateReturnRequestAction,
   adminUpdateOrderStatusAction,
   adminUpdateTrackingNumberAction,
+  adminCheckPaymentStatusAction,
 } from '@/modules/orders/actions'
 
 export interface AdminUpdateOrderStatusInput {
@@ -43,6 +44,20 @@ export function useAdminUpdateOrderStatus() {
     mutationFn: async ({ orderId, status, trackingNumber }: AdminUpdateOrderStatusInput) => {
       const res = await adminUpdateOrderStatusAction(orderId, status, trackingNumber)
       if (!res.success) throw new Error(res.error?.message || 'Gagal mengupdate status pesanan')
+      return res.data!
+    },
+    onSuccess: () => {
+      invalidateAdminQueries(queryClient, ['orders', 'dashboard'])
+    },
+  })
+}
+
+export function useAdminCheckPaymentStatus() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (orderNumber: string) => {
+      const res = await adminCheckPaymentStatusAction(orderNumber)
+      if (!res.success) throw new Error(res.error?.message || 'Gagal memeriksa status pembayaran')
       return res.data!
     },
     onSuccess: () => {
