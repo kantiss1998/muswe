@@ -7,6 +7,15 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -67,12 +76,20 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Check ownership if not service role
+    // Check ownership or admin role if not service role
     if (!isServiceRole && user && order.user_id !== user.id) {
-      return new Response(
-        JSON.stringify({ success: false, message: "Akses ditolak: Anda bukan pemilik pesanan ini" }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      const { data: callerProfile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (callerProfile?.role !== "admin") {
+        return new Response(
+          JSON.stringify({ success: false, message: "Akses ditolak: Anda bukan pemilik pesanan ini" }),
+          { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
     }
 
     // Fetch related profile
@@ -138,13 +155,13 @@ Deno.serve(async (req: Request) => {
 <body>
   <div class="header">
     <div>
-      <h1>${settingsMap.store_name || "Muswe"}</h1>
-      <p>${settingsMap.store_address || ""}</p>
-      <p>${settingsMap.store_phone || ""} | ${settingsMap.store_email || ""}</p>
+      <h1>${escapeHtml(settingsMap.store_name || "Muswe")}</h1>
+      <p>${escapeHtml(settingsMap.store_address || "")}</p>
+      <p>${escapeHtml(settingsMap.store_phone || "")} | ${escapeHtml(settingsMap.store_email || "")}</p>
     </div>
     <div style="text-align:right;">
       <h2 style="margin:0;">INVOICE</h2>
-      <p><strong>${order.order_number}</strong></p>
+      <p><strong>${escapeHtml(order.order_number)}</strong></p>
       <p>Tanggal: ${new Date(order.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}</p>
       <p>Status: <strong style="color: green;">LUNAS</strong></p>
     </div>
@@ -153,15 +170,15 @@ Deno.serve(async (req: Request) => {
   <div class="info-grid">
     <div class="info-box">
       <h3>Informasi Pelanggan</h3>
-      <p><strong>${profile?.name || "Pelanggan"}</strong></p>
-      <p>${profile?.phone || "-"}</p>
+      <p><strong>${escapeHtml(profile?.name || "Pelanggan")}</strong></p>
+      <p>${escapeHtml(profile?.phone || "-")}</p>
     </div>
     <div class="info-box">
       <h3>Alamat Pengiriman</h3>
-      <p><strong>${shipping?.recipient_name || "-"}</strong></p>
-      <p>${shipping?.full_address || "-"}</p>
-      <p>${shipping?.district_name || ""}, ${shipping?.city_name || ""}</p>
-      <p>${shipping?.province_name || ""} ${shipping?.postal_code || ""}</p>
+      <p><strong>${escapeHtml(shipping?.recipient_name || "-")}</strong></p>
+      <p>${escapeHtml(shipping?.full_address || "-")}</p>
+      <p>${escapeHtml(shipping?.district_name || "")}, ${escapeHtml(shipping?.city_name || "")}</p>
+      <p>${escapeHtml(shipping?.province_name || "")} ${escapeHtml(shipping?.postal_code || "")}</p>
     </div>
   </div>
 
@@ -178,9 +195,9 @@ Deno.serve(async (req: Request) => {
     <tbody>
       ${(orderItems || []).map((item: Record<string, unknown>) => `
       <tr>
-        <td>${item.product_name} - ${item.variant_name}</td>
-        <td>${item.sku}</td>
-        <td style="text-align:center;">${item.quantity}</td>
+        <td>${escapeHtml(item.product_name)} - ${escapeHtml(item.variant_name)}</td>
+        <td>${escapeHtml(item.sku)}</td>
+        <td style="text-align:center;">${Number(item.quantity)}</td>
         <td style="text-align:right;">Rp ${Number(item.price).toLocaleString("id-ID")}</td>
         <td style="text-align:right;">Rp ${Number(item.subtotal).toLocaleString("id-ID")}</td>
       </tr>
@@ -196,7 +213,7 @@ Deno.serve(async (req: Request) => {
   </table>
 
   <div class="footer">
-    <p>Terima kasih telah berbelanja di ${settingsMap.store_name || "Muswe"}!</p>
+    <p>Terima kasih telah berbelanja di ${escapeHtml(settingsMap.store_name || "Muswe")}!</p>
     <p>Kebijakan retur berlaku 7 hari setelah pesanan diterima.</p>
   </div>
 </body>
@@ -248,7 +265,7 @@ Deno.serve(async (req: Request) => {
     return new Response(
       JSON.stringify({
         success: true,
-        data: { invoice_path: invoicePath },
+        data: { invoice_path: invoicePath, invoice_html: invoiceHtml },
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );

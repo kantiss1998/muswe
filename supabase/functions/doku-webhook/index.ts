@@ -201,8 +201,12 @@ Deno.serve(async (req: Request) => {
           data: { order_id: order.id, order_number: order.order_number },
         });
 
-        // Trigger generate-invoice and send-email Edge Functions asynchronously
-        supabase.functions.invoke("generate-invoice", { body: { order_number: order.order_number } }).catch(console.error);
+        // Await generate-invoice before serverless runtime exits
+        try {
+          await supabase.functions.invoke("generate-invoice", { body: { order_number: order.order_number } });
+        } catch (invErr) {
+          console.error("Failed to invoke generate-invoice:", invErr);
+        }
       } else if (orderStatus === "cancelled") {
         await supabase.rpc("cancel_order", {
           p_order_id: order.id,

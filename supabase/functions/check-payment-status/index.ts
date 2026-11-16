@@ -191,7 +191,11 @@ Deno.serve(async (req: Request) => {
                 data: { order_id: order.id, order_number: order.order_number },
               });
 
-              supabase.functions.invoke("generate-invoice", { body: { order_number: order.order_number } }).catch(console.error);
+              try {
+                await supabase.functions.invoke("generate-invoice", { body: { order_number: order.order_number } });
+              } catch (invErr) {
+                console.error("Failed to invoke generate-invoice:", invErr);
+              }
 
               order.status = "processing";
               if (payment) payment.status = "success";

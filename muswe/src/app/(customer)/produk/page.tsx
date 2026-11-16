@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import { cacheLife, cacheTag } from 'next/cache'
-import { getProductsAction } from '@/modules/products/actions'
-import { getActiveCategoriesAction } from '@/modules/categories/actions'
+import { productService } from '@/modules/products/product.service'
+import { categoryService } from '@/modules/categories/category.service'
 import { CatalogClient } from './CatalogClient'
 import { PageContainer, PageHero } from '@/shared/components'
 import { ProductCardSkeleton } from '@/modules/products/components/ProductCardSkeleton'
@@ -13,21 +13,23 @@ interface CatalogPageProps {
 async function getCachedCatalogData(
   categorySlug?: string,
   sortBy?: 'newest' | 'featured' | 'price-low' | 'price-high' | 'popular',
+  searchQuery?: string,
   page?: number,
   limit?: number
 ) {
-  // 'use cache'
-  // cacheLife('minutes')
-  // cacheTag('products', 'catalog', 'categories')
+  'use cache'
+  cacheLife('minutes')
+  cacheTag('products', 'catalog', 'categories')
 
   const [productsRes, categoriesRes] = await Promise.all([
-    getProductsAction({
+    productService.getProducts({
       categorySlug,
       sortBy,
+      searchQuery,
       page,
       limit,
     }),
-    getActiveCategoriesAction(),
+    categoryService.getActiveCategories(),
   ])
 
   return {
@@ -61,7 +63,7 @@ async function CatalogContent({
   let isError = false
 
   try {
-    data = await getCachedCatalogData(categorySlug, sortBy, page, limit)
+    data = await getCachedCatalogData(categorySlug, sortBy, searchQuery, page, limit)
   } catch (error) {
     console.error('Error fetching catalog data:', error)
     isError = true

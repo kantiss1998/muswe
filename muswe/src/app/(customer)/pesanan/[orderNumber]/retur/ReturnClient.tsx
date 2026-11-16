@@ -152,69 +152,59 @@ export default function ReturnPageClient({ params }: ReturnPageProps): React.JSX
 
     setIsSubmitting(true)
     try {
-      // 1. Insert return request row
-      const { data: returnReq, error: reqError } = await supabase
-        .from('return_requests')
-        .insert({
-          order_id: order.id,
-          user_id: user.id,
-          reason: reason,
-          customer_notes: customerNotes.trim() || null,
-          refund_bank_name: bankName.trim(),
-          refund_account_number: accountNumber.trim(),
-          refund_account_name: accountName.trim(),
-          status: 'pending',
-        })
-        .select('id')
-        .single()
+      // 1. Upload return media first so database stays untouched if upload fails
+      const mediaUrls: string[] = []
+      if (returnFiles.length > 0) {
+        toast.loading('Mengunggah foto bukti...', { id: 'return-media' })
+        try {
+          for (const file of returnFiles) {
+            // Upload to 'products' bucket to save quota/configuration
+            const url = await uploadImage(file, 'products')
+            if (!url) {
+              throw new Error('Gagal mengunggah foto bukti retur')
+            }
+            mediaUrls.push(url)
+          }
+        } finally {
+          toast.dismiss('return-media')
+        }
+      }
 
-      if (reqError) throw reqError
-
-      // 2. Insert return items rows
-      const returnItemsData = itemsToReturn.map((itemId) => ({
-        return_request_id: returnReq.id,
+      // 2. Submit return request, items, and media in a single atomic transaction
+      const returnItemsPayload = itemsToReturn.map((itemId) => ({
         order_item_id: itemId,
         quantity: quantities[itemId],
       }))
 
-      const { error: itemsError } = await supabase.from('return_items').insert(returnItemsData)
-
-      if (itemsError) throw itemsError
-
-      // 3. Upload and insert return media
-      if (returnFiles.length > 0) {
-        toast.loading('Mengunggah foto bukti...', { id: 'return-media' })
-        const mediaUrls: string[] = []
-        for (const file of returnFiles) {
-          try {
-            // Upload to 'products' bucket to save quota/configuration
-            const url = await uploadImage(file, 'products')
-            if (url) mediaUrls.push(url)
-          } catch (uploadErr) {
-            console.error('Failed to upload a return file:', uploadErr)
-            // continue with others
-          }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: rpcRes, error: rpcError } = await (supabase.rpc as any)(
+        'submit_return_request',
+        {
+          p_order_id: order.id,
+          p_reason: reason,
+          p_customer_notes: customerNotes.trim() || null,
+          p_bank_name: bankName.trim(),
+          p_account_number: accountNumber.trim(),
+          p_account_name: accountName.trim(),
+          p_items: returnItemsPayload,
+          p_media_urls: mediaUrls,
         }
+      )
 
-        if (mediaUrls.length > 0) {
-          const mediaData = mediaUrls.map((url, idx) => ({
-            return_request_id: returnReq.id,
-            url: url,
-            sort_order: idx,
-          }))
-
-          const { error: mediaError } = await supabase.from('return_media').insert(mediaData)
-
-          if (mediaError) console.error('Error inserting return media:', mediaError)
-        }
-        toast.dismiss('return-media')
+      if (rpcError) throw rpcError
+      if (!rpcRes?.success) {
+        throw new Error(rpcRes?.message || 'Gagal mengirim pengajuan retur')
       }
 
       toast.success('Pengajuan retur berhasil dikirim!')
       router.push(`/pesanan/${order.order_number}`)
     } catch (err: unknown) {
       console.error('Error submitting return:', err)
-      toast.error('Gagal mengirim pengajuan retur. Silakan coba lagi.')
+      const msg =
+        err instanceof Error && err.message
+          ? err.message
+          : 'Gagal mengirim pengajuan retur. Silakan coba lagi.'
+      toast.error(msg)
     } finally {
       setIsSubmitting(false)
     }

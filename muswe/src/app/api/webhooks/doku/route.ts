@@ -158,10 +158,14 @@ export async function POST(req: Request) {
           data: { order_id: order.id, order_number: order.order_number },
         })
 
-        // Trigger generate-invoice Edge Function asynchronously
-        supabase.functions.invoke('generate-invoice', { body: { order_number: order.order_number } }).catch((err) => {
+        // Await generate-invoice before serverless runtime returns HTTP response
+        try {
+          await supabase.functions.invoke('generate-invoice', {
+            body: { order_number: order.order_number },
+          })
+        } catch (err) {
           safeLogError('Error invoking generate-invoice from DOKU webhook', err)
-        })
+        }
       } else if (orderStatus === 'cancelled') {
         await supabase.rpc('cancel_order', {
           p_order_id: order.id,

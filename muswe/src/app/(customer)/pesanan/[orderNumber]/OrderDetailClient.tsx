@@ -243,13 +243,14 @@ function OrderDetailContent({ params }: OrderDetailPageProps): React.JSX.Element
         body: { order_number: order.order_number },
       })
 
-      if (error || !invoiceRes.success) {
+      if (error || !invoiceRes?.success) {
         toast.error(isEnglish ? 'Failed to generate invoice' : 'Gagal menghasilkan invoice')
         return
       }
 
       if (order.order_number) {
-        const htmlString = await fetchInvoiceHtml(order.order_number)
+        const htmlString =
+          invoiceRes?.data?.invoice_html || (await fetchInvoiceHtml(order.order_number))
         const blob = new Blob([htmlString], { type: 'text/html' })
         const blobUrl = URL.createObjectURL(blob)
         window.open(blobUrl, '_blank')
