@@ -8,6 +8,7 @@ import type { SiteSetting } from './types'
 function revalidateSettingsCache() {
   try {
     revalidateTag('settings', 'hours')
+    revalidateTag('mega-menu', 'hours')
     revalidateTag('homepage-data', 'hours')
     revalidatePath('/', 'layout')
   } catch (err) {

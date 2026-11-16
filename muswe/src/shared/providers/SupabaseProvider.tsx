@@ -19,9 +19,9 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }): R
   useEffect(() => {
     setLoading(true)
 
-    const handleUserSession = async (user: User | null) => {
+    const handleUserSession = async (user: User | null, event?: AuthChangeEvent) => {
       const userId = user?.id ?? null
-      if (lastProcessedUserIdRef.current === userId) {
+      if (lastProcessedUserIdRef.current === userId && event !== 'SIGNED_OUT') {
         setLoading(false)
         return
       }
@@ -49,8 +49,12 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }): R
         useWishlistStore.getState().syncWishlist(user.id)
       } else {
         clearAuth()
-        useWishlistStore.getState().clearWishlist()
-        useCartStore.getState().resetCart()
+        // Only clear persisted guest cart/wishlist when explicitly signing out,
+        // preserving guest cart items across page refreshes on INITIAL_SESSION.
+        if (event === 'SIGNED_OUT') {
+          useWishlistStore.getState().clearWishlist()
+          useCartStore.getState().resetCart()
+        }
       }
       setLoading(false)
     }
@@ -62,7 +66,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }): R
       if (event === 'PASSWORD_RECOVERY') {
         router.push('/reset-password')
       }
-      await handleUserSession(session?.user ?? null)
+      await handleUserSession(session?.user ?? null, event)
     })
 
     return () => {

@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils'
 
 import { Category } from '@/modules/categories/types'
 import { Collection } from '@/modules/collections/types'
+import type { SiteSetting } from '@/modules/settings/types'
 
 import { useTranslation } from '@/shared/i18n/useTranslation'
 
@@ -30,14 +31,20 @@ interface CustomerLayoutProps {
   children: React.ReactNode
   categories?: Category[]
   collections?: Collection[]
+  siteSettings?: SiteSetting[]
 }
 
-export function CustomerLayout({ children, categories = [], collections = [] }: CustomerLayoutProps): React.JSX.Element {
+export function CustomerLayout({
+  children,
+  categories = [],
+  collections = [],
+  siteSettings,
+}: CustomerLayoutProps): React.JSX.Element {
   const pathname = usePathname()
   const router = useRouter()
   const { t, isEnglish } = useTranslation()
   const [supabase] = useState(() => createBrowserClient())
-  const { logoUrl, whatsappUrl } = useSiteSettings()
+  const { logoUrl, whatsappUrl } = useSiteSettings(siteSettings)
 
   const navLinks = [
     { name: t.nav.products, href: '/produk' },
@@ -170,7 +177,7 @@ export function CustomerLayout({ children, categories = [], collections = [] }: 
         <ErrorBoundary>{children}</ErrorBoundary>
       </main>
 
-      <Footer />
+      <Footer siteSettings={siteSettings} />
       <ScrollToTopButton />
       <MiniCartDrawer />
 

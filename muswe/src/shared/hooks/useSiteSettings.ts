@@ -1,11 +1,25 @@
 import { useQuery } from '@tanstack/react-query'
 import { getSiteSettingsAction } from '@/modules/settings/actions'
 import { SOCIAL_LINKS } from '@/lib/constants'
+import type { SiteSetting } from '@/modules/settings/types'
 
-export function useSiteSettings() {
+export function useSiteSettings(initialSettings?: SiteSetting[]) {
   const query = useQuery({
     queryKey: ['site-settings'],
     queryFn: () => getSiteSettingsAction(),
+    initialData: initialSettings
+      ? {
+          success: true as const,
+          data: initialSettings,
+          pagination: {
+            page: 1,
+            limit: initialSettings.length || 1,
+            total_count: initialSettings.length,
+            total_pages: 1,
+          },
+        }
+      : undefined,
+    enabled: !initialSettings,
     staleTime: 1000 * 60 * 10, // 10 minutes
   })
 

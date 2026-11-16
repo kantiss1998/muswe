@@ -5,10 +5,15 @@ import { Button, Input, CurrentYear } from '@/shared/components'
 import { useTranslation } from '@/shared/i18n/useTranslation'
 import toast from 'react-hot-toast'
 import { useSiteSettings } from '@/shared/hooks/useSiteSettings'
+import type { SiteSetting } from '@/modules/settings/types'
 
-export function Footer(): React.JSX.Element {
+interface FooterProps {
+  siteSettings?: SiteSetting[]
+}
+
+export function Footer({ siteSettings }: FooterProps): React.JSX.Element {
   const { t, isEnglish } = useTranslation()
-  const { logoUrl, instagramUrl, tiktokUrl, whatsappUrl, shopeeUrl } = useSiteSettings()
+  const { logoUrl, instagramUrl, tiktokUrl, whatsappUrl, shopeeUrl } = useSiteSettings(siteSettings)
 
   return (
     <footer className="bg-brand-cream border-t border-neutral-200">
