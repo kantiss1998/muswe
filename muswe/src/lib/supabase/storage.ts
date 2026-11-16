@@ -2,8 +2,125 @@ import { SupabaseClient } from '@supabase/supabase-js'
 import { safeLogError } from '../logger'
 import { createBrowserClient } from './client'
 
+const MAX_DIMENSION_BY_BUCKET: Record<string, number> = {
+  banners: 1920,
+  products: 1600,
+}
+
+const WEBP_QUALITY_BY_BUCKET: Record<string, number> = {
+  banners: 0.88,
+  products: 0.85,
+}
+
+const SKIP_CONVERT_MIME_TYPES = new Set(['image/svg+xml', 'image/gif'])
+const SMALL_WEBP_THRESHOLD_BYTES = 350 * 1024
+
+function toWebpFileName(originalName: string): string {
+  const baseName = originalName.replace(/\.[^/.]+$/, '')
+  return `${baseName}.webp`
+}
+
+async function decodeImageSource(
+  file: File
+): Promise<{ source: CanvasImageSource; width: number; height: number; cleanup: () => void }> {
+  if (typeof createImageBitmap === 'function') {
+    const bitmap = await createImageBitmap(file)
+    return {
+      source: bitmap,
+      width: bitmap.width,
+      height: bitmap.height,
+      cleanup: () => bitmap.close(),
+    }
+  }
+
+  const objectUrl = URL.createObjectURL(file)
+  try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new Image()
+      el.onload = () => resolve(el)
+      el.onerror = () => reject(new Error('Failed to decode image'))
+      el.src = objectUrl
+    })
+    return {
+      source: img,
+      width: img.naturalWidth || img.width,
+      height: img.naturalHeight || img.height,
+      cleanup: () => URL.revokeObjectURL(objectUrl),
+    }
+  } catch (err) {
+    URL.revokeObjectURL(objectUrl)
+    throw err
+  }
+}
+
 /**
- * Uploads an image file to Supabase Storage and returns its public URL.
+ * Resizes and converts raster images to WebP in the browser before uploading to Supabase Storage.
+ * Falls back cleanly to the original file for SVGs, GIFs, small WebPs, or unsupported environments.
+ */
+export async function convertImageToWebP(
+  file: File,
+  maxDimension: number = 1600,
+  quality: number = 0.85
+): Promise<File> {
+  if (
+    typeof window === 'undefined' ||
+    typeof document === 'undefined' ||
+    !file.type.startsWith('image/') ||
+    SKIP_CONVERT_MIME_TYPES.has(file.type)
+  ) {
+    return file
+  }
+
+  if (file.type === 'image/webp' && file.size <= SMALL_WEBP_THRESHOLD_BYTES) {
+    return file
+  }
+
+  try {
+    const { source, width, height, cleanup } = await decodeImageSource(file)
+    try {
+      if (!width || !height) return file
+
+      const longestSide = Math.max(width, height)
+      const scale = longestSide > maxDimension ? maxDimension / longestSide : 1
+      const targetWidth = Math.max(1, Math.round(width * scale))
+      const targetHeight = Math.max(1, Math.round(height * scale))
+
+      const canvas = document.createElement('canvas')
+      canvas.width = targetWidth
+      canvas.height = targetHeight
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return file
+
+      ctx.drawImage(source, 0, 0, targetWidth, targetHeight)
+
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, 'image/webp', quality)
+      )
+
+      if (!blob || blob.type !== 'image/webp') {
+        return file
+      }
+
+      // Avoid inflating already-WebP images that did not shrink after re-encoding
+      if (file.type === 'image/webp' && blob.size >= file.size) {
+        return file
+      }
+
+      return new File([blob], toWebpFileName(file.name), {
+        type: 'image/webp',
+        lastModified: Date.now(),
+      })
+    } finally {
+      cleanup()
+    }
+  } catch (err) {
+    safeLogError('Client WebP conversion fallback to original file:', err)
+    return file
+  }
+}
+
+/**
+ * Uploads an image file to Supabase Storage (converting raster images to WebP first) and returns its CDN URL.
  * @param file The file to upload
  * @param bucket The storage bucket name (defaults to 'products')
  */
@@ -11,12 +128,17 @@ export async function uploadImage(file: File, bucket: string = 'products'): Prom
   const supabase = createBrowserClient()
   const targetBucket = bucket.toLowerCase()
 
+  const maxDimension = MAX_DIMENSION_BY_BUCKET[targetBucket] ?? 1600
+  const quality = WEBP_QUALITY_BY_BUCKET[targetBucket] ?? 0.85
+  const preparedFile = await convertImageToWebP(file, maxDimension, quality)
+
   // Clean file name to prevent issues with special characters
-  const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+  const cleanName = preparedFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')
   const fileName = `${crypto.randomUUID()}_${cleanName}`
 
-  const { error } = await supabase.storage.from(targetBucket).upload(fileName, file, {
-    cacheControl: '3600',
+  const { error } = await supabase.storage.from(targetBucket).upload(fileName, preparedFile, {
+    cacheControl: '31536000',
+    contentType: preparedFile.type || undefined,
     upsert: true,
   })
 
