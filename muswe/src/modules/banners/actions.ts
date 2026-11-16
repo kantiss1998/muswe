@@ -1,7 +1,18 @@
 'use server'
 
+import { revalidateTag, revalidatePath } from 'next/cache'
 import { bannerService } from './banner.service'
 import { requireAdmin } from '@/lib/auth-guard'
+
+function revalidateBannerCache() {
+  try {
+    revalidateTag('banners', 'hours')
+    revalidateTag('homepage-data', 'hours')
+    revalidatePath('/', 'page')
+  } catch (err) {
+    console.error('Failed to revalidate banner cache:', err)
+  }
+}
 
 // Public Actions
 export async function getActiveBannersAction(page = 1, limit = 20) {
@@ -27,7 +38,9 @@ export async function createAdminBannerAction(bannerData: {
   ends_at: string | null
 }) {
   await requireAdmin()
-  return bannerService.adminCreateBanner(bannerData)
+  const res = await bannerService.adminCreateBanner(bannerData)
+  if (res.success) revalidateBannerCache()
+  return res
 }
 
 export async function updateAdminBannerAction(
@@ -46,10 +59,14 @@ export async function updateAdminBannerAction(
   }
 ) {
   await requireAdmin()
-  return bannerService.adminUpdateBanner(bannerId, bannerData)
+  const res = await bannerService.adminUpdateBanner(bannerId, bannerData)
+  if (res.success) revalidateBannerCache()
+  return res
 }
 
 export async function deleteAdminBannerAction(bannerId: string) {
   await requireAdmin()
-  return bannerService.adminDeleteBanner(bannerId)
+  const res = await bannerService.adminDeleteBanner(bannerId)
+  if (res.success) revalidateBannerCache()
+  return res
 }

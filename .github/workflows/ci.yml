@@ -29,20 +29,20 @@ jobs:
       with:
         node-version: '20'
         cache: 'npm'
-        cache-dependency-path: 'benangbaju/package-lock.json'
+        cache-dependency-path: 'muswe/package-lock.json'
         
     - name: Install dependencies
-      working-directory: ./benangbaju
+      working-directory: ./muswe
       run: npm ci
       
     - name: Lint
-      working-directory: ./benangbaju
+      working-directory: ./muswe
       run: npm run lint
       
     - name: Test
-      working-directory: ./benangbaju
+      working-directory: ./muswe
       run: npm run test
       
     - name: Build
-      working-directory: ./benangbaju
+      working-directory: ./muswe
       run: npm run build

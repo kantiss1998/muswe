@@ -2,6 +2,7 @@
 
 import { cmsService } from './cms.service'
 import { requireAdmin } from '@/lib/auth-guard'
+import { clearRedirectsCache } from '@/lib/supabase/middleware'
 import type { RedirectRule, LandingPage } from './types'
 
 export async function adminGetRedirectsAction(page = 1, limit = 20) {
@@ -11,7 +12,9 @@ export async function adminGetRedirectsAction(page = 1, limit = 20) {
 
 export async function adminCreateRedirectAction(redirect: Omit<RedirectRule, 'id' | 'created_at'>) {
   await requireAdmin()
-  return cmsService.adminCreateRedirect(redirect)
+  const res = await cmsService.adminCreateRedirect(redirect)
+  if (res.success) clearRedirectsCache()
+  return res
 }
 
 export async function adminUpdateRedirectAction(
@@ -19,12 +22,16 @@ export async function adminUpdateRedirectAction(
   redirect: Partial<Omit<RedirectRule, 'id' | 'created_at'>>
 ) {
   await requireAdmin()
-  return cmsService.adminUpdateRedirect(redirectId, redirect)
+  const res = await cmsService.adminUpdateRedirect(redirectId, redirect)
+  if (res.success) clearRedirectsCache()
+  return res
 }
 
 export async function adminDeleteRedirectAction(redirectId: string) {
   await requireAdmin()
-  return cmsService.adminDeleteRedirect(redirectId)
+  const res = await cmsService.adminDeleteRedirect(redirectId)
+  if (res.success) clearRedirectsCache()
+  return res
 }
 
 export async function adminGetLandingPagesAction(page = 1, limit = 20) {

@@ -8,6 +8,8 @@ import { ProductFilters, ProductPayload } from './types'
 
 function revalidateProductCache() {
   try {
+    revalidateTag('products', 'hours')
+    revalidateTag('homepage-data', 'hours')
     revalidatePath('/', 'layout')
     revalidatePath('/produk', 'layout')
   } catch (err) {

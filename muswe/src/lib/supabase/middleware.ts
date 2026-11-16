@@ -1,12 +1,58 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-// Cache for database-driven redirects
-// Max size prevents unbounded memory growth in long-lived server processes
-const MAX_CACHE_SIZE = 500
-const redirectCache = new Map<string, { to_path: string; status_code: number; expiresAt: number }>()
-const CACHE_TTL = 60 * 1000 // 1 minute
-const NEGATIVE_CACHE_TTL = 10 * 1000 // 10 seconds
+// Bulk in-memory cache for database-driven redirects (reduces DB queries to <= 1 per 5 mins per isolate)
+const REDIRECT_CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+let redirectMapCache: {
+  map: Map<string, { to_path: string; status_code: number }>
+  expiresAt: number
+} | null = null
+let redirectInFlight: Promise<Map<string, { to_path: string; status_code: number }>> | null = null
+
+export function clearRedirectsCache(): void {
+  redirectMapCache = null
+}
+
+async function getActiveRedirectsMap(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any
+): Promise<Map<string, { to_path: string; status_code: number }>> {
+  if (redirectMapCache && redirectMapCache.expiresAt > Date.now()) {
+    return redirectMapCache.map
+  }
+
+  if (redirectInFlight) {
+    return redirectInFlight
+  }
+
+  redirectInFlight = (async () => {
+    const map = new Map<string, { to_path: string; status_code: number }>()
+    const { data, error } = await supabase
+      .from('redirects')
+      .select('from_path, to_path, status_code')
+      .eq('is_active', true)
+
+    if (!error && Array.isArray(data)) {
+      for (const row of data) {
+        if (row.from_path && row.to_path) {
+          map.set(row.from_path, {
+            to_path: row.to_path,
+            status_code: row.status_code || 301,
+          })
+        }
+      }
+      redirectMapCache = {
+        map,
+        expiresAt: Date.now() + REDIRECT_CACHE_TTL,
+      }
+    }
+    return map
+  })().finally(() => {
+    redirectInFlight = null
+  })
+
+  return redirectInFlight
+}
 
 export async function updateSession(request: NextRequest): Promise<NextResponse<unknown>> {
   let supabaseResponse = NextResponse.next({
@@ -60,62 +106,30 @@ export async function updateSession(request: NextRequest): Promise<NextResponse<
     return supabaseResponse
   }
 
-  // Database-driven redirects check with cache
-  const cached = redirectCache.get(pathname)
-  if (cached && cached.expiresAt > Date.now()) {
-    if (cached.to_path) {
+  // Database-driven redirects check via bulk 5-minute cache
+  try {
+    const redirectsMap = await getActiveRedirectsMap(supabase)
+    const redirectEntry = redirectsMap.get(pathname)
+    if (redirectEntry) {
       const url = request.nextUrl.clone()
-      url.pathname = cached.to_path
-      return NextResponse.redirect(url, cached.status_code)
+      url.pathname = redirectEntry.to_path
+      return NextResponse.redirect(url, redirectEntry.status_code)
     }
-  } else {
-    try {
-      const { data: redirectData } = await supabase
-        .from('redirects')
-        .select('to_path, status_code')
-        .eq('from_path', pathname)
-        .eq('is_active', true)
-        .limit(1)
-        .maybeSingle()
-
-      if (redirectCache.size > MAX_CACHE_SIZE) {
-        const now = Date.now()
-        for (const [key, val] of redirectCache.entries()) {
-          if (val.expiresAt < now) {
-            redirectCache.delete(key)
-          }
-        }
-        if (redirectCache.size > MAX_CACHE_SIZE) {
-          redirectCache.clear()
-        }
-      }
-
-      if (redirectData) {
-        redirectCache.set(pathname, {
-          to_path: redirectData.to_path,
-          status_code: redirectData.status_code || 301,
-          expiresAt: Date.now() + CACHE_TTL,
-        })
-        const url = request.nextUrl.clone()
-        url.pathname = redirectData.to_path
-        return NextResponse.redirect(url, redirectData.status_code || 301)
-      } else {
-        // Cache negative lookup (no redirect found)
-        redirectCache.set(pathname, {
-          to_path: '',
-          status_code: 301,
-          expiresAt: Date.now() + NEGATIVE_CACHE_TTL,
-        })
-      }
-    } catch (error) {
-      console.error('Redirect check error:', error)
-    }
+  } catch (error) {
+    console.error('Redirect check error:', error)
   }
 
-  // Refresh session - important for Server Components
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  // Fast-path for guests: skip GoTrue auth.getUser() network call if no Supabase session cookie exists
+  const hasAuthCookie = request.cookies
+    .getAll()
+    .some((cookie) => cookie.name.startsWith('sb-') && cookie.value.length > 0)
+
+  let user = null
+  if (hasAuthCookie) {
+    // Refresh session - important for Server Components
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  }
 
   // Protected routes: redirect to login if not authenticated
   const protectedPaths = ['/akun', '/checkout', '/pesanan', '/wishlist']

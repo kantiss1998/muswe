@@ -60,6 +60,18 @@ async function timingSafeEqual(a: string, b: string): Promise<boolean> {
   return result === 0
 }
 
+/**
+ * Extract real client IP behind Cloudflare / Vercel reverse proxies.
+ * Prioritizes `cf-connecting-ip` so clients cannot spoof `x-forwarded-for`.
+ */
+export function getClientIp(request: NextRequest): string {
+  const cfIp = request.headers.get('cf-connecting-ip')
+  if (cfIp) return cfIp.trim()
+  const forwardedFor = request.headers.get('x-forwarded-for')
+  if (forwardedFor) return forwardedFor.split(',')[0].trim()
+  return request.headers.get('x-real-ip')?.trim() || 'unknown'
+}
+
 export async function proxy(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl
 
@@ -69,7 +81,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     process.env.NODE_ENV !== 'development' &&
     authPaths.some((p) => pathname.startsWith(p) || pathname === `/api/auth/callback`)
   ) {
-    const ip = request.headers.get('x-forwarded-for') || 'unknown'
+    const ip = getClientIp(request)
     const allowed = await checkRateLimit(request, ip, 'auth', 15, 60) // 15 requests per minute
 
     if (!allowed) {
@@ -89,7 +101,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 
   // API v1 Rate Limiting & Auth
   if (pathname.startsWith('/api/v1/')) {
-    const ip = request.headers.get('x-forwarded-for') || 'unknown'
+    const ip = getClientIp(request)
     const allowed = await checkRateLimit(request, ip, 'api_v1', 60, 60) // 60 requests per minute
 
     if (!allowed) {

@@ -1,7 +1,19 @@
 'use server'
 
+import { revalidateTag, revalidatePath } from 'next/cache'
 import { collectionService } from './collection.service'
 import { requireAdmin } from '@/lib/auth-guard'
+
+function revalidateCollectionCache() {
+  try {
+    revalidateTag('collections', 'hours')
+    revalidateTag('mega-menu', 'hours')
+    revalidateTag('homepage-data', 'hours')
+    revalidatePath('/', 'layout')
+  } catch (err) {
+    console.error('Failed to revalidate collection cache:', err)
+  }
+}
 
 // Public Actions
 export async function getActiveCollectionsAction(page = 1, limit = 20) {
@@ -32,7 +44,9 @@ export async function createAdminCollectionAction(
   productIds: string[]
 ) {
   await requireAdmin()
-  return collectionService.adminCreateCollection(collectionData, productIds)
+  const res = await collectionService.adminCreateCollection(collectionData, productIds)
+  if (res.success) revalidateCollectionCache()
+  return res
 }
 
 export async function updateAdminCollectionAction(
@@ -50,10 +64,14 @@ export async function updateAdminCollectionAction(
   productIds: string[]
 ) {
   await requireAdmin()
-  return collectionService.adminUpdateCollection(collectionId, collectionData, productIds)
+  const res = await collectionService.adminUpdateCollection(collectionId, collectionData, productIds)
+  if (res.success) revalidateCollectionCache()
+  return res
 }
 
 export async function deleteAdminCollectionAction(collectionId: string) {
   await requireAdmin()
-  return collectionService.adminDeleteCollection(collectionId)
+  const res = await collectionService.adminDeleteCollection(collectionId)
+  if (res.success) revalidateCollectionCache()
+  return res
 }
