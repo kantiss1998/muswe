@@ -30,12 +30,14 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [instantResults, setInstantResults] = useState<ProductListItem[]>([])
   const [isSearchingInstant, setIsSearchingInstant] = useState(false)
+  const searchCacheRef = React.useRef<Map<string, ProductListItem[]>>(new Map())
 
   const overlayRef = React.useRef<HTMLDivElement>(null)
   useFocusTrap(isOpen, overlayRef, { onClose })
 
   useEffect(() => {
-    if (!isOpen || searchQuery.trim().length < 2) {
+    const normalizedQuery = searchQuery.trim().toLowerCase()
+    if (!isOpen || normalizedQuery.length < 2) {
       const t = setTimeout(() => {
         setInstantResults([])
         setIsSearchingInstant(false)
@@ -43,17 +45,26 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
       return () => clearTimeout(t)
     }
 
+    const cached = searchCacheRef.current.get(normalizedQuery)
+    if (cached) {
+      setInstantResults(cached)
+      setIsSearchingInstant(false)
+      return
+    }
+
     const startTimer = setTimeout(() => setIsSearchingInstant(true), 0)
     const delayDebounceFn = setTimeout(async () => {
       try {
         const res = await getProductsAction({ searchQuery: searchQuery.trim(), limit: 3 })
-        setInstantResults(res.data || [])
+        const items = res.data || []
+        searchCacheRef.current.set(normalizedQuery, items)
+        setInstantResults(items)
       } catch (err) {
         safeLogError('Instant search error:', err)
       } finally {
         setIsSearchingInstant(false)
       }
-    }, 300)
+    }, 400)
 
     return () => {
       clearTimeout(startTimer)

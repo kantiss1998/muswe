@@ -62,14 +62,7 @@ export default function PesananPage(): React.JSX.Element {
     }
   }, [isAuthenticated, authLoading, router])
 
-  // 2. Trigger Lazy Cancellation of Expired Orders on Load
-  useEffect(() => {
-    if (user?.id) {
-      lazyCancelExpiredOrdersAction()
-    }
-  }, [user])
-
-  // 3. Fetch Orders
+  // 2. Fetch Orders
   const {
     data: ordersResponse,
     isLoading: ordersLoading,
@@ -79,6 +72,22 @@ export default function PesananPage(): React.JSX.Element {
   const orders = Array.isArray(ordersResponse?.data) ? ordersResponse.data : []
   const totalCount = ordersResponse?.pagination?.total_count || 0
   const totalPages = Math.ceil(totalCount / limit)
+
+  // 3. Trigger Lazy Cancellation only if user actually has an expired pending_payment order
+  useEffect(() => {
+    const list = Array.isArray(ordersResponse?.data) ? ordersResponse.data : []
+    if (!user?.id || list.length === 0) return
+    const now = Date.now()
+    const hasExpiredPending = list.some((o) => {
+      if (o.status !== 'pending_payment' || !o.created_at) return false
+      const hasFlashSale = o.order_items?.some((item) => Boolean(item.flash_sale_item_id))
+      const ttlMs = hasFlashSale ? 15 * 60 * 1000 : 24 * 60 * 60 * 1000
+      return new Date(o.created_at).getTime() + ttlMs <= now
+    })
+    if (hasExpiredPending) {
+      lazyCancelExpiredOrdersAction().then(() => refetch())
+    }
+  }, [user?.id, ordersResponse?.data, refetch])
 
   const cancelMutation = useCancelOrder()
   const confirmMutation = useConfirmDelivery()

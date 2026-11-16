@@ -5,12 +5,14 @@ import { ApiListResponse, ApiResponse } from '@/lib/api-response'
 import { ProductReview, ReviewDetail } from '@/modules/reviews/types'
 
 export function useReviews(
-  productId: string
+  productId: string,
+  enabled = true
 ): import('@tanstack/react-query').UseQueryResult<ApiListResponse<ReviewDetail>, Error> {
   return useQuery({
     queryKey: ['reviews', productId],
     queryFn: () => getApprovedReviewsAction(productId),
-    enabled: !!productId,
+    enabled: !!productId && enabled,
+    staleTime: 1000 * 60 * 5,
   })
 }
 

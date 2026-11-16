@@ -16,7 +16,8 @@ interface ReviewSectionProps {
 
 export function ReviewSection({ productId, ratingSummary }: ReviewSectionProps): React.JSX.Element {
   const { isEnglish } = useTranslation()
-  const { data: reviewsRes, isLoading } = useReviews(productId)
+  const hasKnownReviews = ratingSummary === null || (ratingSummary?.total_reviews ?? 0) > 0
+  const { data: reviewsRes, isLoading } = useReviews(productId, hasKnownReviews)
   const reviews = reviewsRes?.data || []
 
   // Calculate default values if ratingSummary is missing

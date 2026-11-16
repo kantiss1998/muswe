@@ -15,7 +15,7 @@ interface SmartLinkProps
  * touches it (on mobile), resulting in near zero-latency transitions.
  */
 export const SmartLink = React.forwardRef<HTMLAnchorElement, SmartLinkProps>(
-  ({ children, onMouseEnter, onTouchStart, href, prefetch = true, ...props }, ref) => {
+  ({ children, onMouseEnter, onTouchStart, href, prefetch = false, ...props }, ref) => {
     const router = useRouter()
 
     const handlePrefetch = () => {

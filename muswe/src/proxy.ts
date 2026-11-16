@@ -149,10 +149,9 @@ export const config = {
      * Match all request paths except for the ones starting with:
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public (static assets like images)
-     * Feel free to modify this pattern to include more paths.
+     * - favicon.ico, sitemap.xml, robots.txt
+     * - public static assets & fonts (svg, png, jpg, jpeg, gif, webp, avif, ico, otf, woff, woff2, ttf, css, js, map)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon\\.ico|sitemap\\.xml|robots\\.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico|otf|woff|woff2|ttf|css|js|map)$).*)',
   ],
 }

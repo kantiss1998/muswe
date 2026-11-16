@@ -1,6 +1,7 @@
 import { safeLogError } from '@/lib/logger'
 import { adminLogRepository } from '@/modules/admin-logs/admin-log.repository'
 import { createServerClient } from '@/lib/supabase/server'
+import { createStaticClient } from '@/lib/supabase/static'
 import { ApiListResponse, ApiResponse, ok, paginated, fail } from '@/lib/api-response'
 import { ApiErrorCode } from '@/lib/api-errors'
 import {
@@ -17,7 +18,7 @@ export class ReviewRepository {
     page = 1,
     limit = 20
   ): Promise<ApiListResponse<ReviewDetail>> {
-    const supabase = await createServerClient()
+    const supabase = createStaticClient()
     const from = (page - 1) * limit
     const to = from + limit - 1
     const { data, error, count } = await supabase
