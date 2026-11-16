@@ -24,11 +24,13 @@ const IMAGE_COLUMNS = [
 function parseArgs(argv) {
   const args = {
     dryRun: false,
+    cleanup: false,
     concurrency: 5,
     backupPath: path.join(os.tmpdir(), 'muswe-image-migration-backup.json'),
   }
   for (const arg of argv) {
     if (arg === '--dry-run') args.dryRun = true
+    else if (arg === '--cleanup') args.cleanup = true
     else if (arg.startsWith('--backup-path=')) args.backupPath = arg.slice('--backup-path='.length)
     else if (arg.startsWith('--concurrency=')) {
       const n = Number(arg.slice('--concurrency='.length))
@@ -329,6 +331,10 @@ async function main() {
 
   const verificationFailures = []
   const sampleUrls = new Map()
+  const activeStoragePaths = new Map([
+    ['products', new Set()],
+    ['banners', new Set()],
+  ])
   let verifiedWebpRows = 0
 
   for (const { table, idCol, urlCol } of IMAGE_COLUMNS) {
@@ -343,6 +349,9 @@ async function main() {
       const url = row[urlCol]
       const parsed = parseStorageUrl(url)
       if (!parsed) continue
+      if (activeStoragePaths.has(parsed.bucket)) {
+        activeStoragePaths.get(parsed.bucket).add(parsed.objectPath)
+      }
       const ext = getExtension(parsed.objectPath)
       if (SKIP_EXTENSIONS.has(ext)) continue
 
@@ -387,6 +396,46 @@ async function main() {
 
   console.log(
     `[Point 4 Complete] Verified ${verifiedWebpRows} DB URLs as .webp on cdn.muswedaily.com and present in Supabase Storage.`
+  )
+
+  if (!args.cleanup) {
+    return
+  }
+
+  // 5. Cleanup unused/legacy files in products & banners buckets
+  let totalDeletedFiles = 0
+  let totalFreedBytes = 0
+
+  for (const bucket of ['products', 'banners']) {
+    const allFiles = await listAllBucketFiles(supabase, bucket)
+    const activeSet = activeStoragePaths.get(bucket)
+    const unusedFiles = allFiles.filter((f) => !activeSet.has(f.name))
+
+    if (unusedFiles.length === 0) {
+      console.log(`[Point 5 Cleanup] Bucket [${bucket}]: 0 unused files to remove.`)
+      continue
+    }
+
+    const bucketFreedBytes = unusedFiles.reduce((sum, f) => sum + (f.metadata?.size || 0), 0)
+    const namesToDelete = unusedFiles.map((f) => f.name)
+
+    for (let i = 0; i < namesToDelete.length; i += 50) {
+      const batch = namesToDelete.slice(i, i + 50)
+      const { error: rmErr } = await supabase.storage.from(bucket).remove(batch)
+      if (rmErr) {
+        throw new Error(`Failed removing batch from ${bucket}: ${rmErr.message}`)
+      }
+    }
+
+    totalDeletedFiles += namesToDelete.length
+    totalFreedBytes += bucketFreedBytes
+    console.log(
+      `[Point 5 Cleanup] Bucket [${bucket}]: Removed ${namesToDelete.length} unused files (${(bucketFreedBytes / 1024 / 1024).toFixed(2)} MB freed).`
+    )
+  }
+
+  console.log(
+    `[Point 5 Complete] Deleted ${totalDeletedFiles} unused/legacy files, freeing ${(totalFreedBytes / 1024 / 1024).toFixed(2)} MB of Supabase Storage.`
   )
 }
 
