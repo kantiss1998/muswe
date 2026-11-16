@@ -29,7 +29,11 @@ export class CartRepository {
           id, variant_id, quantity,
           product_variants (
             id, sku, name, price, compare_price, stock,
-            products (name, slug, product_images (url, is_primary))
+            products (name, slug, product_images (url, is_primary)),
+            flash_sale_items (
+              id, sale_price, original_price, quota, sold_count,
+              flash_sales (is_active, starts_at, ends_at)
+            )
           )
         `
       )

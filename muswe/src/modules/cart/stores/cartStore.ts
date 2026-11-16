@@ -28,7 +28,7 @@ interface CartState {
   syncTimeoutId: ReturnType<typeof setTimeout> | null
   debouncedSyncCart: (userId: string) => void
   setCartDrawerOpen: (open: boolean) => void
-  addItem: (item: Omit<CartItem, 'quantity'>, qty?: number) => Promise<void>
+  addItem: (item: Omit<CartItem, 'quantity'>, qty?: number, immediate?: boolean) => Promise<void>
   updateQuantity: (variantId: string, quantity: number) => Promise<void>
   removeItem: (variantId: string) => Promise<void>
   clearCart: () => Promise<void>
@@ -62,7 +62,7 @@ export const useCartStore = create<CartState>()(
       },
       setCartDrawerOpen: (open) => set({ isCartDrawerOpen: open }),
 
-      addItem: async (newItem, qty = 1) => {
+      addItem: async (newItem, qty = 1, immediate = false) => {
         set((state) => {
           const effectiveStock = newItem.stock > 0 ? newItem.stock : 9999
           const safeQty = Math.max(1, qty)
@@ -82,7 +82,16 @@ export const useCartStore = create<CartState>()(
         // DB Sync if authenticated
         const user = useAuthStore.getState().user
         if (user) {
-          get().debouncedSyncCart(user.id)
+          if (immediate) {
+            const { syncTimeoutId } = get()
+            if (syncTimeoutId) {
+              clearTimeout(syncTimeoutId)
+              set({ syncTimeoutId: null })
+            }
+            await get().syncCart(user.id, false)
+          } else {
+            get().debouncedSyncCart(user.id)
+          }
         }
       },
 

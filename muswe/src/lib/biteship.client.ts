@@ -3,6 +3,11 @@ import { safeLogError } from './logger'
 const BITESHIP_BASE_URL = process.env.BITESHIP_BASE_URL || 'https://api.biteship.com'
 const DEFAULT_ORIGIN_POSTAL_CODE = process.env.BITESHIP_ORIGIN_POSTAL_CODE || '40295'
 
+const RATES_CACHE_TTL_MS = 10 * 60 * 1000 // 10 minutes
+const MAX_RATES_CACHE_SIZE = 1000
+const ratesCache = new Map<string, { data: BiteshipRatePricing[]; expiresAt: number }>()
+const inFlightRates = new Map<string, Promise<BiteshipRatePricing[]>>()
+
 export interface BiteshipCourierItem {
   name: string
   description?: string
@@ -103,13 +108,30 @@ export class BiteshipClient {
     const defaultCouriers = isInternational
       ? 'dhl,fedex,pos,aramex,biteship'
       : 'jne,sicepat,jnt,pos,tiki,anteraja'
+    const couriersKey = params.couriers || defaultCouriers
+    const totalWeightGram = params.items.reduce(
+      (sum, item) => sum + (Number(item.weight) || 0) * (Number(item.quantity) || 1),
+      0
+    )
+    const weightKgBucket = Math.ceil(Math.max(totalWeightGram, 1) / 1000)
+    const cacheKey = `${cleanOrigin}:${cleanDestination}:${(params.destinationCountryCode || 'ID').toUpperCase()}:${couriersKey}:${weightKgBucket}`
+
+    const cached = ratesCache.get(cacheKey)
+    if (cached && cached.expiresAt > Date.now()) {
+      return cached.data
+    }
+
+    const existingPromise = inFlightRates.get(cacheKey)
+    if (existingPromise) {
+      return existingPromise
+    }
 
     const payload: Record<string, any> = {
       origin_postal_code: Number(cleanOrigin),
       destination_postal_code: isInternational
         ? cleanDestination
         : (Number(cleanDestination) || cleanDestination),
-      couriers: params.couriers || defaultCouriers,
+      couriers: couriersKey,
       items: params.items.map((item) => ({
         name: item.name.substring(0, 50),
         description: item.description ? item.description.substring(0, 100) : item.name.substring(0, 50),
@@ -126,6 +148,39 @@ export class BiteshipClient {
       payload.destination_country_code = params.destinationCountryCode!.toUpperCase()
     }
 
+    const fetchPromise = this.fetchRatesUncached(payload, isInternational)
+      .then((rates) => {
+        this.setRatesCache(cacheKey, rates)
+        return rates
+      })
+      .finally(() => {
+        inFlightRates.delete(cacheKey)
+      })
+
+    inFlightRates.set(cacheKey, fetchPromise)
+    return fetchPromise
+  }
+
+  private setRatesCache(key: string, data: BiteshipRatePricing[]) {
+    if (ratesCache.size >= MAX_RATES_CACHE_SIZE) {
+      const now = Date.now()
+      for (const [k, v] of ratesCache.entries()) {
+        if (v.expiresAt < now) {
+          ratesCache.delete(k)
+        }
+      }
+      if (ratesCache.size >= MAX_RATES_CACHE_SIZE) {
+        const firstKey = ratesCache.keys().next().value
+        if (firstKey) ratesCache.delete(firstKey)
+      }
+    }
+    ratesCache.set(key, { data, expiresAt: Date.now() + RATES_CACHE_TTL_MS })
+  }
+
+  private async fetchRatesUncached(
+    payload: Record<string, any>,
+    isInternational: boolean
+  ): Promise<BiteshipRatePricing[]> {
     try {
       const response = await fetch(`${BITESHIP_BASE_URL}/v1/rates/couriers`, {
         method: 'POST',
@@ -134,6 +189,7 @@ export class BiteshipClient {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(8000),
       })
 
       const data: any = await response.json()

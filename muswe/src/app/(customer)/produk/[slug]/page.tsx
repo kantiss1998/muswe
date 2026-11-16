@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { cacheLife, cacheTag } from 'next/cache'
 import { createStaticClient } from '@/lib/supabase/static'
 import { productService } from '@/modules/products/product.service'
-import { flashSaleService } from '@/modules/flash-sales/flash-sale.service'
+import { getCachedActiveFlashSale } from '@/modules/flash-sales/flash-sale.cache'
 import { ProductDetailClient } from './ProductDetailClient'
 import { RelatedProducts } from './RelatedProducts'
 import { ProductGridSkeleton } from '@/shared/components'
@@ -115,8 +115,8 @@ export default async function ProductDetailPage({
     notFound()
   }
 
-  // Fetch active flash sale to override prices
-  const flashSaleRes = await flashSaleService.getActiveFlashSale()
+  // Fetch active flash sale (cached) to override prices
+  const flashSaleRes = await getCachedActiveFlashSale()
   const activeFlashSale = flashSaleRes.success ? flashSaleRes.data : null
 
   if (activeFlashSale) {
@@ -125,18 +125,27 @@ export default async function ProductDetailPage({
     const ends = new Date(activeFlashSale.ends_at)
     
     if (now >= starts && now <= ends) {
-      // Modify product variant prices in memory
-      product.product_variants = product.product_variants.map(variant => {
-        const saleItem = activeFlashSale.flash_sale_items.find(item => item.variant_id === variant.id)
-        if (saleItem) {
-          return {
-            ...variant,
-            compare_price: variant.price, // Save original price
-            price: saleItem.sale_price,
+      // Clone product before overriding variant prices/quota so cached reference is not mutated
+      product = {
+        ...product,
+        product_variants: product.product_variants.map(variant => {
+          const saleItem = activeFlashSale.flash_sale_items.find(item => item.variant_id === variant.id)
+          const hasQuota = saleItem && (saleItem.quota === 0 || saleItem.sold_count < saleItem.quota)
+          if (saleItem && hasQuota) {
+            const effectiveStock =
+              saleItem.quota > 0
+                ? Math.min(variant.stock, Math.max(0, saleItem.quota - saleItem.sold_count))
+                : variant.stock
+            return {
+              ...variant,
+              compare_price: variant.price, // Save original price
+              price: saleItem.sale_price,
+              stock: effectiveStock,
+            }
           }
-        }
-        return variant
-      })
+          return variant
+        }),
+      }
     }
   }
 

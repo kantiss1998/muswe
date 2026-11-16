@@ -1,7 +1,18 @@
 'use server'
 
+import { revalidateTag, revalidatePath } from 'next/cache'
 import { flashSaleService } from './flash-sale.service'
 import { requireAdmin } from '@/lib/auth-guard'
+
+function revalidateFlashSaleCache() {
+  try {
+    revalidateTag('flash-sales', 'seconds')
+    revalidatePath('/', 'layout')
+    revalidatePath('/flash-sale', 'page')
+  } catch (err) {
+    console.error('Failed to revalidate flash sale cache:', err)
+  }
+}
 
 export async function adminGetFlashSalesAction(page = 1, limit = 20) {
   await requireAdmin()
@@ -25,7 +36,9 @@ export async function adminCreateFlashSaleAction(
   }[]
 ) {
   await requireAdmin()
-  return flashSaleService.adminCreateFlashSale(saleData, items)
+  const res = await flashSaleService.adminCreateFlashSale(saleData, items)
+  if (res.success) revalidateFlashSaleCache()
+  return res
 }
 
 export async function adminUpdateFlashSaleAction(
@@ -46,10 +59,14 @@ export async function adminUpdateFlashSaleAction(
   }[]
 ) {
   await requireAdmin()
-  return flashSaleService.adminUpdateFlashSale(saleId, saleData, items)
+  const res = await flashSaleService.adminUpdateFlashSale(saleId, saleData, items)
+  if (res.success) revalidateFlashSaleCache()
+  return res
 }
 
 export async function adminDeleteFlashSaleAction(saleId: string) {
   await requireAdmin()
-  return flashSaleService.adminDeleteFlashSale(saleId)
+  const res = await flashSaleService.adminDeleteFlashSale(saleId)
+  if (res.success) revalidateFlashSaleCache()
+  return res
 }

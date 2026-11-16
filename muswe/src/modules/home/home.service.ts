@@ -1,18 +1,16 @@
-import { createStaticClient } from '@/lib/supabase/static'
 import { getActiveBannersAction } from '@/modules/banners/actions'
 import { getActiveCategoriesAction } from '@/modules/categories/actions'
 import {
   getActiveCollectionsAction,
   getCollectionBySlugAction,
 } from '@/modules/collections/actions'
-import { flashSaleService } from '@/modules/flash-sales/flash-sale.service'
+import { getCachedActiveFlashSale } from '@/modules/flash-sales/flash-sale.cache'
 import { getProductsAction } from '@/modules/products/actions'
 import { settingsService } from '@/modules/settings/settings.service'
 import { paginated } from '@/lib/api-response'
 
 export class HomeService {
-  getCachedHomepageData = async () => {    const supabase = createStaticClient()
-
+  getCachedHomepageData = async () => {
     const [
       bannersRes,
       categoriesRes,
@@ -25,7 +23,7 @@ export class HomeService {
       getActiveBannersAction(),
       getActiveCategoriesAction(),
       getActiveCollectionsAction(),
-      flashSaleService.getActiveFlashSale(supabase),
+      getCachedActiveFlashSale(),
       getProductsAction({ sortBy: 'featured', limit: 4 }),
       getProductsAction({ sortBy: 'newest', limit: 4 }),
       settingsService.getSiteSettings(),

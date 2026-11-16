@@ -150,18 +150,16 @@ export async function createSecureOrderAction(params: CreateOrderParams) {
     return fail(ERROR_CODES.UNAUTHORIZED, 'Unauthorized')
   }
 
-  // Idempotency / Double-Submit Lock (Database-backed)
-  // Clean up any stale locks (TTL 5 mins) before trying to acquire a new one
-  const { error: cleanupError } = await supabase.rpc('cleanup_checkout_locks')
-  if (cleanupError) {
-    safeLogError('Error cleaning up checkout locks:', cleanupError)
-  }
-
+  // Idempotency / Double-Submit Lock (Atomic per-user Database Lock)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error: lockError } = await supabase
-    .from('checkout_locks' as any)
-    .insert({ user_id: user.id })
-  if (lockError) {
+  const { data: lockAcquired, error: lockError } = await (supabase.rpc as any)(
+    'acquire_checkout_lock',
+    { p_user_id: user.id }
+  )
+  if (lockError || !lockAcquired) {
+    if (lockError) {
+      safeLogError('Error acquiring checkout lock:', lockError)
+    }
     return fail(ERROR_CODES.CHECKOUT_IN_PROGRESS, 'Sedang memproses pesanan Anda. Silakan tunggu.')
   }
 

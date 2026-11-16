@@ -13,7 +13,8 @@ export class FlashSaleRepository {
     client?: SupabaseClient<Database>
   ): Promise<ApiResponse<FlashSaleDetail | null>> {
     const supabase = client || (await createServerClient())
-    
+    const nowIso = new Date().toISOString()
+
     // Fetch active flash sale that is currently running
     const { data, error } = await supabase
       .from('flash_sales')
@@ -33,6 +34,8 @@ export class FlashSaleRepository {
         `
       )
       .eq('is_active', true)
+      .lte('starts_at', nowIso)
+      .gt('ends_at', nowIso)
       .limit(1)
       .maybeSingle()
 

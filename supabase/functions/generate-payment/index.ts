@@ -192,6 +192,10 @@ Deno.serve(async (req: Request) => {
       });
     }
 
+    const hasFlashSaleItem = Array.isArray(order.order_items) &&
+      order.order_items.some((item: any) => Boolean(item.flash_sale_item_id));
+    const paymentDueDateMinutes = hasFlashSaleItem ? 15 : 60;
+
     const payload = {
       order: {
         amount: Math.round(Number(order.total_amount)),
@@ -203,7 +207,7 @@ Deno.serve(async (req: Request) => {
         line_items: lineItems,
       },
       payment: {
-        payment_due_date: 60, // 60 minutes
+        payment_due_date: paymentDueDateMinutes,
       },
     };
 

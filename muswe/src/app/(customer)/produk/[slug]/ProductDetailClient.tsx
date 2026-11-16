@@ -188,7 +188,7 @@ export function ProductDetailClient({
         stock: selectedVariant.stock,
       }
 
-      await addItem(cartItem, quantity)
+      await addItem(cartItem, quantity, true)
       router.push('/checkout')
     } catch {
       toast.error(isEnglish ? 'Failed to process purchase.' : 'Gagal memproses pembelian.')
